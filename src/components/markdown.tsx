@@ -64,7 +64,7 @@ function extractFirstFence(
 ): { lang: string; code: string } | null {
   const m = body.match(/```([\w+-]*)\s*\n([\s\S]*?)\n```/);
   if (!m) {
-    // Bare body — treat as plain text snippet
+    // Bare body, treat as plain text snippet
     const trimmed = body.trim();
     if (!trimmed) return null;
     return { lang: 'text', code: trimmed };
@@ -126,7 +126,7 @@ function parseSegments(source: string): Segment[] {
       continue;
     }
 
-    // Directive — collect consecutive blocks of the SAME directive kind.
+    // Directive: collect consecutive blocks of the SAME directive kind.
     const directive = next.match[1] as DirectiveKind;
     const blocks: DirectiveBlock[] = [];
     const collect = (kind: DirectiveKind, m: RegExpMatchArray) => {
@@ -139,7 +139,7 @@ function parseSegments(source: string): Segment[] {
     collect(directive, next.match);
     remaining = remaining.slice(next.index + next.match[0].length);
 
-    // Look at what follows — skip pure whitespace between directive blocks
+    // Look at what follows: skip pure whitespace between directive blocks
     // of the same kind. A different directive kind breaks the group.
     while (true) {
       const wsMatch = remaining.match(/^\s*/);
@@ -220,7 +220,7 @@ function TextSpan({ value }: { value: string }) {
 
 /**
  * Server component. Parses markdown into text / code-fence / directive
- * segments and renders each segment directly as React elements — text spans
+ * segments and renders each segment directly as React elements: text spans
  * through react-markdown, code fences through <CodeBlock>, directive groups
  * through <PkgTabs> (with either package-manager labels or legacy OS labels
  * depending on the directive kind).

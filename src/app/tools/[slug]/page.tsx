@@ -12,7 +12,6 @@ import RecentlyViewedPusher from '@/components/recently-viewed-pusher';
 import OftenCompared from '@/components/often-compared';
 import ToolQuickInfo from '@/components/tool-quick-info';
 import ToolRelated from '@/components/tool-related';
-import KeyboardShortcutsSection from '@/components/keyboard-shortcuts-section';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -61,9 +60,11 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   const sections: Array<{ id: string; label: string }> = [];
   if (tool.install_md) sections.push({ id: 'install', label: 'Install' });
+  if (tool.pricing_md) sections.push({ id: 'pricing', label: 'Pricing' });
   if (tool.usage_md) sections.push({ id: 'usage', label: 'How it works' });
   if (tool.asciinema_id) sections.push({ id: 'live-demo', label: 'Live demo' });
   if (tool.cheatsheet_md) sections.push({ id: 'cheatsheet', label: 'Cheat sheet' });
+  if (tool.resources_md) sections.push({ id: 'resources', label: 'Resources' });
   if (tool.used_in_stacks.length > 0)
     sections.push({ id: 'used-in', label: 'Used in' });
 
@@ -84,12 +85,6 @@ export default async function ToolPage({ params }: ToolPageProps) {
             <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.10em]">
               <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
               <span className={cat.textClass}>{cat.label}</span>
-              {tool.is_curated && (
-                <>
-                  <span className="text-ink-faint">·</span>
-                  <span className="text-accent">★ Curated</span>
-                </>
-              )}
             </div>
 
             <h1 className="mt-3 text-4xl font-medium tracking-tight text-ink sm:text-5xl">
@@ -141,6 +136,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
             </Section>
           )}
 
+          {tool.pricing_md && (
+            <Section title="Pricing" id="pricing">
+              <Markdown source={tool.pricing_md} />
+            </Section>
+          )}
+
           {tool.usage_md && (
             <Section title="How it works" id="usage">
               <Markdown source={tool.usage_md} />
@@ -156,6 +157,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
           {tool.cheatsheet_md && (
             <Section title="Cheat sheet" id="cheatsheet">
               <Markdown source={tool.cheatsheet_md} />
+            </Section>
+          )}
+
+          {tool.resources_md && (
+            <Section title="Resources" id="resources">
+              <Markdown source={tool.resources_md} />
             </Section>
           )}
 
@@ -179,15 +186,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
           <ToolRelated tool={tool} all={allTools.tools} />
 
-          <KeyboardShortcutsSection cheatsheet={tool.cheatsheet_md} />
-
           <OftenCompared tool={tool} all={allTools.tools} />
         </div>
 
-        <div className="hidden lg:flex lg:flex-col lg:gap-6">
-          {sections.length > 0 && <ScrollSpyTOC sections={sections} />}
+        <aside className="hidden lg:block sticky top-24 self-start space-y-6">
           <ToolQuickInfo tool={tool} />
-        </div>
+          {sections.length > 0 && <ScrollSpyTOC sections={sections} />}
+        </aside>
       </div>
       <RecentlyViewedPusher slug={tool.slug} title={tool.title} />
     </div>

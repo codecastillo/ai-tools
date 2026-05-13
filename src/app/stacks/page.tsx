@@ -19,7 +19,7 @@ export default async function StacksPage() {
 
       <header className="mt-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
-          Curated stacks · ready-to-share
+          Stacks · ready-to-share
         </p>
         <h1 className="mt-3 text-4xl font-medium tracking-tight text-ink sm:text-5xl">
           Hand-picked combinations.

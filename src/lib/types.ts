@@ -15,6 +15,8 @@ export interface Tool {
   install_md: string | null;
   usage_md: string | null;
   cheatsheet_md: string | null;
+  pricing_md: string | null;
+  resources_md: string | null;
   asciinema_id: string | null;
   pricing: Pricing | null;
   difficulty: Difficulty | null;

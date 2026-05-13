@@ -89,10 +89,7 @@ export default function ScrollSpyTOC({ sections }: ScrollSpyTOCProps) {
   };
 
   return (
-    <nav
-      aria-label="On this page"
-      className="hidden lg:block sticky top-24 self-start"
-    >
+    <nav aria-label="On this page">
       <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
         On this page
       </p>

@@ -11,21 +11,6 @@ interface ToolCardProps {
   variant?: 'default' | 'featured';
 }
 
-function timeAgo(iso: string): string {
-  const t = new Date(iso).getTime();
-  if (Number.isNaN(t)) return '';
-  const diff = Date.now() - t;
-  const min = Math.round(diff / 60000);
-  if (min < 60) return `${min}m ago`;
-  const hr = Math.round(min / 60);
-  if (hr < 24) return `${hr}h ago`;
-  const day = Math.round(hr / 24);
-  if (day < 30) return `${day}d ago`;
-  const mo = Math.round(day / 30);
-  if (mo < 12) return `${mo}mo ago`;
-  return `${Math.round(day / 365)}y ago`;
-}
-
 export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
   const cat = categoryStyle(tool.category);
   const isFeatured = variant === 'featured';
@@ -55,13 +40,8 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           )}
         />
 
-        {/* Add-to-stack button. Owned by B4, kept absolute-positioned in top-right. */}
-        <div className="absolute top-3 right-3 z-10">
-          <AddToStackButton toolId={tool.id} title={tool.title} />
-        </div>
-
         {/* Category dot + label */}
-        <div className="flex items-center justify-between gap-3 pr-10">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em]">
             <span
               className={cn(
@@ -74,7 +54,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent-bright" />
         </div>
 
-        {/* Title + curated badge */}
+        {/* Title */}
         <h3
           className={cn(
             'mt-3 tracking-tight text-ink transition-colors',
@@ -82,11 +62,6 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           )}
         >
           {tool.title}
-          {tool.is_curated && (
-            <span className="ml-2 text-[10px] font-normal uppercase tracking-wider text-accent">
-              ★ curated
-            </span>
-          )}
         </h3>
 
         {tool.tagline && (
@@ -115,13 +90,13 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
         {/* Footer row */}
         <div
           className={cn(
-            'mt-5 flex items-center justify-between border-t pt-3 text-[11px] text-ink-faint transition-colors',
+            'mt-5 flex items-center justify-between gap-3 border-t pt-3 text-[11px] text-ink-faint transition-colors',
             isFeatured
               ? 'border-accent/15 group-hover:border-accent/30'
               : 'border-white/[0.04] group-hover:border-white/[0.14]',
           )}
         >
-          <span className="font-mono">added {timeAgo(tool.created_at)}</span>
+          <AddToStackButton toolId={tool.id} title={tool.title} variant="ghost" />
           <span className="font-medium transition-colors group-hover:text-accent">
             Read guide →
           </span>

@@ -18,7 +18,7 @@ export default function ToolMarquee({ tools }: ToolMarqueeProps) {
   // Double the list so the loop seamlessly tiles.
   const repeated = [...tools, ...tools];
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="rail-mask relative w-full overflow-hidden">
       <div className="marquee-track flex w-max gap-3 motion-reduce:animate-none">
         {repeated.map((t, i) => {
           const isClone = i >= tools.length;
@@ -39,15 +39,6 @@ export default function ToolMarquee({ tools }: ToolMarqueeProps) {
           );
         })}
       </div>
-      {/* Edge fade masks */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-[--color-bg] to-transparent"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-[--color-bg] to-transparent"
-      />
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
   const recentlyAdded = !isFiltering ? allTools.tools.slice(0, 5) : [];
 
   return (
-    <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pt-14 lg:px-10">
+    <div className="relative mx-auto max-w-screen-2xl px-6 pb-24 pt-10 sm:pt-14 lg:px-12">
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative motion-safe:section-in">
         {/* Dotted-grid backdrop, only behind the hero. */}
@@ -184,7 +184,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <div className="flex items-center gap-3">
                     <Layers className="h-5 w-5 text-accent-bright" aria-hidden />
                     <h2 className="text-display text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-                      Curated stacks
+                      Stacks
                     </h2>
                   </div>
                   <p className="mt-2 max-w-xl text-sm text-ink-dim sm:text-base">

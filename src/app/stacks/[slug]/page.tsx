@@ -58,7 +58,7 @@ export default async function StackDetail({ params }: StackPageProps) {
 
       <header className="mt-6 border-b border-white/[0.10] pb-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-accent">
-          {stack.is_curated ? 'Curated stack' : 'Shared stack'} · {stack.tools.length} tools
+          Stack · {stack.tools.length} tools
         </p>
         <h1 className="mt-3 text-4xl font-medium tracking-tight text-ink sm:text-5xl">
           {stack.name ?? stack.slug}

@@ -9,7 +9,7 @@ interface ToolQuickInfoProps {
 export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
   const lastVerified = tool.last_verified ? tool.last_verified.slice(0, 10) : null;
 
-  // Only render rows that have data — keeps the card focused.
+  // Only render rows that have data, keeps the card focused.
   const rows: Array<{ label: string; value: React.ReactNode }> = [];
   if (tool.pricing) rows.push({ label: 'Pricing', value: <span className="capitalize">{tool.pricing}</span> });
   if (tool.difficulty) rows.push({ label: 'Difficulty', value: <span className="capitalize">{tool.difficulty}</span> });
@@ -26,9 +26,9 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
     });
 
   return (
-    <aside
+    <div
       aria-label="Quick info"
-      className="hidden lg:block rounded-2xl border border-white/[0.12] bg-[--color-surface] p-5 space-y-4"
+      className="rounded-2xl border border-white/[0.12] bg-[--color-surface] p-5 space-y-4"
     >
       <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
         Quick info
@@ -76,6 +76,6 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
         Visit website
         <ArrowUpRight className="h-4 w-4" />
       </a>
-    </aside>
+    </div>
   );
 }

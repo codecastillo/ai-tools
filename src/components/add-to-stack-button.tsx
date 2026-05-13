@@ -13,9 +13,14 @@ import { cn } from '@/lib/cn';
 interface AddToStackButtonProps {
   toolId: string;
   title: string;
+  variant?: 'pill' | 'ghost';
 }
 
-export default function AddToStackButton({ toolId, title }: AddToStackButtonProps) {
+export default function AddToStackButton({
+  toolId,
+  title,
+  variant = 'pill',
+}: AddToStackButtonProps) {
   const [inStack, setInStack] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -28,6 +33,14 @@ export default function AddToStackButton({ toolId, title }: AddToStackButtonProp
 
   // Avoid hydration mismatch: render an inert placeholder until mounted.
   if (!mounted) {
+    if (variant === 'ghost') {
+      return (
+        <span
+          aria-hidden
+          className="inline-flex h-5 items-center gap-1 text-xs text-ink-faint opacity-0"
+        />
+      );
+    }
     return (
       <span
         aria-hidden
@@ -36,17 +49,49 @@ export default function AddToStackButton({ toolId, title }: AddToStackButtonProp
     );
   }
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (inStack) removeFromDraft(toolId);
+    else addToDraft(toolId);
+  };
+
+  if (variant === 'ghost') {
+    return (
+      <button
+        type="button"
+        aria-label={inStack ? `Remove ${title} from stack` : `Add ${title} to stack`}
+        title={inStack ? 'In stack' : 'Add to stack'}
+        onClick={handleClick}
+        className={cn(
+          'inline-flex items-center gap-1 text-xs transition-colors',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+          inStack
+            ? 'text-accent-bright hover:text-accent'
+            : 'text-ink-faint hover:text-accent',
+        )}
+      >
+        {inStack ? (
+          <>
+            <Check className="h-3.5 w-3.5" />
+            In stack
+          </>
+        ) : (
+          <>
+            <Plus className="h-3.5 w-3.5" />
+            Stack
+          </>
+        )}
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
       aria-label={inStack ? `Remove ${title} from stack` : `Add ${title} to stack`}
       title={inStack ? 'In stack' : 'Add to stack'}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (inStack) removeFromDraft(toolId);
-        else addToDraft(toolId);
-      }}
+      onClick={handleClick}
       className={cn(
         'group/add inline-flex h-7 items-center gap-1 rounded-md border px-1.5 text-[11px] font-medium transition-all',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',

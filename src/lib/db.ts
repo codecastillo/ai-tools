@@ -89,6 +89,8 @@ function rowToTool(row: Record<string, unknown>): Tool {
     install_md: (row.install_md as string | null) ?? null,
     usage_md: (row.usage_md as string | null) ?? null,
     cheatsheet_md: (row.cheatsheet_md as string | null) ?? null,
+    pricing_md: (row.pricing_md as string | null) ?? null,
+    resources_md: (row.resources_md as string | null) ?? null,
     asciinema_id: (row.asciinema_id as string | null) ?? null,
     pricing: (row.pricing as Tool['pricing']) ?? null,
     difficulty: (row.difficulty as Tool['difficulty']) ?? null,
@@ -116,7 +118,7 @@ function rowToStack(row: Record<string, unknown>): Stack {
 
 const TOOL_COLS = `
   id, slug, title, url, tagline, description, category, tags,
-  install_md, usage_md, cheatsheet_md, asciinema_id,
+  install_md, usage_md, cheatsheet_md, pricing_md, resources_md, asciinema_id,
   pricing, difficulty, time_to_value, status, submitter, is_curated,
   last_verified, created_at, approved_at
 `;

@@ -1,8 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Check, Copy } from 'lucide-react';
 import { cn } from '@/lib/cn';
+
+// Run as a layout effect on the client (pre-paint) but fall back to a
+// normal effect on the server so SSR doesn't warn. We use this to hide all
+// code lines BEFORE the first browser paint, avoiding a flash of the
+// fully-revealed SSR state before the typewriter starts.
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface CodeBlockProps {
   html: string;
@@ -13,42 +27,81 @@ interface CodeBlockProps {
    */
   label?: string;
   /**
-   * Hide the header row entirely (used by parent containers — e.g. OSTabs —
+   * Hide the header row entirely (used by parent containers, e.g. OSTabs,
    * that supply their own header / tab strip).
    */
   hideHeader?: boolean;
   /**
-   * If true (default), the block plays a one-shot typewriter animation the
-   * first time it scrolls into view. Already-in-view blocks skip the anim.
+   * If true (default), the block plays a one-shot line-reveal animation the
+   * first time it scrolls into view. Already-in-view blocks reveal on mount.
    */
   animate?: boolean;
   className?: string;
 }
 
-type AnimState = 'pre-reveal' | 'typing' | 'finishing' | 'done';
+// Animation timing constants. Total animation is clamped between these
+// bounds; per-line delay is derived from total / lineCount.
+const TOTAL_MIN_MS = 1200;
+const TOTAL_MAX_MS = 2200;
+const PER_LINE_MIN_MS = 90;
+const PER_LINE_MAX_MS = 220;
 
-// Adaptive per-character timing: every character is typed (no global duration
-// cap), but the per-char interval shrinks for longer blocks so total time
-// stays in a comfortable range. Do NOT reintroduce a global max-duration cap
-// here — it caused long blocks to snap mid-stream after the first ~75 chars.
-//   50-char block   → 10 ms/ch ≈ 500ms total → floor 700ms (≥20-char rule)
-//   200-char block  →  4 ms/ch ≈ 800ms total
-//   500-char block  →  3 ms/ch ≈ 1500ms total (clamped to min)
-//   1000-char block →  3 ms/ch ≈ 3000ms total (clamped to min)
-const TYPE_MS_PER_CHAR_MIN = 3;
-const TYPE_MS_PER_CHAR_MAX = 10;
-const TYPE_TARGET_TOTAL_MS = 800;
-/** Any block this long or longer must take at least MIN_TOTAL_DURATION_MS. */
-const MIN_DURATION_CHAR_THRESHOLD = 20;
-const MIN_TOTAL_DURATION_MS = 700;
+/**
+ * Inject `data-line-idx="N"` into every `<span class="line">` emitted by
+ * Shiki, so each line is independently addressable from JS/CSS. We do this
+ * as a pure string transform on the sanitized HTML so the server-rendered
+ * markup already carries the index attributes. The client mounts the
+ * existing DOM and just toggles per-line `opacity` for the reveal.
+ *
+ * Shiki keeps each line's spans on a single source line, so the per-line
+ * wrapper is always `<span class="line">…</span>` with no nested newlines.
+ * If the input doesn't contain any `<span class="line">` we fall back to
+ * splitting the inner `<code>…</code>` body by `\n` and wrapping each
+ * chunk ourselves.
+ */
+function annotateShikiLines(html: string): { html: string; lineCount: number } {
+  const lineSpan = /<span class="line">/g;
+  if (lineSpan.test(html)) {
+    let idx = 0;
+    const out = html.replace(/<span class="line">/g, () => {
+      const tag = `<span class="line" data-line-idx="${idx}">`;
+      idx += 1;
+      return tag;
+    });
+    return { html: out, lineCount: Math.max(1, idx) };
+  }
+  // Fallback: split the <code> body on `\n` and wrap each line.
+  const codeMatch = html.match(/(<code[^>]*>)([\s\S]*?)(<\/code>)/);
+  if (!codeMatch) {
+    return { html, lineCount: 1 };
+  }
+  const [, codeOpen, body, codeClose] = codeMatch;
+  const lines = body.split('\n');
+  const wrapped = lines
+    .map(
+      (line, i) =>
+        `<span class="line" data-line-idx="${i}">${line}</span>`,
+    )
+    .join('\n');
+  const next = html.replace(
+    codeMatch[0],
+    `${codeOpen}${wrapped}${codeClose}`,
+  );
+  return { html: next, lineCount: Math.max(1, lines.length) };
+}
 
 /**
  * Renders pre-sanitized Shiki HTML inside a styled surface with a
  * language pill and a copy-to-clipboard button.
  *
- * When `animate` is true (default), the block plays a one-shot typewriter
- * reveal the first time it enters the viewport. The Copy button always
- * copies the original `code` string regardless of animation state.
+ * When `animate` is true (default), the block reveals each line one at a
+ * time the first time it enters the viewport. Lines are toggled via direct
+ * DOM `style.opacity` writes against the nodes React injected through
+ * `dangerouslySetInnerHTML`. React doesn't reconcile those children, so
+ * direct manipulation is safe.
+ *
+ * The Copy button always copies the original `code` string regardless of
+ * animation state.
  */
 export default function CodeBlock({
   html,
@@ -60,124 +113,170 @@ export default function CodeBlock({
   className,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const startTsRef = useRef<number | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cursorRef = useRef<HTMLSpanElement | null>(null);
   const hasRunRef = useRef(false);
 
-  // Stable derived values.
-  const codeLength = code.length;
-  const lineCount = useMemo(() => {
-    if (!code) return 1;
-    return Math.max(1, code.split('\n').length);
-  }, [code]);
-  // Approximate min-height of the body so the placeholder reserves space.
-  // ~20px/line + 32px vertical padding (matches `[&_pre]:p-4` ≈ 16px each side).
-  const minBodyHeightPx = lineCount * 20 + 32;
+  // Pre-process the Shiki HTML once per `html` prop. The annotated HTML is
+  // what we feed to `dangerouslySetInnerHTML`; the SSR pass renders the
+  // exact same string so hydration markup matches.
+  const { annotatedHtml, lineCount } = useMemo(() => {
+    const r = annotateShikiLines(html);
+    return { annotatedHtml: r.html, lineCount: r.lineCount };
+  }, [html]);
 
-  // Lazy initial state so we can decide synchronously at first render whether
-  // we'll need to animate. SSR / non-window contexts always get 'done' to
-  // keep hydration markup stable. Once hydrated, the effect below either
-  // kicks off typing immediately (already-in-view) or sets up the observer.
-  const [animState, setAnimState] = useState<AnimState>(() => {
-    if (typeof window === 'undefined') return 'done';
-    if (!animate) return 'done';
-    if (code.length === 0) return 'done';
-    if (typeof IntersectionObserver === 'undefined') return 'done';
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    if (reduceMotion) return 'done';
-    // We'll commit the real decision (immediate vs observer) in the effect.
-    return 'pre-reveal';
-  });
-  const [typedCount, setTypedCount] = useState(0);
-
+  // One-time copy cleanup.
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      if (revealTimerRef.current) clearTimeout(revealTimerRef.current);
     };
   }, []);
 
-  // Drive the typewriter. Either kicks off immediately (block already in
-  // view at mount) or wires up an IntersectionObserver to start when the
-  // user scrolls to it.
+  // Pre-paint: synchronously hide every line so the user never sees the
+  // fully-revealed SSR markup between hydration and animation start. The
+  // post-paint effect below then either reveals immediately (reduce-motion
+  // / no observer / above-fold) or waits for scroll.
+  useIsomorphicLayoutEffect(() => {
+    if (!animate) return;
+    if (hasRunRef.current) return;
+    if (typeof window === 'undefined') return;
+    const body = bodyRef.current;
+    if (!body) return;
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    if (reduceMotion) return;
+    const lineNodes = body.querySelectorAll<HTMLElement>('[data-line-idx]');
+    for (const n of lineNodes) {
+      n.style.opacity = '0';
+      n.style.transition = 'opacity 150ms ease-out';
+    }
+    // We intentionally do NOT set hasRunRef here. That flag is the gate
+    // for the reveal driver below, which still needs to fire.
+  }, [animate, lineCount]);
+
+  // Drive the line-by-line reveal. Either kicks off immediately (block
+  // already in view at mount) or wires up an IntersectionObserver to start
+  // when the user scrolls to it.
   useEffect(() => {
     if (!animate) return;
     if (hasRunRef.current) return;
     if (typeof window === 'undefined') return;
-    if (codeLength === 0) return;
-    if (animState === 'done') return; // Already finalized (reduce-motion etc.)
+    if (lineCount === 0) return;
 
-    const el = wrapperRef.current;
-    if (!el) return;
+    const body = bodyRef.current;
+    const wrapper = wrapperRef.current;
+    if (!body || !wrapper) return;
 
-    if (typeof IntersectionObserver === 'undefined') {
-      setAnimState('done');
+    const lineNodes = Array.from(
+      body.querySelectorAll<HTMLElement>('[data-line-idx]'),
+    );
+    if (lineNodes.length === 0) {
+      hasRunRef.current = true;
       return;
     }
 
-    const startTyping = () => {
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+
+    if (reduceMotion) {
+      // Snap to fully revealed. (The pre-paint hide is skipped under
+      // reduce-motion so the lines are already at their natural opacity;
+      // we still set explicitly to be safe.)
+      for (const n of lineNodes) n.style.opacity = '1';
+      hasRunRef.current = true;
+      return;
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      // No observer support, just reveal everything immediately.
+      for (const n of lineNodes) n.style.opacity = '1';
+      hasRunRef.current = true;
+      return;
+    }
+
+    // Pre-build a single cursor element we can reposition by appending it
+    // to the current revealed line. CSS class `terminal-cursor` provides
+    // the blink keyframes.
+    const cursor = document.createElement('span');
+    cursor.setAttribute('aria-hidden', 'true');
+    cursor.className = 'terminal-cursor';
+    cursor.style.display = 'inline-block';
+    cursor.style.width = '0.55em';
+    cursor.style.height = '1em';
+    cursor.style.marginLeft = '2px';
+    cursor.style.verticalAlign = '-0.1em';
+    cursor.style.backgroundColor = 'var(--color-accent)';
+    cursorRef.current = cursor;
+
+    const startReveal = () => {
       if (hasRunRef.current) return;
       hasRunRef.current = true;
 
-      startTsRef.current = null;
-      setTypedCount(0);
-      setAnimState('typing');
-
-      const baseMsPerChar = Math.max(
-        TYPE_MS_PER_CHAR_MIN,
-        Math.min(
-          TYPE_MS_PER_CHAR_MAX,
-          TYPE_TARGET_TOTAL_MS / Math.max(1, codeLength),
-        ),
+      // Per-line delay: clamp(TOTAL_MIN/lines, PER_LINE_MIN, TOTAL_MAX/lines)
+      // guarantees the total animation lands within
+      // [TOTAL_MIN_MS, TOTAL_MAX_MS] for any plausible line count, with
+      // per-line delay bounded to a comfortable range.
+      const rawDelay = Math.floor(TOTAL_MIN_MS / Math.max(1, lineCount));
+      const maxDelay = Math.floor(TOTAL_MAX_MS / Math.max(1, lineCount));
+      const delay = Math.max(
+        PER_LINE_MIN_MS,
+        Math.min(PER_LINE_MAX_MS, Math.max(rawDelay, Math.min(maxDelay, rawDelay))),
       );
-      const baseDuration = baseMsPerChar * codeLength;
-      // Floor: ≥20-char blocks must take ≥700ms so they feel like typewriters.
-      const duration =
-        codeLength >= MIN_DURATION_CHAR_THRESHOLD
-          ? Math.max(MIN_TOTAL_DURATION_MS, baseDuration)
-          : baseDuration;
 
-      const step = (ts: number) => {
-        if (startTsRef.current == null) startTsRef.current = ts;
-        const elapsed = ts - startTsRef.current;
-        const progress = Math.min(1, elapsed / duration);
-        const next = Math.floor(progress * codeLength);
-        setTypedCount(next);
-        if (progress < 1) {
-          rafRef.current = requestAnimationFrame(step);
-        } else {
-          rafRef.current = null;
-          // 'finishing' = highlighted body becomes visible at opacity-1,
-          // overlay stays mounted for one more frame to avoid a font-metric
-          // flash, then we transition to 'done' which unmounts the overlay.
-          setAnimState('finishing');
-          rafRef.current = requestAnimationFrame(() => {
-            rafRef.current = requestAnimationFrame(() => {
-              setAnimState('done');
-            });
-          });
-        }
+      let current = 0;
+      const reveal = (idx: number) => {
+        const node = lineNodes[idx];
+        if (!node) return;
+        node.style.opacity = '1';
+        // Move the cursor to sit at the end of this freshly-revealed line.
+        // Appending to the line node keeps it visually attached to that
+        // text run regardless of code-block scroll position.
+        node.appendChild(cursor);
       };
-      rafRef.current = requestAnimationFrame(step);
+
+      // Reveal the first line immediately so there's a visible starting
+      // point, then tick the rest on the timer.
+      reveal(current);
+      current += 1;
+
+      const tick = () => {
+        if (current >= lineCount) {
+          // Done. Drop the cursor.
+          if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+          revealTimerRef.current = null;
+          return;
+        }
+        reveal(current);
+        current += 1;
+        revealTimerRef.current = setTimeout(tick, delay);
+      };
+      revealTimerRef.current = setTimeout(tick, delay);
     };
 
     // Probe: if this block is already in the viewport at mount, start
-    // immediately. IntersectionObserver can sometimes no-op for elements
-    // already in view at hydration on certain browsers, so we don't rely
-    // on it for the above-the-fold case.
-    const rect = el.getBoundingClientRect();
+    // immediately. IntersectionObserver can no-op for elements already in
+    // view at hydration on certain browsers, so we don't rely on it for the
+    // above-the-fold case.
+    const rect = wrapper.getBoundingClientRect();
     const viewportH =
       window.innerHeight || document.documentElement.clientHeight || 0;
     const alreadyInView = rect.bottom > 0 && rect.top < viewportH;
 
     if (alreadyInView) {
-      startTyping();
-      return;
+      startReveal();
+      return () => {
+        if (revealTimerRef.current) {
+          clearTimeout(revealTimerRef.current);
+          revealTimerRef.current = null;
+        }
+      };
     }
 
     const observer = new IntersectionObserver(
@@ -186,16 +285,22 @@ export default function CodeBlock({
           if (!entry.isIntersecting) continue;
           if (hasRunRef.current) break;
           observer.disconnect();
-          startTyping();
+          startReveal();
           break;
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.25 },
     );
 
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [animate, codeLength, animState]);
+    observer.observe(wrapper);
+    return () => {
+      observer.disconnect();
+      if (revealTimerRef.current) {
+        clearTimeout(revealTimerRef.current);
+        revealTimerRef.current = null;
+      }
+    };
+  }, [animate, lineCount]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -213,26 +318,14 @@ export default function CodeBlock({
         document.body.removeChild(ta);
       }
       setCopied(true);
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => setCopied(false), 1500);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 1500);
     } catch {
-      // Silently fail — clipboard permission denied, etc.
+      // Silently fail. Clipboard permission denied, etc.
     }
   }, [code]);
 
   const displayLabel = (label ?? lang ?? 'text').toLowerCase();
-
-  // Visibility of the highlighted (shiki) body.
-  // During pre-reveal/typing it stays hidden behind the overlay. Once
-  // typing completes we enter 'finishing' for one frame so the highlighted
-  // body paints at opacity-1 before the overlay is unmounted on the next
-  // frame — prevents a font-metric flash at the swap.
-  const showHighlighted =
-    animState === 'finishing' || animState === 'done';
-  const showOverlay =
-    animState === 'pre-reveal' ||
-    animState === 'typing' ||
-    animState === 'finishing';
 
   return (
     <div
@@ -275,37 +368,15 @@ export default function CodeBlock({
         {copied ? 'Code copied to clipboard' : ''}
       </span>
       <div
-        className="relative"
-        style={
-          showOverlay ? { minHeight: `${minBodyHeightPx}px` } : undefined
-        }
-      >
-        {/* Highlighted (final) body. We render it always so the DOM is stable;
-            we just toggle visibility to hand off from the typewriter overlay. */}
-        <div
-          aria-hidden={!showHighlighted}
-          className={cn(
-            'overflow-x-auto [&_pre]:!bg-transparent [&_pre]:p-4 [&_pre]:m-0 [&_code]:!bg-transparent [&_code]:!px-0 [&_code]:!py-0',
-            'transition-opacity duration-200 motion-reduce:transition-none',
-            showHighlighted ? 'opacity-100' : 'opacity-0',
-          )}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-        {/* Typewriter overlay. Sits on top during pre-reveal/typing/finishing. */}
-        {showOverlay && (
-          <pre
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 m-0 overflow-hidden p-4 font-mono text-[13px] leading-[1.55] text-ink-dim"
-          >
-            <code className="whitespace-pre">
-              {code.slice(0, typedCount)}
-              {animState !== 'finishing' && (
-                <span className="terminal-cursor text-accent">▍</span>
-              )}
-            </code>
-          </pre>
+        ref={bodyRef}
+        data-line-total={lineCount}
+        className={cn(
+          'relative overflow-x-auto',
+          '[&_pre]:!bg-transparent [&_pre]:p-4 [&_pre]:m-0',
+          '[&_code]:!bg-transparent [&_code]:!px-0 [&_code]:!py-0',
         )}
-      </div>
+        dangerouslySetInnerHTML={{ __html: annotatedHtml }}
+      />
     </div>
   );
 }
