@@ -4,6 +4,7 @@ import './globals.css';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
 import CommandPaletteProvider from '@/components/command-palette-provider';
+import KeyboardOverlayProvider from '@/components/keyboard-overlay';
 import KeyboardShortcuts from '@/components/keyboard-shortcuts';
 import StackPill from '@/components/stack-pill';
 
@@ -37,10 +38,12 @@ export default function RootLayout({
     >
       <body className="relative min-h-full flex flex-col">
         <CommandPaletteProvider>
-          <SiteHeader />
-          <main className="relative z-10 flex-1">{children}</main>
-          <SiteFooter />
-          <KeyboardShortcuts />
+          <KeyboardOverlayProvider>
+            <SiteHeader />
+            <main className="relative z-10 flex-1">{children}</main>
+            <SiteFooter />
+            <KeyboardShortcuts />
+          </KeyboardOverlayProvider>
         </CommandPaletteProvider>
         <StackPill />
       </body>

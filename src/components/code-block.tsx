@@ -27,10 +27,17 @@ interface CodeBlockProps {
 
 type AnimState = 'pre-reveal' | 'typing' | 'done';
 
-// Roughly one character every 12ms — clamped so very long blocks finish in
-// well under a second.
-const TYPE_MS_PER_CHAR = 12;
-const TYPE_MAX_DURATION_MS = 900;
+// Adaptive per-character timing: every character is typed (no global duration
+// cap), but the per-char interval shrinks for longer blocks so total time
+// stays in a comfortable range. Do NOT reintroduce a global max-duration cap
+// here — it caused long blocks to snap mid-stream after the first ~75 chars.
+//   50-char block   → 10 ms/ch ≈ 500ms total
+//   200-char block  →  4 ms/ch ≈ 800ms total
+//   500-char block  →  3 ms/ch ≈ 1500ms total (clamped to min)
+//   1000-char block →  3 ms/ch ≈ 3000ms total (clamped to min)
+const TYPE_MS_PER_CHAR_MIN = 3;
+const TYPE_MS_PER_CHAR_MAX = 10;
+const TYPE_TARGET_TOTAL_MS = 800;
 
 /**
  * Renders pre-sanitized Shiki HTML inside a styled surface with a
@@ -122,10 +129,14 @@ export default function CodeBlock({
           setTypedCount(0);
           setAnimState('typing');
 
-          const duration = Math.min(
-            codeLength * TYPE_MS_PER_CHAR,
-            TYPE_MAX_DURATION_MS,
+          const msPerChar = Math.max(
+            TYPE_MS_PER_CHAR_MIN,
+            Math.min(
+              TYPE_MS_PER_CHAR_MAX,
+              TYPE_TARGET_TOTAL_MS / Math.max(1, codeLength),
+            ),
           );
+          const duration = msPerChar * codeLength;
 
           const step = (ts: number) => {
             if (startTsRef.current == null) startTsRef.current = ts;

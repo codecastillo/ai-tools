@@ -213,7 +213,7 @@ export default function TerminalHero({ tools }: TerminalHeroProps) {
   return (
     <div
       className={cn(
-        'w-full max-w-2xl rounded-2xl border-2 border-white/[0.08]',
+        'w-full rounded-2xl border-2 border-white/[0.08]',
         'bg-[#14121C]/95 shadow-elevated overflow-hidden',
         'backdrop-blur-sm',
       )}

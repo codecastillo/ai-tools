@@ -2,13 +2,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react';
-import { getToolBySlug } from '@/lib/db';
+import { getToolBySlug, listApprovedTools } from '@/lib/db';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
 import Markdown from '@/components/markdown';
 import ScrollSpyTOC from '@/components/scrollspy-toc';
 import AsciinemaEmbed from '@/components/asciinema-embed';
 import RecentlyViewedPusher from '@/components/recently-viewed-pusher';
+import OftenCompared from '@/components/often-compared';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -46,7 +47,10 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
 
 export default async function ToolPage({ params }: ToolPageProps) {
   const { slug } = await params;
-  const tool = await getToolBySlug(slug);
+  const [tool, allTools] = await Promise.all([
+    getToolBySlug(slug),
+    listApprovedTools({ limit: 100 }),
+  ]);
   if (!tool) notFound();
 
   const cat = categoryStyle(tool.category);
@@ -169,6 +173,8 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </ul>
             </Section>
           )}
+
+          <OftenCompared tool={tool} all={allTools.tools} />
         </div>
 
         {sections.length > 0 && <ScrollSpyTOC sections={sections} />}

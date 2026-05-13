@@ -188,6 +188,29 @@
     animation: terminal-cursor 1s steps(2, end) infinite;
   }
 
+  /* Faint dotted-grid background — used behind the hero only. */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+    background-position: 0 0;
+  }
+
+  /* Slow auto-scrolling marquee for the tool-name strip. */
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track {
+    animation: marquee-scroll 40s linear infinite;
+    will-change: transform;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
   /* Soft horizontal-scroll affordance for category rails. */
   .rail-mask {
     -webkit-mask-image: linear-gradient(

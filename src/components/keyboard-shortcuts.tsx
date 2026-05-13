@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useCommandPalette } from './command-palette-provider';
+import { useKeyboardOverlay } from './keyboard-overlay';
 
 const TOOL_LINK_SELECTOR = 'a[href^="/tools/"]';
 
@@ -24,10 +25,22 @@ function focusableToolLinks(): HTMLAnchorElement[] {
 
 export default function KeyboardShortcuts() {
   const { open, setOpen, toggle } = useCommandPalette();
+  const {
+    open: overlayOpen,
+    setOpen: setOverlayOpen,
+    toggle: toggleOverlay,
+  } = useKeyboardOverlay();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const meta = e.metaKey || e.ctrlKey;
+
+      // Prioritize closing the keyboard-shortcut overlay if it's open.
+      if (overlayOpen && e.key === 'Escape') {
+        e.preventDefault();
+        setOverlayOpen(false);
+        return;
+      }
 
       // Cmd/Ctrl + K toggles palette regardless of focus context.
       if (meta && (e.key === 'k' || e.key === 'K')) {
@@ -41,6 +54,16 @@ export default function KeyboardShortcuts() {
 
       const active = document.activeElement;
       const inField = isEditable(active);
+
+      // `?` toggles the keyboard-shortcut overlay, unless typing.
+      if (e.key === '?' && !inField && !meta && !e.altKey) {
+        e.preventDefault();
+        toggleOverlay();
+        return;
+      }
+
+      // If the overlay is open, swallow other shortcuts (Esc handled above).
+      if (overlayOpen) return;
 
       // `/` focuses the first search input on the page, unless typing.
       if (e.key === '/' && !inField && !meta && !e.altKey && !e.shiftKey) {
@@ -83,7 +106,7 @@ export default function KeyboardShortcuts() {
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, setOpen, toggle]);
+  }, [open, setOpen, toggle, overlayOpen, setOverlayOpen, toggleOverlay]);
 
   return null;
 }

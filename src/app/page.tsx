@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Layers, Sparkles } from 'lucide-react';
+import { ArrowRight, Layers, Library, Sparkles } from 'lucide-react';
 import { listApprovedTools, listCuratedStacks } from '@/lib/db';
 import { CATEGORIES, type Category } from '@/lib/types';
 import { pickToolOfTheDay } from '@/lib/tool-of-the-day';
@@ -7,7 +7,9 @@ import { groupByCategory } from '@/lib/sections';
 import TerminalHero from '@/components/terminal-hero';
 import ToolOfTheDay from '@/components/tool-of-the-day';
 import CategorySection from '@/components/category-section';
-import AnimatedStat from '@/components/animated-stat';
+import StatCard from '@/components/stat-card';
+import PathCards from '@/components/path-cards';
+import ToolMarquee from '@/components/tool-marquee';
 import RecentlyViewed from '@/components/recently-viewed';
 import SearchBar from '@/components/search-bar';
 import CategoryTabs from '@/components/category-tabs';
@@ -49,54 +51,87 @@ export default async function HomePage({ searchParams }: HomeProps) {
     <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-10 sm:pt-14">
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative motion-safe:section-in">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
-          A reference for AI dev tooling
+        {/* Dotted-grid backdrop, only behind the hero. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-dot-grid opacity-50"
+        />
+
+        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center lg:gap-12">
+          <div className="min-w-0">
+            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
+              A reference for AI dev tooling
+            </p>
+
+            <h1 className="text-display mt-5 text-balance text-5xl text-ink sm:text-6xl lg:text-7xl">
+              Find your favorite AI tools.
+            </h1>
+
+            <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
+              We hand-pick AI tools real devs love — install guides, usage tips,
+              curated stacks, all in one place.
+            </p>
+
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link
+                href="#sections"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
+              >
+                Browse all tools
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/submit"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.10] bg-white/[0.02] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
+              >
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Submit a tool
+              </Link>
+            </div>
+          </div>
+
+          <div className="min-w-0">
+            <TerminalHero tools={allTools.tools} />
+          </div>
+        </div>
+
+        {/* Stat cards */}
+        <div className="mt-10 grid gap-3 sm:grid-cols-3">
+          <StatCard
+            icon={<Library className="h-4 w-4" aria-hidden />}
+            value={counts.all}
+            label="tools"
+            sublabel="curated guides"
+          />
+          <StatCard
+            icon={<Layers className="h-4 w-4" aria-hidden />}
+            value={4}
+            label="categories"
+            sublabel="claude, clis, frameworks, productivity"
+          />
+          <StatCard
+            icon={<Sparkles className="h-4 w-4" aria-hidden />}
+            value={stacks.length}
+            label="stacks"
+            sublabel="ready-to-share starter kits"
+          />
+        </div>
+      </section>
+
+      {/* ─── PICK YOUR PATH ───────────────────────────────────────────────── */}
+      <section className="mt-16 motion-safe:section-in">
+        <h2 className="text-display text-2xl text-ink">Pick your path</h2>
+        <p className="mt-2 text-sm text-ink-dim">
+          Quick-start entry points if you&apos;re not sure where to begin.
         </p>
-
-        <h1 className="text-display mt-5 text-balance text-5xl text-ink sm:text-7xl lg:text-8xl">
-          Find your favorite AI tools.
-        </h1>
-
-        <p className="mt-6 max-w-2xl text-balance text-lg text-ink-dim sm:text-xl">
-          We hand-pick AI tools real devs love — install guides, usage tips,
-          curated stacks, all in one place.
-        </p>
-
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link
-            href="#sections"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
-          >
-            Browse all tools
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/submit"
-            className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.10] bg-white/[0.02] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
-          >
-            <Sparkles className="h-4 w-4" aria-hidden />
-            Submit a tool
-          </Link>
+        <div className="mt-6">
+          <PathCards />
         </div>
+      </section>
 
-        <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-ink-mute">
-          <AnimatedStat value={counts.all} label="tools" />
-          <Dot />
-          <AnimatedStat value={4} label="categories" />
-          <Dot />
-          <AnimatedStat value={stacks.length} label="stacks" />
-          <Dot />
-          <span className="inline-flex items-baseline gap-1.5">
-            <span className="font-mono text-base font-semibold tabular-nums text-ink">
-              100%
-            </span>
-            <span className="text-ink-faint">open</span>
-          </span>
-        </div>
-
-        <div className="mt-10 motion-safe:section-in">
-          <TerminalHero tools={allTools.tools} />
-        </div>
+      {/* ─── TOOL-NAME MARQUEE ────────────────────────────────────────────── */}
+      <section aria-label="All tools" className="mt-12 motion-safe:section-in">
+        <ToolMarquee tools={allTools.tools} />
       </section>
 
       {/* ─── SEARCH ───────────────────────────────────────────────────────── */}
@@ -234,15 +269,6 @@ export default async function HomePage({ searchParams }: HomeProps) {
         </>
       )}
     </div>
-  );
-}
-
-function Dot() {
-  return (
-    <span
-      aria-hidden
-      className="inline-block h-1 w-1 rounded-full bg-accent/60"
-    />
   );
 }
 
