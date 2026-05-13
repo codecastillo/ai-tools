@@ -17,7 +17,7 @@ export default function SiteStatsBand({
   ];
 
   return (
-    <section className="border-y border-white/[0.06] bg-white/[0.02]">
+    <section className="border-y border-line bg-surface-1">
       <div className="mx-auto max-w-screen-2xl px-6 lg:px-12 py-12">
         <h2 className="text-2xl md:text-3xl font-medium text-ink text-center">
           By the numbers

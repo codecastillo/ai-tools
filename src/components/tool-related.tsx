@@ -13,7 +13,7 @@ export default function ToolRelated({ tool, all }: ToolRelatedProps) {
   const related = pickRelatedTools(tool, all, 3);
   if (related.length === 0) return null;
   return (
-    <section className="mt-10 border-t border-white/[0.10] pt-5">
+    <section className="mt-10 border-t border-line-2 pt-5">
       <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
         Related tools
       </p>
@@ -33,7 +33,7 @@ function RelatedCard({ tool }: { tool: Tool }) {
       <Link
         href={`/tools/${tool.slug}`}
         className={cn(
-          'group block h-full rounded-lg border border-white/[0.08] bg-white/[0.02] p-4 text-center',
+          'group block h-full rounded-lg border border-line bg-surface-1 p-4 text-center',
           'transition-all hover:-translate-y-0.5 hover:border-accent/30 hover:bg-accent/[0.04]',
         )}
       >

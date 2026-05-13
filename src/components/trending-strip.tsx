@@ -45,7 +45,7 @@ export function TrendingStrip({ tools }: Props) {
           <Link
             key={tool.id}
             href={`/tools/${tool.slug}`}
-            className="flex-none w-56 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 text-center hover:bg-white/[0.05] hover:border-white/[0.15] transition"
+            className="flex-none w-56 rounded-xl border border-line bg-surface-1 p-4 text-center hover:bg-surface-2 hover:border-line-2 transition"
           >
             <div className="flex items-center justify-start">
               <span className="text-[10px] uppercase tracking-wider text-ink-faint">

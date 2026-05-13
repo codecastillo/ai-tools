@@ -1,22 +1,44 @@
 @import "tailwindcss";
 
 /* Bun.sh-inspired warm-chunky palette.
- * Dark base with a touch of purple-warmth; bold coral accent; amber secondary. */
-@theme {
+ * Dark base with a touch of purple-warmth; bold coral accent; amber secondary.
+ *
+ * Tokens live as CSS custom properties on :root / [data-theme="..."] so we can
+ * swap palettes at runtime. The @theme block re-exposes them to Tailwind v4
+ * so existing utilities (bg-bg, text-ink, border-border, etc.) keep working
+ * while becoming theme-aware. */
+
+:root,
+[data-theme="dark"] {
+  /* Surfaces */
   --color-bg: #0E0D14;
   --color-bg-elevated: #191722;
   --color-surface: #1E1B28;
   --color-surface-hover: #262232;
 
+  /* Neutral surface levels used across cards/pills/inputs. The opacity values
+   * mirror the legacy bg-white/[0.0X] tokens so we can drop in `surface-1/2/3`
+   * everywhere without re-tuning the look. */
+  --color-surface-1: rgba(255, 255, 255, 0.02);
+  --color-surface-2: rgba(255, 255, 255, 0.04);
+  --color-surface-3: rgba(255, 255, 255, 0.06);
+
+  /* Lines */
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-2: rgba(255, 255, 255, 0.12);
+  --color-line-3: rgba(255, 255, 255, 0.20);
+
   --color-border: rgba(255, 255, 255, 0.12);
   --color-border-strong: rgba(255, 255, 255, 0.20);
   --color-border-accent: rgba(255, 107, 91, 0.45);
 
+  /* Text */
   --color-ink: #F6F2EC;
   --color-ink-dim: #C4BFB8;
   --color-ink-mute: #9A958E;
   --color-ink-faint: #6E6A66;
 
+  /* Accents stay constant across themes. */
   --color-accent: #FF6B5B;
   --color-accent-bright: #FF8470;
   --color-accent-dim: #D14F40;
@@ -28,6 +50,108 @@
   --color-warning: #FBBF24;
   --color-danger: #F87171;
 
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 1px 2px 0 rgba(0, 0, 0, 0.40);
+  --shadow-elevated: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.60);
+
+  /* Ambient halo intensities tuned to the active background. */
+  --halo-coral: rgba(255, 107, 91, 0.14);
+  --halo-amber: rgba(255, 179, 71, 0.10);
+
+  /* Dotted grid behind the hero. */
+  --dot-grid: rgba(255, 255, 255, 0.05);
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  /* Warm parchment base, paired with darker ink, so the coral/amber accents
+   * stay readable without re-tuning. */
+  --color-bg: #FAF7F2;
+  --color-bg-elevated: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F2EDE5;
+
+  --color-surface-1: rgba(0, 0, 0, 0.025);
+  --color-surface-2: rgba(0, 0, 0, 0.05);
+  --color-surface-3: rgba(0, 0, 0, 0.08);
+
+  --color-line: rgba(0, 0, 0, 0.08);
+  --color-line-2: rgba(0, 0, 0, 0.14);
+  --color-line-3: rgba(0, 0, 0, 0.22);
+
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-border-strong: rgba(0, 0, 0, 0.22);
+  --color-border-accent: rgba(232, 77, 61, 0.45);
+
+  --color-ink: #1A1310;
+  --color-ink-dim: rgba(26, 19, 16, 0.78);
+  --color-ink-mute: rgba(26, 19, 16, 0.58);
+  --color-ink-faint: rgba(26, 19, 16, 0.42);
+
+  /* Slightly deeper coral/amber for contrast on the warm parchment. */
+  --color-accent: #E84D3D;
+  --color-accent-bright: #FF6B5B;
+  --color-accent-dim: #B83A2D;
+  --color-accent-glow: rgba(232, 77, 61, 0.22);
+  --color-accent-2: #D88E2A;
+  --color-accent-warm: #FFE9D6;
+
+  --color-success: #2E8C49;
+  --color-warning: #B17C00;
+  --color-danger: #C8423B;
+
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.60) inset,
+    0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 1px 0 0 rgba(255, 255, 255, 0.80) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.18);
+
+  --halo-coral: rgba(232, 77, 61, 0.10);
+  --halo-amber: rgba(216, 142, 42, 0.08);
+
+  --dot-grid: rgba(0, 0, 0, 0.06);
+
+  color-scheme: light;
+}
+
+/* Re-expose the tokens to Tailwind v4. Each property here references the
+ * CSS variable above, so utilities like `bg-bg`, `text-ink`, `border-border`
+ * automatically swap with the [data-theme] attribute. */
+@theme {
+  --color-bg: var(--color-bg);
+  --color-bg-elevated: var(--color-bg-elevated);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+
+  --color-surface-1: var(--color-surface-1);
+  --color-surface-2: var(--color-surface-2);
+  --color-surface-3: var(--color-surface-3);
+
+  --color-line: var(--color-line);
+  --color-line-2: var(--color-line-2);
+  --color-line-3: var(--color-line-3);
+
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-border-accent: var(--color-border-accent);
+
+  --color-ink: var(--color-ink);
+  --color-ink-dim: var(--color-ink-dim);
+  --color-ink-mute: var(--color-ink-mute);
+  --color-ink-faint: var(--color-ink-faint);
+
+  --color-accent: var(--color-accent);
+  --color-accent-bright: var(--color-accent-bright);
+  --color-accent-dim: var(--color-accent-dim);
+  --color-accent-glow: var(--color-accent-glow);
+  --color-accent-2: var(--color-accent-2);
+  --color-accent-warm: var(--color-accent-warm);
+
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -37,19 +161,13 @@
   --radius-xl: 18px;
   --radius-2xl: 24px;
 
-  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
-    0 1px 2px 0 rgba(0, 0, 0, 0.40);
-  --shadow-elevated: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-    0 8px 24px -8px rgba(0, 0, 0, 0.60);
-  --shadow-glow: 0 0 40px -8px rgba(255, 107, 91, 0.45);
+  --shadow-card: var(--shadow-card);
+  --shadow-elevated: var(--shadow-elevated);
+  --shadow-glow: 0 0 40px -8px var(--color-accent-glow);
   --shadow-glow-amber: 0 0 32px -8px rgba(255, 179, 71, 0.40);
 }
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
   html,
   body {
     background: var(--color-bg);
@@ -57,6 +175,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   body {
@@ -75,7 +194,8 @@
     border-radius: 6px;
   }
 
-  /* Ambient warm gradient anchored top. Chunky bun.sh-style halo. */
+  /* Ambient warm gradient anchored top. Halo intensities are token-driven so
+   * the light theme reads as a soft sunrise instead of a glow on black. */
   body::before {
     content: "";
     position: fixed;
@@ -84,12 +204,12 @@
     background:
       radial-gradient(
         ellipse 80% 60% at 50% 0%,
-        rgba(255, 107, 91, 0.14),
+        var(--halo-coral),
         transparent 60%
       ),
       radial-gradient(
         ellipse 50% 40% at 80% 10%,
-        rgba(255, 179, 71, 0.10),
+        var(--halo-amber),
         transparent 60%
       );
     pointer-events: none;
@@ -133,6 +253,18 @@
     background: var(--color-surface-hover);
     border-color: var(--color-border-strong);
   }
+
+  /* Theme-aware translucent surface levels. Drop-in replacements for the old
+   * bg-white/[0.0X] tokens. They tint *up* on dark themes and *down* on
+   * light themes via the [data-theme] overrides above. */
+  .bg-surface-1 { background-color: var(--color-surface-1); }
+  .bg-surface-2 { background-color: var(--color-surface-2); }
+  .bg-surface-3 { background-color: var(--color-surface-3); }
+
+  /* Theme-aware borders. Use with `border` to set width. */
+  .border-line { border-color: var(--color-line); }
+  .border-line-2 { border-color: var(--color-line-2); }
+  .border-line-3 { border-color: var(--color-line-3); }
 }
 
 @layer utilities {
@@ -212,7 +344,7 @@
   /* Faint dotted-grid background, used behind the hero only. */
   .bg-dot-grid {
     background-image: radial-gradient(
-      rgba(255, 255, 255, 0.05) 1px,
+      var(--dot-grid) 1px,
       transparent 1px
     );
     background-size: 24px 24px;

@@ -21,7 +21,7 @@ export default function CompareBuilder({ tools }: CompareBuilderProps) {
   }
 
   return (
-    <div className="rounded-xl border border-white/[0.10] bg-[--color-surface] p-6">
+    <div className="rounded-xl border border-line-2 bg-[--color-surface] p-6">
       <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr]">
         <Picker label="Tool A" value={a} onChange={setA} tools={tools} exclude={b} />
         <div className="hidden items-center justify-center text-ink-faint sm:flex">vs</div>
@@ -64,7 +64,7 @@ function Picker({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full rounded-md border border-white/[0.14] bg-white/[0.02] px-3 py-2.5 text-sm text-ink focus:border-accent/60 focus:outline-none"
+        className="mt-2 w-full rounded-md border border-line-2 bg-surface-1 px-3 py-2.5 text-sm text-ink focus:border-accent/60 focus:outline-none"
       >
         <option value="">Choose a tool…</option>
         {tools

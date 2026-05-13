@@ -46,7 +46,7 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
         aria-hidden
         className="pointer-events-none absolute -inset-x-8 -inset-y-8 -z-10 gradient-featured-wash blur-3xl"
       />
-      <div className="gradient-featured overflow-hidden rounded-2xl border border-white/[0.10] bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="gradient-featured overflow-hidden rounded-2xl border border-line-2 bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
         <div className="grid gap-8 p-6 sm:p-10 md:grid-cols-5">
           {/* Left: 60%. Copy + CTA. */}
           <div className="text-center md:col-span-3">
@@ -101,7 +101,7 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.14] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:border-white/[0.18] hover:text-ink"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-line-2 px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:border-line-3 hover:text-ink"
               >
                 Visit site
               </a>
@@ -110,9 +110,9 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
 
           {/* Right: 40%. Static faux terminal. */}
           <div className="md:col-span-2">
-            <div className="overflow-hidden rounded-xl border-2 border-white/[0.14] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+            <div className="overflow-hidden rounded-xl border-2 border-line-2 bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               {/* macOS chrome */}
-              <div className="flex items-center gap-2 border-b border-white/[0.10] px-3 py-2">
+              <div className="flex items-center gap-2 border-b border-line-2 px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" aria-hidden />
@@ -158,8 +158,8 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium',
         variant === 'accent'
-          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
-          : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
+          ? 'border-line-2 bg-surface-2 text-accent-bright'
+          : 'border-line-2 bg-surface-1 text-ink-mute',
       )}
     >
       {children}

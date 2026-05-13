@@ -33,7 +33,7 @@ export default function GlossaryTooltip({ slug, children }: Props) {
       {open ? (
         <div
           role="tooltip"
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-lg border border-white/[0.10] bg-[#0e0a08] p-3 text-xs text-ink-dim shadow-xl z-50"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-lg border border-line-2 bg-[#0e0a08] p-3 text-xs text-ink-dim shadow-xl z-50"
         >
           <div className="text-sm font-medium text-ink">{term.term}</div>
           <div className="mt-1 text-ink-faint italic">{term.short}</div>

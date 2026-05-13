@@ -89,7 +89,7 @@ export default function TokenCalculator() {
   );
 
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6">
+    <div className="rounded-xl border border-line bg-surface-1 p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h3 className="text-lg font-medium text-ink">Token cost calculator</h3>
         <p className="text-xs text-ink-faint">
@@ -110,7 +110,7 @@ export default function TokenCalculator() {
                 'whitespace-nowrap rounded-md px-3 py-1.5 text-xs transition-colors',
                 active
                   ? 'bg-accent text-white'
-                  : 'border border-white/[0.08] bg-white/[0.02] text-ink-dim hover:border-white/[0.18] hover:text-ink',
+                  : 'border border-line bg-surface-1 text-ink-dim hover:border-line-3 hover:text-ink',
               )}
             >
               <span className="font-medium">{FAMILY_LABEL[r.family]}</span>
@@ -152,7 +152,7 @@ export default function TokenCalculator() {
       </div>
 
       {/* Result */}
-      <div className="mt-6 rounded-lg border border-white/[0.06] bg-white/[0.02] p-5">
+      <div className="mt-6 rounded-lg border border-line bg-surface-1 p-5">
         <div className="text-xs uppercase tracking-wider text-ink-faint">
           Estimated monthly cost
         </div>
@@ -176,7 +176,7 @@ export default function TokenCalculator() {
         </div>
 
         {selected.id !== cheapest.id && (
-          <div className="mt-4 inline-flex items-center gap-2 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-1.5 text-xs text-ink-dim">
+          <div className="mt-4 inline-flex items-center gap-2 rounded-md border border-line bg-surface-1 px-3 py-1.5 text-xs text-ink-dim">
             <Sparkles className="h-3 w-3 text-accent" />
             Cheapest option: {cheapest.vendor} {cheapest.model} at{' '}
             <span className="font-medium text-ink">{formatUsd(cheapestCost)}/mo</span>
@@ -233,7 +233,7 @@ function BreakdownRow({
   tone?: 'default' | 'success' | 'muted';
 }) {
   return (
-    <div className="flex items-center justify-between rounded-md border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+    <div className="flex items-center justify-between rounded-md border border-line bg-surface-1 px-3 py-2">
       <span className="text-xs uppercase tracking-wider text-ink-faint">
         {label}
       </span>

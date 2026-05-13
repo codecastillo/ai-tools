@@ -5,6 +5,7 @@ import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
 import AddToStackButton from '@/components/add-to-stack-button';
 import HoverPreview from '@/components/hover-preview';
+import WhatsNewBadge from '@/components/whats-new-badge';
 
 interface ToolCardProps {
   tool: Tool;
@@ -26,8 +27,8 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           'lift-on-hover hover:-translate-y-1',
           'hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]',
           isFeatured
-            ? 'gradient-featured border border-white/[0.12] bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/60'
-            : 'border-[1.5px] border-white/[0.14] bg-[--color-surface] hover:border-accent/40 hover:bg-[--color-surface-hover]',
+            ? 'gradient-featured border border-line-2 bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/60'
+            : 'border-[1.5px] border-line-2 bg-[--color-surface] hover:border-accent/40 hover:bg-[--color-surface-hover]',
         )}
       >
         {/* Subtle accent edge highlight on hover */}
@@ -76,13 +77,12 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
         )}
 
         {/* Pricing/difficulty/time chips */}
-        {(tool.pricing || tool.difficulty || tool.time_to_value) && (
-          <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-            {tool.pricing && <Chip>{tool.pricing}</Chip>}
-            {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
-            {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}
-          </div>
-        )}
+        <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+          <WhatsNewBadge tool={tool} />
+          {tool.pricing && <Chip>{tool.pricing}</Chip>}
+          {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
+          {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}
+        </div>
 
         {/* Spacer to push footer down */}
         <div className="flex-1" />
@@ -93,7 +93,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
             'mt-5 flex items-center justify-between gap-3 border-t pt-3 text-[11px] text-ink-faint transition-colors',
             isFeatured
               ? 'border-accent/15 group-hover:border-accent/30'
-              : 'border-white/[0.04] group-hover:border-white/[0.14]',
+              : 'border-line group-hover:border-line-2',
           )}
         >
           <AddToStackButton toolId={tool.id} title={tool.title} variant="ghost" />
@@ -118,8 +118,8 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-lg border px-2.5 py-1 text-[12px] font-medium transition-colors',
         variant === 'accent'
-          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
-          : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
+          ? 'border-line-2 bg-surface-2 text-accent-bright'
+          : 'border-line-2 bg-surface-1 text-ink-mute',
       )}
     >
       {children}

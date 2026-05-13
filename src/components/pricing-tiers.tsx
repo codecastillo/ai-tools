@@ -25,8 +25,8 @@ export default function PricingTiers({ tool, fallbackMd }: Props) {
           <div
             key={`${tier.name}-${i}`}
             className={cn(
-              'rounded-xl border border-white/[0.08] p-5 text-center',
-              tier.highlight ? 'bg-white/[0.04]' : 'bg-white/[0.02]',
+              'rounded-xl border border-line p-5 text-center',
+              tier.highlight ? 'bg-surface-2' : 'bg-surface-1',
             )}
           >
             {tier.highlight && (
@@ -57,7 +57,7 @@ export default function PricingTiers({ tool, fallbackMd }: Props) {
               )}
             </div>
 
-            <hr className="my-4 border-white/[0.06]" />
+            <hr className="my-4 border-line" />
 
             {tier.features.length > 0 && (
               <ul className="space-y-2 text-left text-sm text-ink-dim">

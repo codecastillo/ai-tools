@@ -28,7 +28,7 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
   return (
     <div
       aria-label="Quick info"
-      className="rounded-2xl border border-white/[0.12] bg-[--color-surface] p-5 space-y-4 text-center"
+      className="rounded-2xl border border-line-2 bg-[--color-surface] p-5 space-y-4 text-center"
     >
       <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
         Quick info
@@ -53,7 +53,7 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
               <span
                 key={tag}
                 className={cn(
-                  'inline-flex items-center rounded-md border border-white/[0.10] bg-white/[0.03] px-2 py-0.5',
+                  'inline-flex items-center rounded-md border border-line-2 bg-surface-1 px-2 py-0.5',
                   'text-[11px] text-ink-mute',
                 )}
               >

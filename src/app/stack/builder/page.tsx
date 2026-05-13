@@ -12,7 +12,7 @@ export default async function StackBuilderPage() {
   const { tools } = await listApprovedTools({ limit: 200 });
   return (
     <div className="mx-auto w-full max-w-5xl px-6 pb-20 pt-10">
-      <header className="border-b border-white/[0.10] pb-6">
+      <header className="border-b border-line-2 pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-accent">
           Build a stack
         </p>

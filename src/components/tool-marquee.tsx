@@ -28,7 +28,7 @@ export default function ToolMarquee({ tools }: ToolMarqueeProps) {
               href={`/tools/${t.slug}`}
               aria-hidden={isClone ? true : undefined}
               tabIndex={isClone ? -1 : 0}
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.03] px-4 py-2 text-sm text-ink-dim transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-ink"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line-2 bg-surface-1 px-4 py-2 text-sm text-ink-dim transition-colors hover:border-accent/40 hover:bg-accent/10 hover:text-ink"
             >
               <span
                 aria-hidden

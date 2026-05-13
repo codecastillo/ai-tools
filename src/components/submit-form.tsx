@@ -308,9 +308,9 @@ function Field({
 
 function inputClass(invalid: boolean): string {
   return cn(
-    'w-full rounded-md border bg-white/[0.02] px-3 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none transition-colors',
+    'w-full rounded-md border bg-surface-1 px-3 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:outline-none transition-colors',
     invalid
       ? 'border-danger/50 focus:border-danger'
-      : 'border-white/[0.10] focus:border-accent/60 focus:bg-white/[0.04]',
+      : 'border-line-2 focus:border-accent/60 focus:bg-surface-2',
   );
 }

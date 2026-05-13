@@ -221,7 +221,7 @@ export default function ToolFinderQuiz({ tools }: Props) {
   const recs = showResults ? recommend(tools, q1, q2, q3) : [];
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 md:p-10 text-center">
+    <div className="rounded-2xl border border-line bg-surface-1 p-8 md:p-10 text-center">
       <Sparkles className="h-5 w-5 text-accent mx-auto mb-2" />
       <h2 className="text-display text-2xl md:text-3xl tracking-tight text-ink">
         Find your tool in 30 seconds
@@ -289,7 +289,7 @@ function QuestionBlock<T extends string>({ prompt, options, onPick }: QuestionBl
             key={opt.value}
             type="button"
             onClick={() => onPick(opt.value)}
-            className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3 text-left hover:bg-white/[0.05] hover:border-white/[0.15] transition"
+            className="rounded-lg border border-line bg-surface-1 px-4 py-3 text-left hover:bg-surface-2 hover:border-line-2 transition"
           >
             <div className="text-sm font-medium text-ink">{opt.label}</div>
             {opt.hint && <div className="mt-0.5 text-xs text-ink-mute">{opt.hint}</div>}
@@ -326,7 +326,7 @@ function Results({ tools, onReset }: { tools: Tool[]; onReset: () => void }) {
             <Link
               key={tool.id}
               href={`/tools/${tool.slug}`}
-              className="group rounded-xl border border-white/[0.08] bg-white/[0.03] p-5 text-center hover:border-white/[0.15] hover:bg-white/[0.06] transition"
+              className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-3 transition"
             >
               <div className="text-[11px] uppercase tracking-wider text-ink-faint">
                 {cat.label}

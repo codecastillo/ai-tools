@@ -331,12 +331,12 @@ export default function CodeBlock({
     <div
       ref={wrapperRef}
       className={cn(
-        'group my-4 overflow-hidden rounded-lg border border-white/[0.10] bg-[--color-bg-elevated,#0a0a0a] text-[13px] shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_1px_2px_rgba(0,0,0,0.4)]',
+        'group my-4 overflow-hidden rounded-lg border border-line-2 bg-[--color-bg-elevated,#0a0a0a] text-[13px] shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_1px_2px_rgba(0,0,0,0.4)]',
         className,
       )}
     >
       {!hideHeader && (
-        <div className="flex items-center justify-between border-b border-white/[0.06] px-3 py-1.5">
+        <div className="flex items-center justify-between border-b border-line px-3 py-1.5">
           <span className="font-mono text-[11px] uppercase tracking-wide text-ink-faint">
             {displayLabel}
           </span>
@@ -345,8 +345,8 @@ export default function CodeBlock({
             onClick={handleCopy}
             aria-label={copied ? 'Copied' : 'Copy code'}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.02] px-2 py-1 text-[11px] font-medium text-ink-mute',
-              'transition-colors hover:border-white/[0.16] hover:bg-white/[0.06] hover:text-ink',
+              'inline-flex items-center gap-1.5 rounded-md border border-line bg-surface-1 px-2 py-1 text-[11px] font-medium text-ink-mute',
+              'transition-colors hover:border-line-2 hover:bg-surface-3 hover:text-ink',
               'motion-reduce:transition-none',
             )}
           >

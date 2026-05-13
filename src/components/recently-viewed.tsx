@@ -36,7 +36,7 @@ export default function RecentlyViewed() {
           <li key={r.slug}>
             <Link
               href={`/tools/${r.slug}`}
-              className="inline-flex items-center rounded-full border border-white/[0.14] bg-white/[0.03] px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent"
+              className="inline-flex items-center rounded-full border border-line-2 bg-surface-1 px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent"
             >
               {r.title}
             </Link>

@@ -27,6 +27,8 @@ import ToolCard from '@/components/tool-card';
 import ToolFinderQuiz from '@/components/tool-finder-quiz';
 import TrendingStrip from '@/components/trending-strip';
 import SiteStatsBand from '@/components/site-stats-band';
+import AiNewsTicker from '@/components/ai-news-ticker';
+import NewsletterSignup from '@/components/newsletter-signup';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,6 +65,17 @@ export default async function HomePage({ searchParams }: HomeProps) {
   const recentlyAdded = !isFiltering ? allTools.tools.slice(0, 5) : [];
   const recentChangelog = CHANGELOG.slice(0, 3);
 
+  const fourteenDaysMs = 14 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const newThisWeek = !isFiltering
+    ? allTools.tools.filter((t) => {
+        if (!t.created_at) return false;
+        const createdAt = new Date(t.created_at).getTime();
+        if (Number.isNaN(createdAt)) return false;
+        return now - createdAt <= fourteenDaysMs;
+      })
+    : [];
+
   return (
     <div className="relative mx-auto max-w-screen-2xl px-6 pb-24 pt-10 sm:pt-14 lg:px-12">
       {/* HERO */}
@@ -96,7 +109,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </Link>
             <Link
               href="/submit"
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.10] bg-white/[0.02] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-line-2 bg-surface-1 px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
             >
               <Sparkles className="h-4 w-4" aria-hidden />
               Submit a tool
@@ -132,7 +145,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
       </section>
 
       {/* TOOL FINDER QUIZ */}
-      <section className="mt-16 md:mt-20 motion-safe:section-in">
+      <section id="find-your-tool" className="mt-16 md:mt-20 motion-safe:section-in">
         <ToolFinderQuiz tools={allTools.tools} />
       </section>
 
@@ -186,7 +199,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </section>
           <section className="mt-6">
             {filtered.tools.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-white/[0.14] bg-white/[0.01] py-16 text-center text-sm text-ink-mute">
+              <p className="rounded-xl border border-dashed border-line-2 bg-surface-1 py-16 text-center text-sm text-ink-mute">
                 {q ? `No tools match "${q}".` : 'No tools in this category yet.'}
               </p>
             ) : (
@@ -212,6 +225,30 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <TrendingStrip tools={allTools.tools} />
           </section>
 
+          {/* NEW THIS WEEK */}
+          <section
+            aria-label="New this week"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <div className="mb-6 text-center">
+              <h2 className="text-display text-2xl text-ink">New this week</h2>
+              <p className="mt-2 text-sm text-ink-dim">
+                Tools added in the last 14 days.
+              </p>
+            </div>
+            {newThisWeek.length === 0 ? (
+              <p className="text-center text-sm text-ink-faint">
+                No new tools this week.
+              </p>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {newThisWeek.map((tool) => (
+                  <ToolCard key={tool.id} tool={tool} />
+                ))}
+              </div>
+            )}
+          </section>
+
           {/* WHAT'S NEW */}
           <section
             aria-label="What's new"
@@ -224,8 +261,8 @@ export default async function HomePage({ searchParams }: HomeProps) {
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+              <div className="group flex flex-col items-center rounded-2xl border border-line bg-surface-1 p-8 text-center md:p-10">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-2 text-accent">
                   <DollarSign className="h-5 w-5" aria-hidden />
                 </span>
                 <h3 className="mt-4 text-display text-xl text-ink">
@@ -244,8 +281,8 @@ export default async function HomePage({ searchParams }: HomeProps) {
                 </Link>
               </div>
 
-              <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+              <div className="group flex flex-col items-center rounded-2xl border border-line bg-surface-1 p-8 text-center md:p-10">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-2 text-accent">
                   <GraduationCap className="h-5 w-5" aria-hidden />
                 </span>
                 <h3 className="mt-4 text-display text-xl text-ink">
@@ -288,7 +325,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                 </div>
                 <Link
                   href="/stacks"
-                  className="inline-flex items-center gap-1.5 self-start rounded-md border border-white/[0.14] bg-white/[0.02] px-3 py-1.5 text-sm font-medium text-ink-mute transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright sm:self-end"
+                  className="inline-flex items-center gap-1.5 self-start rounded-md border border-line-2 bg-surface-1 px-3 py-1.5 text-sm font-medium text-ink-mute transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright sm:self-end"
                 >
                   Browse all
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -299,7 +336,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <Link
                     key={s.id}
                     href={`/stacks/${s.slug}`}
-                    className="group lift-on-hover flex h-full flex-col items-center rounded-2xl border border-l border-white/[0.10] bg-white/[0.02] p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
+                    className="group lift-on-hover flex h-full flex-col items-center rounded-2xl border border-l border-line-2 bg-surface-1 p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
                   >
                     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-accent-bright">
                       <span className="h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-200 group-hover:scale-150" />
@@ -314,7 +351,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                       </p>
                     )}
                     <div className="flex-1" />
-                    <div className="mt-5 flex w-full items-center justify-between border-t border-white/[0.05] pt-3 font-mono text-[11px] text-ink-faint transition-colors group-hover:border-white/[0.10]">
+                    <div className="mt-5 flex w-full items-center justify-between border-t border-line pt-3 font-mono text-[11px] text-ink-faint transition-colors group-hover:border-line-2">
                       <span>{s.tool_ids.length} tools</span>
                       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-accent-bright" />
                     </div>
@@ -339,8 +376,8 @@ export default async function HomePage({ searchParams }: HomeProps) {
             aria-label="Glossary"
             className="mt-16 md:mt-20 motion-safe:section-in"
           >
-            <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+            <div className="group flex flex-col items-center rounded-2xl border border-line bg-surface-1 p-8 text-center md:p-10">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-2 text-accent">
                 <BookOpen className="h-5 w-5" aria-hidden />
               </span>
               <h2 className="mt-4 text-display text-2xl text-ink">
@@ -360,13 +397,21 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </div>
           </section>
 
+          {/* AI ECOSYSTEM NEWS */}
+          <section
+            aria-label="AI ecosystem news"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <AiNewsTicker />
+          </section>
+
           {/* CHANGELOG TEASER */}
           <section
             aria-label="Latest from the site"
             className="mt-16 md:mt-20 motion-safe:section-in"
           >
             <div className="mb-6 flex flex-col items-center gap-2 text-center">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-2 text-accent">
                 <Newspaper className="h-5 w-5" aria-hidden />
               </span>
               <h2 className="mt-2 text-display text-2xl text-ink">
@@ -381,7 +426,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                 <li key={entry.date}>
                   <Link
                     href="/changelog"
-                    className="group flex h-full flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 text-center transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
+                    className="group flex h-full flex-col items-center rounded-2xl border border-line bg-surface-1 p-6 text-center transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
                   >
                     <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
                       {relativeTime(entry.date)}
@@ -414,6 +459,11 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </div>
           </section>
 
+          {/* NEWSLETTER SIGNUP */}
+          <section className="mt-16 md:mt-20">
+            <NewsletterSignup />
+          </section>
+
           {/* RECENTLY ADDED */}
           {recentlyAdded.length > 0 && (
             <section
@@ -434,7 +484,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <li key={t.id}>
                     <Link
                       href={`/tools/${t.slug}`}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.02] px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright"
+                      className="inline-flex items-center gap-2 rounded-full border border-line-2 bg-surface-1 px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright"
                     >
                       <span className="font-medium text-ink">{t.title}</span>
                       {t.tagline && (

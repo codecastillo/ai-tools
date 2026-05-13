@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function SiteFooter() {
   return (
-    <footer className="relative z-10 mt-24 border-t border-white/[0.10]">
+    <footer className="relative z-10 mt-24 border-t border-line-2">
       <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-6 py-8 text-sm text-ink-faint sm:flex-row sm:items-center">
         <p>
           A reference site for the AI tools real devs love.{' '}

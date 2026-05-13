@@ -19,7 +19,7 @@ export default async function AdminPage() {
           <ArrowLeft className="h-3.5 w-3.5" />
           Home
         </Link>
-        <div className="mt-8 rounded-xl border border-white/[0.10] bg-[--color-surface] p-7">
+        <div className="mt-8 rounded-xl border border-line-2 bg-[--color-surface] p-7">
           <div className="flex items-center gap-2 text-sm font-medium text-ink">
             <Lock className="h-4 w-4 text-accent" />
             Curator access

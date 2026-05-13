@@ -103,7 +103,7 @@ export default function StackBuilderClient({ catalog }: Props) {
     <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_minmax(0,360px)]">
       {/* Left column: draft list + meta inputs */}
       <section>
-        <div className="rounded-xl border border-white/[0.10] bg-[--color-surface] p-5">
+        <div className="rounded-xl border border-line-2 bg-[--color-surface] p-5">
           <div className="grid gap-4">
             <label className="block">
               <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-faint">
@@ -115,7 +115,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={120}
                 placeholder="My AI dev stack"
-                className="mt-1.5 w-full rounded-md border border-white/[0.14] bg-[--color-surface-hover] px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
+                className="mt-1.5 w-full rounded-md border border-line-2 bg-[--color-surface-hover] px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
               />
             </label>
             <label className="block">
@@ -128,7 +128,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                 rows={2}
                 maxLength={2000}
                 placeholder="What's the workflow this stack supports?"
-                className="mt-1.5 w-full resize-none rounded-md border border-white/[0.14] bg-[--color-surface-hover] px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
+                className="mt-1.5 w-full resize-none rounded-md border border-line-2 bg-[--color-surface-hover] px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
               />
             </label>
           </div>
@@ -152,7 +152,7 @@ export default function StackBuilderClient({ catalog }: Props) {
           </div>
 
           {draftTools.length === 0 ? (
-            <div className="mt-4 rounded-xl border border-dashed border-white/[0.14] bg-[--color-surface]/40 px-5 py-10 text-center">
+            <div className="mt-4 rounded-xl border border-dashed border-line-2 bg-[--color-surface]/40 px-5 py-10 text-center">
               <p className="text-sm text-ink-dim">
                 Your draft is empty. Browse tools and click the{' '}
                 <span className="inline-flex items-center align-middle">
@@ -169,9 +169,9 @@ export default function StackBuilderClient({ catalog }: Props) {
                 return (
                   <li
                     key={tool.id}
-                    className="flex items-center gap-3 rounded-lg border border-white/[0.10] bg-[--color-surface] px-4 py-3"
+                    className="flex items-center gap-3 rounded-lg border border-line-2 bg-[--color-surface] px-4 py-3"
                   >
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-white/[0.10] bg-white/[0.03] font-mono text-base font-medium text-ink-dim">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-line-2 bg-surface-1 font-mono text-base font-medium text-ink-dim">
                       {first}
                     </span>
                     <div className="min-w-0 flex-1">
@@ -195,7 +195,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                         title="Move up"
                         disabled={i === 0}
                         onClick={() => reorderDraft(i, i - 1)}
-                        className="grid h-7 w-7 place-items-center rounded-md border border-white/[0.10] text-ink-faint transition-colors hover:border-white/[0.14] hover:text-ink-dim disabled:cursor-not-allowed disabled:opacity-30"
+                        className="grid h-7 w-7 place-items-center rounded-md border border-line-2 text-ink-faint transition-colors hover:border-line-2 hover:text-ink-dim disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         <ArrowUp className="h-3.5 w-3.5" />
                       </button>
@@ -205,7 +205,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                         title="Move down"
                         disabled={i === draftTools.length - 1}
                         onClick={() => reorderDraft(i, i + 1)}
-                        className="grid h-7 w-7 place-items-center rounded-md border border-white/[0.10] text-ink-faint transition-colors hover:border-white/[0.14] hover:text-ink-dim disabled:cursor-not-allowed disabled:opacity-30"
+                        className="grid h-7 w-7 place-items-center rounded-md border border-line-2 text-ink-faint transition-colors hover:border-line-2 hover:text-ink-dim disabled:cursor-not-allowed disabled:opacity-30"
                       >
                         <ArrowDown className="h-3.5 w-3.5" />
                       </button>
@@ -214,7 +214,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                         aria-label={`Remove ${tool.title}`}
                         title="Remove"
                         onClick={() => removeFromDraft(tool.id)}
-                        className="grid h-7 w-7 place-items-center rounded-md border border-white/[0.10] text-ink-faint transition-colors hover:border-red-400/30 hover:bg-red-400/10 hover:text-red-300"
+                        className="grid h-7 w-7 place-items-center rounded-md border border-line-2 text-ink-faint transition-colors hover:border-red-400/30 hover:bg-red-400/10 hover:text-red-300"
                       >
                         <X className="h-3.5 w-3.5" />
                       </button>
@@ -244,7 +244,7 @@ export default function StackBuilderClient({ catalog }: Props) {
               'inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-all',
               canShare
                 ? 'border-accent/40 bg-accent/15 text-accent-bright hover:border-accent/60 hover:bg-accent/25'
-                : 'cursor-not-allowed border-white/[0.10] bg-white/[0.02] text-ink-faint',
+                : 'cursor-not-allowed border-line-2 bg-surface-1 text-ink-faint',
             )}
           >
             <Share2 className="h-4 w-4" />
@@ -258,7 +258,7 @@ export default function StackBuilderClient({ catalog }: Props) {
 
       {/* Right column: catalog picker */}
       <aside>
-        <div className="rounded-xl border border-white/[0.10] bg-[--color-surface] p-5">
+        <div className="rounded-xl border border-line-2 bg-[--color-surface] p-5">
           <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-ink-faint">
             Add tools
           </h2>
@@ -269,7 +269,7 @@ export default function StackBuilderClient({ catalog }: Props) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search the catalog"
-              className="w-full rounded-md border border-white/[0.14] bg-[--color-surface-hover] py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
+              className="w-full rounded-md border border-line-2 bg-[--color-surface-hover] py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink-faint focus:border-accent/40 focus:outline-none focus:ring-2 focus:ring-accent/20"
             />
           </div>
 
@@ -288,7 +288,7 @@ export default function StackBuilderClient({ catalog }: Props) {
                     key={tool.id}
                     type="button"
                     onClick={() => addToDraft(tool.id)}
-                    className="group flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 text-left transition-all hover:border-white/[0.14] hover:bg-[--color-surface-hover]"
+                    className="group flex w-full items-center gap-2.5 rounded-md border border-transparent px-2.5 py-2 text-left transition-all hover:border-line-2 hover:bg-[--color-surface-hover]"
                   >
                     <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', cat.dotClass)} />
                     <span className="min-w-0 flex-1">

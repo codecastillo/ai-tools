@@ -27,9 +27,9 @@ export default function PathCards() {
           <Link
             key={p.slug}
             href={p.href}
-            className="group relative flex h-full flex-col items-center rounded-2xl border-2 border-white/[0.14] bg-[--color-surface] p-6 text-center transition-all duration-200 hover:-translate-y-1 hover:border-white/[0.20] hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]"
+            className="group relative flex h-full flex-col items-center rounded-2xl border-2 border-line-2 bg-[--color-surface] p-6 text-center transition-all duration-200 hover:-translate-y-1 hover:border-line-3 hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]"
           >
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.03] text-accent-bright" aria-hidden>
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-1 text-accent-bright" aria-hidden>
               <Icon className="h-5 w-5" />
             </span>
             <h3 className="mt-3 text-xl font-semibold text-ink">{p.title}</h3>

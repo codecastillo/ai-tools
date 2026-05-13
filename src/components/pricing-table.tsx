@@ -132,7 +132,7 @@ export default function PricingTable({ rates }: Props) {
                   'rounded-md px-3 py-1.5 text-xs transition-colors',
                   active
                     ? 'bg-accent text-white'
-                    : 'border border-white/[0.08] bg-white/[0.02] text-ink-dim hover:border-white/[0.18] hover:text-ink',
+                    : 'border border-line bg-surface-1 text-ink-dim hover:border-line-3 hover:text-ink',
                 )}
               >
                 {opt.label}
@@ -161,7 +161,7 @@ export default function PricingTable({ rates }: Props) {
           return (
             <div
               key={r.id}
-              className="group rounded-md border border-white/[0.06] bg-white/[0.02] py-3 px-4 transition-colors hover:bg-white/[0.04] lg:grid lg:grid-cols-[1.1fr_1.4fr_0.8fr_0.9fr_0.9fr_0.8fr_1.6fr] lg:gap-2 lg:items-center lg:border-transparent lg:bg-transparent lg:rounded-md"
+              className="group rounded-md border border-line bg-surface-1 py-3 px-4 transition-colors hover:bg-surface-2 lg:grid lg:grid-cols-[1.1fr_1.4fr_0.8fr_0.9fr_0.9fr_0.8fr_1.6fr] lg:gap-2 lg:items-center lg:border-transparent lg:bg-transparent lg:rounded-md"
             >
               {/* Vendor */}
               <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ export default function PricingTable({ rates }: Props) {
         })}
 
         {filtered.length === 0 && (
-          <div className="rounded-md border border-white/[0.06] bg-white/[0.02] p-6 text-center text-sm text-ink-faint">
+          <div className="rounded-md border border-line bg-surface-1 p-6 text-center text-sm text-ink-faint">
             No models match this filter.
           </div>
         )}
@@ -290,7 +290,7 @@ function FilterPill({
         'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs transition-colors',
         active
           ? 'bg-accent text-white'
-          : 'border border-white/[0.08] bg-white/[0.02] text-ink-dim hover:border-white/[0.18] hover:text-ink',
+          : 'border border-line bg-surface-1 text-ink-dim hover:border-line-3 hover:text-ink',
       )}
     >
       {dotColor && (

@@ -68,7 +68,7 @@ export default function NotFoundSuggestions({ tools }: Props) {
           }
           aria-label="Search tools"
           autoFocus
-          className="w-full rounded-xl border border-white/[0.14] bg-white/[0.02] py-3 pl-11 pr-4 text-[15px] text-ink placeholder:text-ink-faint shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-200 focus:border-accent/80 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-accent/20 focus:shadow-[0_0_24px_-12px_var(--color-accent-glow)]"
+          className="w-full rounded-xl border border-line-2 bg-surface-1 py-3 pl-11 pr-4 text-[15px] text-ink placeholder:text-ink-faint shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-200 focus:border-accent/80 focus:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:shadow-[0_0_24px_-12px_var(--color-accent-glow)]"
         />
       </div>
 

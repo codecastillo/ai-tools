@@ -52,7 +52,7 @@ export default function GlossaryPage() {
               <span
                 key={letter}
                 aria-disabled="true"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.05] text-sm text-ink-faint/60"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-sm text-ink-faint/60"
               >
                 {letter}
               </span>
@@ -62,7 +62,7 @@ export default function GlossaryPage() {
             <Link
               key={letter}
               href={`#letter-${letter}`}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/[0.08] text-sm text-ink-dim transition-colors hover:border-accent/40 hover:text-accent"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-line text-sm text-ink-dim transition-colors hover:border-accent/40 hover:text-accent"
             >
               {letter}
             </Link>
@@ -84,7 +84,7 @@ export default function GlossaryPage() {
                 <article
                   key={`${term.slug}-${term.term}`}
                   id={`term-${term.slug}`}
-                  className="scroll-mt-24 rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 text-center"
+                  className="scroll-mt-24 rounded-xl border border-line bg-surface-1 p-6 text-center"
                 >
                   <h3 className="text-xl font-medium text-ink">{term.term}</h3>
                   <div className="mt-1 text-sm text-ink-faint italic">
@@ -99,7 +99,7 @@ export default function GlossaryPage() {
                         <Link
                           key={r}
                           href={`#term-${r}`}
-                          className="rounded-md border border-white/[0.08] px-2 py-0.5 text-xs text-ink-faint transition-colors hover:text-accent"
+                          className="rounded-md border border-line px-2 py-0.5 text-xs text-ink-faint transition-colors hover:text-accent"
                         >
                           {r}
                         </Link>

@@ -5,8 +5,8 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getToolBySlug } from '@/lib/db';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
-import Markdown from '@/components/markdown';
-import type { ToolDetail } from '@/lib/types';
+import CompareDelta from '@/components/compare-delta';
+import type { Tool } from '@/lib/types';
 
 interface ComparePageProps {
   params: Promise<{ a: string; b: string }>;
@@ -70,65 +70,42 @@ export default async function CompareDetailPage({ params }: ComparePageProps) {
       </header>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <Column tool={toolA} />
-        <Column tool={toolB} />
+        <ToolHeaderCard tool={toolA} accentColor="#FF6B5B" />
+        <ToolHeaderCard tool={toolB} accentColor="#4285F4" />
       </div>
+
+      <CompareDelta a={toolA} b={toolB} />
     </div>
   );
 }
 
-function Column({ tool }: { tool: ToolDetail }) {
+function ToolHeaderCard({ tool, accentColor }: { tool: Tool; accentColor: string }) {
   const cat = categoryStyle(tool.category);
   return (
-    <article className="rounded-xl border border-white/[0.10] bg-[--color-surface]">
-      <header className="border-b border-white/[0.10] p-6">
-        <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.10em]">
-          <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
-          <span className={cat.textClass}>{cat.short}</span>
-        </div>
-        <h2 className="mt-2 text-2xl font-medium text-ink">{tool.title}</h2>
-        {tool.tagline && <p className="mt-1 text-sm text-ink-dim">{tool.tagline}</p>}
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {tool.pricing && <MiniChip>{tool.pricing}</MiniChip>}
-          {tool.difficulty && <MiniChip>{tool.difficulty}</MiniChip>}
-          {tool.time_to_value && <MiniChip variant="accent">{tool.time_to_value}</MiniChip>}
-        </div>
-        <Link
-          href={`/tools/${tool.slug}`}
-          className="mt-4 inline-flex items-center gap-1 text-sm text-accent hover:text-accent-bright"
-        >
-          Full guide
-          <ArrowUpRight className="h-3.5 w-3.5" />
-        </Link>
-      </header>
-
-      <CompareSection title="Install">
-        <Markdown source={tool.install_md} />
-      </CompareSection>
-      <CompareSection title="Usage tips">
-        <Markdown source={tool.usage_md} />
-      </CompareSection>
-      <CompareSection title="Cheat sheet">
-        <Markdown source={tool.cheatsheet_md} />
-      </CompareSection>
+    <article className="rounded-xl border border-line-2 bg-[--color-surface] p-6">
+      <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.10em]">
+        <span
+          className="h-1.5 w-1.5 rounded-full"
+          style={{ backgroundColor: accentColor }}
+          aria-hidden
+        />
+        <span className={cat.textClass}>{cat.short}</span>
+      </div>
+      <h2 className="mt-2 text-2xl font-medium text-ink">{tool.title}</h2>
+      {tool.tagline && <p className="mt-1 text-sm text-ink-dim">{tool.tagline}</p>}
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {tool.pricing && <MiniChip>{tool.pricing}</MiniChip>}
+        {tool.difficulty && <MiniChip>{tool.difficulty}</MiniChip>}
+        {tool.time_to_value && <MiniChip variant="accent">{tool.time_to_value}</MiniChip>}
+      </div>
+      <Link
+        href={`/tools/${tool.slug}`}
+        className="mt-4 inline-flex items-center gap-1 text-sm text-accent hover:text-accent-bright"
+      >
+        Full guide
+        <ArrowUpRight className="h-3.5 w-3.5" />
+      </Link>
     </article>
-  );
-}
-
-function CompareSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="border-b border-white/[0.04] p-6 last:border-b-0">
-      <h3 className="text-sm font-medium uppercase tracking-[0.10em] text-ink-faint">
-        {title}
-      </h3>
-      <div className="mt-3">{children}</div>
-    </section>
   );
 }
 
@@ -144,8 +121,8 @@ function MiniChip({
       className={cn(
         'inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider',
         variant === 'accent'
-          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
-          : 'border-white/[0.14] bg-white/[0.02] text-ink-mute',
+          ? 'border-line-2 bg-surface-2 text-accent-bright'
+          : 'border-line-2 bg-surface-1 text-ink-mute',
       )}
     >
       {children}

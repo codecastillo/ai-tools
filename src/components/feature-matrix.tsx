@@ -60,7 +60,7 @@ export function FeatureMatrix({ tool }: Props) {
       <h3 className="text-sm uppercase tracking-wider text-ink-faint text-center mb-3">
         At a glance
       </h3>
-      <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] divide-y divide-white/[0.04]">
+      <div className="rounded-xl border border-line bg-surface-1 divide-y divide-white/[0.04]">
         {FEATURES.map((f) => {
           const has = f.predicate(tool);
           return (

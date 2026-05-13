@@ -187,11 +187,11 @@ const proseClasses = cn(
   '[&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-5',
   '[&_li]:my-1',
   '[&_a]:text-accent [&_a]:underline [&_a]:decoration-accent/40 [&_a:hover]:decoration-accent',
-  '[&_code]:font-mono [&_code]:text-[13px] [&_code]:rounded [&_code]:bg-white/[0.05] [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-ink',
+  '[&_code]:font-mono [&_code]:text-[13px] [&_code]:rounded [&_code]:bg-surface-2 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-ink',
   '[&_table]:my-4 [&_table]:w-full [&_table]:text-sm',
-  '[&_th]:border-b [&_th]:border-white/[0.10] [&_th]:py-2 [&_th]:px-3 [&_th]:text-left [&_th]:font-medium [&_th]:text-ink',
-  '[&_td]:border-b [&_td]:border-white/[0.04] [&_td]:py-2 [&_td]:px-3',
-  '[&_blockquote]:border-l-2 [&_blockquote]:border-white/[0.15] [&_blockquote]:pl-4 [&_blockquote]:text-ink-mute [&_blockquote]:italic',
+  '[&_th]:border-b [&_th]:border-line-2 [&_th]:py-2 [&_th]:px-3 [&_th]:text-left [&_th]:font-medium [&_th]:text-ink',
+  '[&_td]:border-b [&_td]:border-line [&_td]:py-2 [&_td]:px-3',
+  '[&_blockquote]:border-l-2 [&_blockquote]:border-line-2 [&_blockquote]:pl-4 [&_blockquote]:text-ink-mute [&_blockquote]:italic',
 );
 
 function TextSpan({ value }: { value: string }) {

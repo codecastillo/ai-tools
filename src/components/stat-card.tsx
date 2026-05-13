@@ -72,14 +72,14 @@ export default function StatCard({
   return (
     <div
       className={cn(
-        'group flex flex-col items-center rounded-2xl border-[1.5px] border-white/[0.14] bg-[--color-surface] p-5 text-center',
+        'group flex flex-col items-center rounded-2xl border-[1.5px] border-line-2 bg-[--color-surface] p-5 text-center',
         'transition-transform duration-150 hover:-translate-y-px',
       )}
     >
       <span
         className={cn(
           'inline-flex h-9 w-9 items-center justify-center rounded-xl',
-          'border border-white/[0.10] bg-white/[0.04]',
+          'border border-line-2 bg-surface-2',
           tintClass,
         )}
       >

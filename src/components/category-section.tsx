@@ -60,7 +60,7 @@ export default function CategorySection({ section }: CategorySectionProps) {
           href={`/?category=${section.category}`}
           className={cn(
             'inline-flex items-center gap-1.5 self-start rounded-md border px-3 py-1.5 text-sm font-medium transition-all duration-150 sm:self-end',
-            'border-white/[0.14] bg-white/[0.02] text-ink-mute hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright',
+            'border-line-2 bg-surface-1 text-ink-mute hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright',
           )}
         >
           {hasMore ? `View all ${total}` : 'View all'}

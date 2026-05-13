@@ -13,7 +13,7 @@ export default function AdminLoginForm() {
         autoFocus
         autoComplete="current-password"
         placeholder="Password"
-        className="w-full rounded-md border border-white/[0.10] bg-white/[0.02] px-3 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:border-accent/60 focus:outline-none"
+        className="w-full rounded-md border border-line-2 bg-surface-1 px-3 py-2.5 text-[15px] text-ink placeholder:text-ink-faint focus:border-accent/60 focus:outline-none"
       />
       {state && 'error' in state && state.error && (
         <p className="text-sm text-danger">{state.error}</p>

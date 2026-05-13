@@ -62,7 +62,7 @@ export function RadarChart({ strengths }: Props) {
     .join(' ');
 
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6">
+    <div className="rounded-xl border border-line bg-surface-1 p-6">
       <h3 className="text-sm uppercase tracking-wider text-ink-faint text-center mb-4">
         Strengths
       </h3>

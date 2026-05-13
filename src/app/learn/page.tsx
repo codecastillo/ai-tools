@@ -64,17 +64,17 @@ export default async function LearnPage() {
           return (
             <article
               key={path.slug}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8 text-center"
+              className="rounded-2xl border border-line bg-surface-1 p-6 md:p-8 text-center"
             >
               <Icon className="h-5 w-5 text-accent mx-auto" aria-hidden="true" />
               <h2 className="mt-3 text-2xl md:text-3xl font-medium text-ink">{path.title}</h2>
               <p className="mt-2 text-[15px] text-ink-dim">{path.tagline}</p>
 
               <div className="mt-4 flex flex-wrap justify-center gap-2">
-                <span className="inline-flex items-center rounded-md border border-white/[0.08] px-2 py-0.5 text-xs text-ink-faint">
+                <span className="inline-flex items-center rounded-md border border-line px-2 py-0.5 text-xs text-ink-faint">
                   Audience: {path.audience}
                 </span>
-                <span className="inline-flex items-center rounded-md border border-white/[0.08] px-2 py-0.5 text-xs text-ink-faint">
+                <span className="inline-flex items-center rounded-md border border-line px-2 py-0.5 text-xs text-ink-faint">
                   Est. {path.estimated_hours}h
                 </span>
               </div>
@@ -90,7 +90,7 @@ export default async function LearnPage() {
                     >
                       <span
                         aria-hidden="true"
-                        className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-white/[0.08] text-xs text-ink-faint"
+                        className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-line text-xs text-ink-faint"
                       >
                         {idx + 1}
                       </span>

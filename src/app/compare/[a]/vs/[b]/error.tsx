@@ -16,7 +16,7 @@ export default function CompareError({ error, reset }: ErrorProps) {
 
   return (
     <div className="mx-auto max-w-2xl px-6 pb-20 pt-16">
-      <div className="rounded-xl border border-white/[0.06] bg-[--color-surface] p-8">
+      <div className="rounded-xl border border-line bg-[--color-surface] p-8">
         <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] text-danger">
           <AlertCircle className="h-3.5 w-3.5" />
           Error
@@ -45,7 +45,7 @@ export default function CompareError({ error, reset }: ErrorProps) {
           </button>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.10] bg-white/[0.02] px-4 py-2 text-ink-dim transition-colors hover:border-accent/40 hover:text-ink"
+            className="inline-flex items-center gap-1.5 rounded-md border border-line-2 bg-surface-1 px-4 py-2 text-ink-dim transition-colors hover:border-accent/40 hover:text-ink"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Back home

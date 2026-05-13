@@ -17,14 +17,14 @@ export default function WorkflowCards({ workflows }: Props) {
         {workflows.map((workflow, idx) => (
           <details
             key={`${workflow.title}-${idx}`}
-            className="group rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 text-center open:bg-white/[0.04] transition"
+            className="group rounded-xl border border-line bg-surface-1 p-5 text-center open:bg-surface-2 transition"
           >
             <summary className="cursor-pointer list-none">
               <span className="text-lg font-medium text-ink">{workflow.title}</span>
               <ChevronDown className="h-4 w-4 text-ink-faint mx-auto mt-2 group-open:rotate-180 transition-transform" />
             </summary>
             <div className="mt-4">
-              <code className="block rounded-md bg-white/[0.05] p-3 text-left text-xs font-mono text-ink whitespace-pre-wrap">
+              <code className="block rounded-md bg-surface-2 p-3 text-left text-xs font-mono text-ink whitespace-pre-wrap">
                 {workflow.prompt}
               </code>
               <ol className="mt-4 list-decimal text-left max-w-md mx-auto space-y-1.5 pl-5 text-sm text-ink-mute">

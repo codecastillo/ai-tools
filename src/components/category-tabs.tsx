@@ -84,8 +84,8 @@ function TabLink({
       className={cn(
         'group inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all duration-150',
         active
-          ? 'border-2 border-white/[0.16] bg-white/[0.10] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
-          : 'border-2 border-transparent text-ink-mute hover:scale-105 hover:border-white/[0.14] hover:bg-white/[0.03] hover:text-ink-dim',
+          ? 'border-2 border-line-2 bg-surface-3 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
+          : 'border-2 border-transparent text-ink-mute hover:scale-105 hover:border-line-2 hover:bg-surface-1 hover:text-ink-dim',
       )}
     >
       {dotClass && (
@@ -103,7 +103,7 @@ function TabLink({
           'inline-flex items-center justify-center min-w-[20px] h-5 rounded-full text-[11px] tabular-nums transition-colors',
           active
             ? 'bg-accent/15 text-accent'
-            : 'bg-white/[0.06] text-ink-faint group-hover:text-ink-mute',
+            : 'bg-surface-3 text-ink-faint group-hover:text-ink-mute',
         )}
       >
         {count}

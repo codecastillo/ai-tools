@@ -94,6 +94,7 @@ function rowToTool(row: Record<string, unknown>): Tool {
     pricing_tiers: (row.pricing_tiers as Tool['pricing_tiers']) ?? null,
     strengths: (row.strengths as Tool['strengths']) ?? null,
     workflows: (row.workflows as Tool['workflows']) ?? null,
+    tool_dna: (row.tool_dna as Tool['tool_dna']) ?? null,
     popularity: typeof row.popularity === 'number' ? row.popularity : Number(row.popularity ?? 0),
     asciinema_id: (row.asciinema_id as string | null) ?? null,
     pricing: (row.pricing as Tool['pricing']) ?? null,
@@ -124,7 +125,7 @@ const TOOL_COLS = `
   id, slug, title, url, tagline, description, category, tags,
   install_md, usage_md, cheatsheet_md, pricing_md, resources_md, asciinema_id,
   pricing, difficulty, time_to_value, status, submitter, is_curated,
-  pricing_tiers, strengths, workflows, popularity,
+  pricing_tiers, strengths, workflows, tool_dna, popularity,
   last_verified, created_at, approved_at
 `;
 

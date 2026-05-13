@@ -56,7 +56,7 @@ export default async function NotFound() {
               <li key={t.slug}>
                 <Link
                   href={`/tools/${t.slug}`}
-                  className="group flex items-center justify-between rounded-md border border-white/[0.10] bg-white/[0.02] px-3 py-2 text-sm text-ink-dim shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04] hover:text-ink"
+                  className="group flex items-center justify-between rounded-md border border-line-2 bg-surface-1 px-3 py-2 text-sm text-ink-dim shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04] hover:text-ink"
                 >
                   <span className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-accent transition-transform group-hover:scale-150" />
@@ -73,7 +73,7 @@ export default async function NotFound() {
       <div className="mt-12 flex items-center gap-3">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-1.5 rounded-md border border-white/[0.10] bg-white/[0.02] px-4 py-2 text-sm text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.04] hover:text-ink"
+          className="inline-flex items-center justify-center gap-1.5 rounded-md border border-line-2 bg-surface-1 px-4 py-2 text-sm text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.04] hover:text-ink"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back home

@@ -18,7 +18,7 @@ export default function AdminQueue({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="flex items-start gap-4 rounded-xl border border-white/[0.10] bg-[--color-surface] px-5 py-4">
+    <div className="flex items-start gap-4 rounded-xl border border-line-2 bg-[--color-surface] px-5 py-4">
       <span className={cn('mt-2 h-2 w-2 rounded-full', cat.dotClass)} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -56,7 +56,7 @@ export default function AdminQueue({ tool }: { tool: Tool }) {
               type="button"
               onClick={() => act(() => rejectTool(tool.id))}
               disabled={isPending}
-              className="inline-flex items-center gap-1 rounded-md border border-white/[0.10] bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-ink-mute transition-colors hover:bg-white/[0.05] disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded-md border border-line-2 bg-surface-1 px-3 py-1.5 text-xs font-medium text-ink-mute transition-colors hover:bg-surface-2 disabled:opacity-50"
             >
               <X className="h-3.5 w-3.5" />
               Reject
@@ -70,7 +70,7 @@ export default function AdminQueue({ tool }: { tool: Tool }) {
           }}
           disabled={isPending}
           aria-label={`Delete ${tool.title}`}
-          className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-faint transition-colors hover:bg-white/[0.05] hover:text-danger disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-faint transition-colors hover:bg-surface-2 hover:text-danger disabled:opacity-50"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>

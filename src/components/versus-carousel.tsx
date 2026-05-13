@@ -28,12 +28,12 @@ export default function VersusCarousel({ tool, all }: Props) {
           <Link
             key={candidate.id}
             href={`/compare/${tool.slug}/vs/${candidate.slug}`}
-            className="group rounded-xl border border-white/[0.08] bg-white/[0.02] p-5 text-center hover:bg-white/[0.04] hover:border-white/[0.15] transition"
+            className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:bg-surface-2 hover:border-line-2 transition"
           >
             <div className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-wider text-ink-faint">
-              <span className="h-px bg-white/[0.10] flex-1 max-w-[20px]" />
+              <span className="h-px bg-surface-3 flex-1 max-w-[20px]" />
               vs
-              <span className="h-px bg-white/[0.10] flex-1 max-w-[20px]" />
+              <span className="h-px bg-surface-3 flex-1 max-w-[20px]" />
             </div>
             <div className="mt-3 text-base font-medium text-ink">
               {candidate.title}

@@ -12,7 +12,7 @@ export default function OftenCompared({ tool, all }: OftenComparedProps) {
   const related = pickRelatedTools(tool, all, 1)[0] ?? null;
   if (!related) return null;
   return (
-    <section className="mt-10 border-t border-white/[0.06] pt-5 text-center">
+    <section className="mt-10 border-t border-line pt-5 text-center">
       <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
         Often compared with
       </p>

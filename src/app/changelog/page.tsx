@@ -21,13 +21,13 @@ export default function ChangelogPage() {
         <p className="mt-3 text-lg text-ink-dim">Every shipped change, newest first.</p>
       </header>
 
-      <ol className="mt-12 relative border-l border-white/[0.08] pl-8 space-y-10">
+      <ol className="mt-12 relative border-l border-line pl-8 space-y-10">
         {CHANGELOG.map((entry, i) => {
           const meta = KIND_ICON[entry.kind];
           const Icon = meta.icon;
           return (
             <li key={i} id={`entry-${entry.date}-${i}`} className="relative">
-              <span className={`absolute -left-[2.4rem] flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.10] bg-[#0e0a08] ${meta.color}`}>
+              <span className={`absolute -left-[2.4rem] flex h-7 w-7 items-center justify-center rounded-full border border-line-2 bg-[#0e0a08] ${meta.color}`}>
                 <Icon className="h-3.5 w-3.5" />
               </span>
               <div className="flex flex-wrap items-baseline gap-2 text-xs">

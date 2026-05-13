@@ -1,6 +1,8 @@
 import { LLM_RATES } from '@/lib/llm-rates';
 import PricingTable from '@/components/pricing-table';
-import TokenCalculator from '@/components/token-calculator';
+import CostSimulator from '@/components/cost-simulator';
+import PriceScatter from '@/components/price-scatter';
+import PriceBarChart from '@/components/price-bar-chart';
 
 export const metadata = {
   title: 'LLM pricing · ai.tools',
@@ -25,25 +27,30 @@ export default function PricingPage() {
         </p>
       </header>
 
+      <section className="mt-12 grid gap-6 lg:grid-cols-2">
+        <PriceScatter rates={LLM_RATES} />
+        <PriceBarChart rates={LLM_RATES} />
+      </section>
+
       <section className="mt-12">
         <PricingTable rates={LLM_RATES} />
       </section>
 
       <section className="mt-16">
-        <TokenCalculator />
+        <CostSimulator />
       </section>
 
       <section className="mt-16 text-center">
         <h2 className="text-2xl font-medium text-ink">How to read this</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3 text-sm text-ink-dim text-left">
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-line bg-surface-1 p-5">
             <div className="text-ink font-medium">Input vs output</div>
             <p className="mt-2">
               Most APIs price output 3-5x higher than input. Long context =
               expensive input. Long answers = expensive output.
             </p>
           </div>
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-line bg-surface-1 p-5">
             <div className="text-ink font-medium">Prompt caching</div>
             <p className="mt-2">
               Anthropic, OpenAI, and Google all let you cache long stable
@@ -51,7 +58,7 @@ export default function PricingPage() {
               cost.
             </p>
           </div>
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-5">
+          <div className="rounded-xl border border-line bg-surface-1 p-5">
             <div className="text-ink font-medium">Batch APIs</div>
             <p className="mt-2">
               Submit non-urgent work as a batch and pay half. Perfect for

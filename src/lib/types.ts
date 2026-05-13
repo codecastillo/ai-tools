@@ -24,6 +24,14 @@ export interface Workflow {
   outcome: string;
 }
 
+export interface ToolDNA {
+  vibe: string;
+  best_for: string[];
+  not_for: string[];
+  typical_user: string;
+  signature_move: string;
+}
+
 export interface Tool {
   id: string;
   slug: string;
@@ -41,6 +49,7 @@ export interface Tool {
   pricing_tiers: PricingTier[] | null;
   strengths: StrengthAxis[] | null;
   workflows: Workflow[] | null;
+  tool_dna: ToolDNA | null;
   popularity: number;
   asciinema_id: string | null;
   pricing: Pricing | null;

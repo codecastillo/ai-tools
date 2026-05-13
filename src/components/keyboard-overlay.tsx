@@ -55,7 +55,7 @@ interface ShortcutRow {
 
 function Kbd({ children }: { children: ReactNode }) {
   return (
-    <kbd className="inline-flex min-w-[1.6rem] items-center justify-center rounded border border-white/[0.10] bg-white/[0.04] px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-ink-dim">
+    <kbd className="inline-flex min-w-[1.6rem] items-center justify-center rounded border border-line-2 bg-surface-2 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-ink-dim">
       {children}
     </kbd>
   );
@@ -104,7 +104,7 @@ function KeyboardOverlay() {
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-[calc(100%-2rem)] max-w-md rounded-2xl border-[1.5px] border-white/[0.10] bg-[--color-surface] p-7 shadow-2xl ring-1 ring-black/40"
+        className="w-[calc(100%-2rem)] max-w-md rounded-2xl border-[1.5px] border-line-2 bg-[--color-surface] p-7 shadow-2xl ring-1 ring-black/40"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-ink-faint">

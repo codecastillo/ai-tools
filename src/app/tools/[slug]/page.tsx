@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { ArrowLeft, ArrowUpRight, Check } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getToolBySlug, listApprovedTools } from '@/lib/db';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
@@ -17,6 +17,9 @@ import RadarChart from '@/components/radar-chart';
 import FeatureMatrix from '@/components/feature-matrix';
 import WorkflowCards from '@/components/workflow-cards';
 import VersusCarousel from '@/components/versus-carousel';
+import ToolDNA from '@/components/tool-dna';
+import FreshnessBadge from '@/components/freshness-badge';
+import WhatsNewBadge from '@/components/whats-new-badge';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -61,11 +64,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
   if (!tool) notFound();
 
   const cat = categoryStyle(tool.category);
-  const lastVerified = tool.last_verified ? tool.last_verified.slice(0, 10) : null;
 
-  const sections: Array<{ id: string; label: string }> = [
-    { id: 'at-a-glance', label: 'At a glance' },
-  ];
+  const sections: Array<{ id: string; label: string }> = [];
+  if (tool.tool_dna) sections.push({ id: 'dna', label: 'DNA' });
+  sections.push({ id: 'at-a-glance', label: 'At a glance' });
   if (tool.install_md) sections.push({ id: 'install', label: 'Install' });
   if (tool.pricing_md || tool.pricing_tiers)
     sections.push({ id: 'pricing', label: 'Pricing' });
@@ -92,7 +94,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
       <div className="mt-6 grid gap-12 lg:grid-cols-[1fr_260px]">
         <div className="min-w-0">
           {/* Header */}
-          <header className="border-b border-white/[0.06] pb-8">
+          <header className="border-b border-line pb-8">
             <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.10em]">
               <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
               <span className={cat.textClass}>{cat.label}</span>
@@ -113,6 +115,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
             )}
 
             <div className="mt-6 flex flex-wrap items-center gap-2">
+              <WhatsNewBadge tool={tool} />
               {tool.pricing && <Chip>{tool.pricing}</Chip>}
               {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
               {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}
@@ -131,16 +134,17 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 Visit website
                 <ArrowUpRight className="h-4 w-4" />
               </a>
-              {lastVerified && (
-                <span className="inline-flex items-center gap-1.5 text-xs text-ink-faint">
-                  <Check className="h-3.5 w-3.5 text-success" />
-                  Verified {lastVerified}
-                </span>
-              )}
+              <FreshnessBadge tool={tool} />
             </div>
           </header>
 
           {/* Sections */}
+          {tool.tool_dna && (
+            <Section title="Tool DNA" id="dna">
+              <ToolDNA tool={tool} />
+            </Section>
+          )}
+
           <Section title="At a glance" id="at-a-glance">
             <div className="grid gap-6 lg:grid-cols-2">
               {tool.strengths && tool.strengths.length > 0 && (
@@ -203,7 +207,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                   <li key={s.id}>
                     <Link
                       href={`/stacks/${s.slug}`}
-                      className="group flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.02] px-4 py-3 transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
+                      className="group flex items-center justify-between rounded-lg border border-line bg-surface-1 px-4 py-3 transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
                     >
                       <span className="font-medium text-ink">{s.name ?? s.slug}</span>
                       <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
@@ -264,8 +268,8 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider',
         variant === 'accent'
-          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
-          : 'border-white/[0.08] bg-white/[0.02] text-ink-mute',
+          ? 'border-line-2 bg-surface-2 text-accent-bright'
+          : 'border-line bg-surface-1 text-ink-mute',
       )}
     >
       {children}

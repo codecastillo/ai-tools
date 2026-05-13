@@ -97,7 +97,7 @@ export default function HoverPreview({ tool, children }: HoverPreviewProps) {
           className={cn(
             'pointer-events-none absolute z-30 top-full left-0 mt-2',
             'w-80 max-w-[calc(100vw-2rem)]',
-            'surface block rounded-2xl border-[1.5px] border-white/[0.15] p-4',
+            'surface block rounded-2xl border-[1.5px] border-line-2 p-4',
             'shadow-[0_0_40px_-8px_var(--color-accent-glow)]',
             reduced
               ? 'opacity-100'
@@ -111,7 +111,7 @@ export default function HoverPreview({ tool, children }: HoverPreviewProps) {
           {snippet && (
             <span
               className={cn(
-                'mt-3 block rounded-lg border border-white/[0.10] bg-black/40',
+                'mt-3 block rounded-lg border border-line-2 bg-black/40',
                 'px-3 py-2 font-mono text-[12px] leading-relaxed text-ink',
                 'overflow-hidden whitespace-pre',
               )}
