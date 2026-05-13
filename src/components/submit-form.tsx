@@ -96,7 +96,7 @@ export default function SubmitForm() {
         setSubmitter('');
         setPrefilled(new Set());
         setDupes([]);
-        setToast("Thanks — we'll review and add it soon.");
+        setToast("Got it! 🎉 We'll review and add it soon.");
         window.setTimeout(() => setToast(null), 4500);
       }
     });

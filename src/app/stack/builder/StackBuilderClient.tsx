@@ -22,6 +22,7 @@ import {
   reorderDraft,
 } from '@/lib/draft-stack';
 import { cn } from '@/lib/cn';
+import { celebrate } from '@/lib/confetti';
 import { shareStack } from './actions';
 
 interface Props {
@@ -85,6 +86,7 @@ export default function StackBuilderClient({ catalog }: Props) {
         return;
       }
       const slug = result.slug;
+      void celebrate();
       clearDraft();
       router.push(`/stacks/${slug}`);
     });

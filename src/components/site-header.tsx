@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import CommandPaletteTrigger from './command-palette-trigger';
+import SurpriseMeButton from './surprise-me-button';
 
 export default function SiteHeader() {
   return (
@@ -17,6 +18,7 @@ export default function SiteHeader() {
             ai.tools
           </Link>
           <CommandPaletteTrigger />
+          <SurpriseMeButton />
         </div>
         <nav className="flex items-center gap-1 text-sm">
           <Link

@@ -33,14 +33,13 @@ export default async function NotFound() {
       />
 
       <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
-        404 · Not found
+        404 · Let&apos;s get you back on track
       </p>
       <h1 className="mt-4 text-balance text-4xl font-medium tracking-tight text-ink sm:text-5xl">
-        That page doesn&apos;t exist.
+        We couldn&apos;t find that page.
       </h1>
       <p className="mt-3 text-balance text-base text-ink-dim">
-        The tool, stack, or page you&apos;re looking for hasn&apos;t been added (or hasn&apos;t been
-        approved yet). Search the catalog or pick a popular tool below.
+        But here are some tools we love. Or use the search.
       </p>
 
       <div className="mt-8">

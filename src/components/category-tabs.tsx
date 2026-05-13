@@ -13,7 +13,7 @@ interface CategoryTabsProps {
 // arbitrary classes from runtime strings, so we drive the color via inline
 // style on the active tab.
 const CATEGORY_HEX: Record<Category | 'all', string> = {
-  all: '#5E6AD2',
+  all: '#FF6B5B',
   claude: '#FF9F66',
   clis: '#86EFAC',
   frameworks: '#5E6AD2',
@@ -82,16 +82,16 @@ function TabLink({
           : undefined
       }
       className={cn(
-        'group inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-all duration-150',
+        'group inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all duration-150',
         active
-          ? 'border-white/[0.16] bg-white/[0.08] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
-          : 'border-transparent text-ink-mute hover:border-white/[0.08] hover:bg-white/[0.03] hover:text-ink-dim',
+          ? 'border-2 border-white/[0.16] bg-white/[0.10] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
+          : 'border-2 border-transparent text-ink-mute hover:scale-105 hover:border-white/[0.08] hover:bg-white/[0.03] hover:text-ink-dim',
       )}
     >
       {dotClass && (
         <span
           className={cn(
-            'h-1.5 w-1.5 rounded-full transition-transform duration-150',
+            'h-2 w-2 rounded-full transition-transform duration-150',
             dotClass,
             active ? 'scale-125' : 'group-hover:scale-125',
           )}
@@ -100,8 +100,10 @@ function TabLink({
       <span>{label}</span>
       <span
         className={cn(
-          'text-[11px] tabular-nums transition-colors',
-          active ? 'text-ink-dim' : 'text-ink-faint group-hover:text-ink-mute',
+          'inline-flex items-center justify-center min-w-[20px] h-5 rounded-full text-[11px] tabular-nums transition-colors',
+          active
+            ? 'bg-accent/15 text-accent'
+            : 'bg-white/[0.06] text-ink-faint group-hover:text-ink-mute',
         )}
       >
         {count}

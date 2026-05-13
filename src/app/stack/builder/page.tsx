@@ -14,13 +14,13 @@ export default async function StackBuilderPage() {
     <div className="mx-auto w-full max-w-5xl px-6 pb-20 pt-10">
       <header className="border-b border-white/[0.06] pb-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-accent">
-          Stack builder
+          Build a stack
         </p>
         <h1 className="mt-3 text-3xl font-medium tracking-tight text-ink sm:text-4xl">
-          Compose your stack
+          Make it your own.
         </h1>
         <p className="mt-3 max-w-2xl text-sm text-ink-dim">
-          Reorder the tools you&rsquo;ve picked, give the stack a name, and share a public URL.
+          Pick the tools that fit your workflow, share the link with your team or class.
         </p>
       </header>
       <StackBuilderClient catalog={tools} />

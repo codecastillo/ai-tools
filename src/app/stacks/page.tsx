@@ -19,14 +19,13 @@ export default async function StacksPage() {
 
       <header className="mt-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
-          Curated stacks
+          Curated stacks · ready-to-share
         </p>
         <h1 className="mt-3 text-4xl font-medium tracking-tight text-ink sm:text-5xl">
           Hand-picked combinations.
         </h1>
         <p className="mt-3 max-w-2xl text-base text-ink-dim">
-          Each stack is a set of tools that work well together for a specific workflow.
-          Use them as a starting point, then make it your own.
+          Each stack is a starter kit. Use it as a starting point and remix it.
         </p>
       </header>
 

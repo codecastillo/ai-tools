@@ -18,11 +18,11 @@ export default function SubmitPage() {
           Submit a tool
         </p>
         <h1 className="mt-3 text-3xl font-medium tracking-tight text-ink sm:text-4xl">
-          Found something we should add?
+          Know a tool we&apos;re missing?
         </h1>
         <p className="mt-3 text-base text-ink-dim">
-          Paste a URL. We'll fetch the title and description, you fill in the rest, and a
-          curator publishes after a quick review.
+          Paste the URL — we&apos;ll grab the title and description for you. A curator
+          polishes the guide before it goes live.
         </p>
       </header>
 
