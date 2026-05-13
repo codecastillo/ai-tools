@@ -21,7 +21,7 @@ export default async function NotFound() {
     }
   } catch {
     // DB unavailable (e.g. during build with empty DATABASE_URL). Fall back to
-    // a generic 404 — `tools` stays empty, the client island will just show
+    // a generic 404. `tools` stays empty, the client island will just show
     // a search field with no suggestions.
   }
 
@@ -56,7 +56,7 @@ export default async function NotFound() {
               <li key={t.slug}>
                 <Link
                   href={`/tools/${t.slug}`}
-                  className="group flex items-center justify-between rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-sm text-ink-dim shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04] hover:text-ink"
+                  className="group flex items-center justify-between rounded-md border border-white/[0.10] bg-white/[0.02] px-3 py-2 text-sm text-ink-dim shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04] hover:text-ink"
                 >
                   <span className="flex items-center gap-2">
                     <span className="h-1.5 w-1.5 rounded-full bg-accent transition-transform group-hover:scale-150" />

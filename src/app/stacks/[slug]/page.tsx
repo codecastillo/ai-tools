@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: StackPageProps): Promise<Meta
   if (!stack) return { title: 'Not found' };
 
   const name = stack.name ?? stack.slug;
-  const title = `${name} — ai.tools`;
+  const title = `${name} · ai.tools`;
   const description =
     stack.description ?? `A ${stack.tools.length}-tool AI dev stack on ai.tools`;
 
@@ -56,7 +56,7 @@ export default async function StackDetail({ params }: StackPageProps) {
         All stacks
       </Link>
 
-      <header className="mt-6 border-b border-white/[0.06] pb-8">
+      <header className="mt-6 border-b border-white/[0.10] pb-8">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-accent">
           {stack.is_curated ? 'Curated stack' : 'Shared stack'} · {stack.tools.length} tools
         </p>
@@ -75,7 +75,7 @@ export default async function StackDetail({ params }: StackPageProps) {
             <li key={tool.id}>
               <Link
                 href={`/tools/${tool.slug}`}
-                className="group flex items-center gap-4 rounded-xl border border-white/[0.06] bg-[--color-surface] px-5 py-4 transition-all hover:-translate-y-px hover:border-white/[0.14] hover:bg-[--color-surface-hover]"
+                className="group flex items-center gap-4 rounded-xl border border-white/[0.10] bg-[--color-surface] px-5 py-4 transition-all hover:-translate-y-px hover:border-white/[0.14] hover:bg-[--color-surface-hover]"
               >
                 <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-white/[0.04] font-mono text-sm font-medium text-ink-faint">
                   {String(i + 1).padStart(2, '0')}

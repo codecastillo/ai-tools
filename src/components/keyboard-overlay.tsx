@@ -88,10 +88,6 @@ function KeyboardOverlay() {
       ],
     },
     { label: 'Search', keys: [<Kbd key="slash">/</Kbd>] },
-    {
-      label: 'Surprise me with a random tool',
-      keys: [<Kbd key="dice">🎲</Kbd>],
-    },
     { label: 'Move down through tool cards', keys: [<Kbd key="j">J</Kbd>] },
     { label: 'Move up through tool cards', keys: [<Kbd key="k">K</Kbd>] },
     { label: 'Open the focused tool', keys: [<Kbd key="enter">↵</Kbd>] },

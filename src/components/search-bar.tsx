@@ -62,7 +62,7 @@ export default function SearchBar({ placeholder = 'Search tools…' }: SearchBar
         onChange={onChange}
         placeholder={placeholder}
         aria-label="Search tools"
-        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.02] py-3.5 pl-11 pr-14 text-[15px] text-ink placeholder:text-ink-faint shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-200 focus:border-accent/80 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-accent/20 focus:shadow-[0_0_24px_-12px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]"
+        className="w-full rounded-xl border border-white/[0.14] bg-white/[0.02] py-3.5 pl-11 pr-14 text-[15px] text-ink placeholder:text-ink-faint shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all duration-200 focus:border-accent/80 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-accent/20 focus:shadow-[0_0_24px_-12px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]"
       />
       <kbd className="pointer-events-none absolute right-4 rounded-md border border-white/[0.10] bg-white/[0.03] px-1.5 py-0.5 font-mono text-[11px] text-ink-faint transition-colors group-focus-within:border-accent/30 group-focus-within:text-accent-bright">
         /

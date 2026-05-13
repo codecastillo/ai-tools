@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import CommandPaletteTrigger from './command-palette-trigger';
-import SurpriseMeButton from './surprise-me-button';
 
 export default function SiteHeader() {
   return (
-    <header className="relative z-20 border-b border-white/[0.06] bg-bg/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-4">
+    <header className="relative z-20 border-b border-white/[0.10] bg-bg/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-6 py-4">
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -18,7 +17,6 @@ export default function SiteHeader() {
             ai.tools
           </Link>
           <CommandPaletteTrigger />
-          <SurpriseMeButton />
         </div>
         <nav className="flex items-center gap-1 text-sm">
           <Link

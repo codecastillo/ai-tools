@@ -1,11 +1,18 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import { PATHS } from '@/lib/paths';
+import { ArrowRight, Bot, Compass, Wrench, type LucideIcon } from 'lucide-react';
+import { PATHS, type PathIconName } from '@/lib/paths';
 import { categoryStyle } from '@/lib/categories';
+
+/** Resolve the small lucide icon used as the card's visual anchor. */
+const ICONS: Record<PathIconName, LucideIcon> = {
+  Compass,
+  Bot,
+  Wrench,
+};
 
 /**
  * "Pick your path" trio of quick-start entry tiles, shown right under the
- * hero. Each card routes to a pre-filtered view of the catalog.
+ * hero. Each card routes to a curated stack so the click has a real payoff.
  */
 export default function PathCards() {
   return (
@@ -15,14 +22,15 @@ export default function PathCards() {
     >
       {PATHS.map((p) => {
         const cat = categoryStyle(p.category ?? null);
+        const Icon = ICONS[p.iconName];
         return (
           <Link
             key={p.slug}
             href={p.href}
-            className="group relative flex h-full flex-col rounded-2xl border-[1.5px] border-white/[0.08] bg-[--color-surface] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]"
+            className="group relative flex h-full flex-col rounded-2xl border-2 border-white/[0.14] bg-[--color-surface] p-6 transition-all duration-200 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]"
           >
-            <span className="text-3xl leading-none" aria-hidden>
-              {p.emoji}
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.03] text-accent-bright" aria-hidden>
+              <Icon className="h-5 w-5" />
             </span>
             <h3 className="mt-3 text-xl font-semibold text-ink">{p.title}</h3>
             <p className="mt-2 text-sm text-ink-dim line-clamp-3">

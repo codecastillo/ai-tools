@@ -1,8 +1,12 @@
 import type { Category } from './types';
 
+/** Lucide icon identifiers recognised by `path-cards.tsx`. */
+export type PathIconName = 'Compass' | 'Bot' | 'Wrench';
+
 export interface PathDef {
   slug: string;
-  emoji: string;
+  /** Lucide icon component name. Resolved to a JSX component in `path-cards.tsx`. */
+  iconName: PathIconName;
   title: string;
   description: string;
   /** Href the path's CTA links to. */
@@ -12,31 +16,32 @@ export interface PathDef {
 }
 
 /**
- * Quick-start entry points shown right under the hero. Each routes to a
- * pre-filtered view of the catalog so newcomers know where to begin.
+ * Quick-start entry points shown right under the hero. Each routes to a real
+ * curated stack page so newcomers land on a concrete walk-through, not a
+ * filtered home view.
  */
 export const PATHS: PathDef[] = [
   {
     slug: 'explore',
-    emoji: '🪐',
+    iconName: 'Compass',
     title: 'Just exploring',
-    description: 'New to AI tools? Browse the catalog and pick something that looks fun.',
-    href: '/',
+    description: 'New to AI tools? Browse a starter pack of must-tries.',
+    href: '/stacks/student-productivity',
   },
   {
     slug: 'agents',
-    emoji: '🤖',
+    iconName: 'Bot',
     title: 'Building agents',
     description: 'Claude Code, Agent SDK, MCP, and the frameworks people actually ship with.',
-    href: '/?category=claude',
+    href: '/stacks/claude-native',
     category: 'claude',
   },
   {
     slug: 'devloop',
-    emoji: '🛠️',
+    iconName: 'Wrench',
     title: 'Daily devloop',
-    description: "Coding CLIs that live in your shell — Cursor, Aider, Codex, and the rest.",
-    href: '/?category=clis',
+    description: 'Coding CLIs that live in your shell. Cursor, Aider, Codex, and the rest.',
+    href: '/stacks/vibe-coding',
     category: 'clis',
   },
 ];

@@ -70,9 +70,9 @@ export default function CommandPalette() {
       onOpenChange={setOpen}
       label="Global command palette"
       overlayClassName="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in data-[state=closed]:animate-out data-[state=closed]:fade-out"
-      contentClassName="fixed left-1/2 top-[18%] z-50 w-[92vw] max-w-xl -translate-x-1/2 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0f0f10] shadow-2xl ring-1 ring-black/40"
+      contentClassName="fixed left-1/2 top-[18%] z-50 w-[92vw] max-w-xl -translate-x-1/2 overflow-hidden rounded-xl border border-white/[0.14] bg-[#0f0f10] shadow-2xl ring-1 ring-black/40"
     >
-      <div className="flex items-center gap-2 border-b border-white/[0.06] px-3.5 py-3">
+      <div className="flex items-center gap-2 border-b border-white/[0.10] px-3.5 py-3">
         <Search className="h-4 w-4 text-ink-faint" aria-hidden="true" />
         <Command.Input
           value={search}
@@ -106,7 +106,7 @@ export default function CommandPalette() {
                 <span className="truncate font-medium">{t.title}</span>
                 {t.tagline && (
                   <span className="ml-1 truncate text-xs text-ink-faint">
-                    — {t.tagline}
+                    · {t.tagline}
                   </span>
                 )}
                 <ArrowRight className="ml-auto h-3.5 w-3.5 shrink-0 text-ink-faint opacity-0 transition-opacity data-[selected=true]:opacity-100" />
@@ -144,7 +144,7 @@ export default function CommandPalette() {
           </div>
         )}
       </Command.List>
-      <div className="flex items-center justify-between gap-2 border-t border-white/[0.06] bg-white/[0.02] px-3 py-2 text-[10px] text-ink-faint">
+      <div className="flex items-center justify-between gap-2 border-t border-white/[0.10] bg-white/[0.02] px-3 py-2 text-[10px] text-ink-faint">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1">
             <kbd className="rounded border border-white/[0.10] bg-white/[0.03] px-1 py-0.5 font-mono">↵</kbd>

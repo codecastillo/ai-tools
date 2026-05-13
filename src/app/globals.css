@@ -8,8 +8,8 @@
   --color-surface: #1E1B28;
   --color-surface-hover: #262232;
 
-  --color-border: rgba(255, 255, 255, 0.06);
-  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.20);
   --color-border-accent: rgba(255, 107, 91, 0.45);
 
   --color-ink: #F6F2EC;
@@ -75,7 +75,7 @@
     border-radius: 6px;
   }
 
-  /* Ambient warm gradient anchored top — chunky bun.sh-style halo. */
+  /* Ambient warm gradient anchored top. Chunky bun.sh-style halo. */
   body::before {
     content: "";
     position: fixed;
@@ -103,6 +103,18 @@
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* Restore pointer cursor on interactive elements. Tailwind Preflight
+   * resets buttons to `cursor: default`, which makes the UI feel un-clickable.
+   * Re-establish a clear "clickable" affordance everywhere it matters. */
+  button:not(:disabled),
+  a[href],
+  [role="button"],
+  [data-tool-card],
+  select,
+  summary {
+    cursor: pointer;
   }
 }
 
@@ -170,7 +182,7 @@
     text-wrap: balance;
   }
 
-  /* Section reveal — fades up 12px on enter. */
+  /* Section reveal. Fades up 12px on enter. */
   @keyframes section-in {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -188,7 +200,7 @@
     animation: terminal-cursor 1s steps(2, end) infinite;
   }
 
-  /* Faint dotted-grid background — used behind the hero only. */
+  /* Faint dotted-grid background, used behind the hero only. */
   .bg-dot-grid {
     background-image: radial-gradient(
       rgba(255, 255, 255, 0.05) 1px,

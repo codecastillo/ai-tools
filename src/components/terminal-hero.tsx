@@ -19,8 +19,14 @@ const CYCLE_SLUGS = [
 const TYPE_SPEED_MS = 30;
 const LINE_STAGGER_MS = 200;
 const HOLD_MS = 2000;
-const CLEAR_MS = 200;
+const CROSSFADE_MS = 250;
 const TAGLINE_CAP = 80;
+/**
+ * Minimum body height so the container never collapses during the cross-fade
+ * between tools. Sized to comfortably fit the 4-line display (command + three
+ * ↳ lines with mt-3 + mt-1.5 + mt-1.5 + p-6 padding).
+ */
+const MIN_BODY_HEIGHT_PX = 156;
 
 interface CycleEntry {
   tool: Tool;
@@ -72,7 +78,16 @@ function buildEntry(tool: Tool): CycleEntry {
   };
 }
 
-type Phase = 'typing' | 'reveal' | 'hold' | 'clear';
+/**
+ * Animation phases:
+ *  - `typing`   — caret types the command, ↳ lines hidden
+ *  - `reveal`   — ↳ lines fade in one by one
+ *  - `hold`     — fully revealed, paused
+ *  - `prepare`  — cross-fade: outgoing entry (current step) fades to 0 while
+ *                 incoming entry (next step) is rendered underneath at 0→1.
+ *                 Container `min-height` keeps width/height stable.
+ */
+type Phase = 'typing' | 'reveal' | 'hold' | 'prepare';
 
 interface AnimState {
   step: number;
@@ -83,6 +98,87 @@ interface AnimState {
   revealedLines: number;
   /** Set true if reduced-motion is preferred (snaps to static). */
   reducedMotion: boolean;
+}
+
+interface TerminalBodyProps {
+  entry: CycleEntry;
+  typedChars: number;
+  revealedLines: number;
+  isFullyTyped: boolean;
+  /** Used to suppress the typing caret on the outgoing/incoming static frame. */
+  showCursor: boolean;
+}
+
+/** Pure render of the terminal body for one cycle entry — used by both
+ *  the foreground (active) and the underlay (incoming during cross-fade). */
+function TerminalBody({
+  entry,
+  typedChars,
+  revealedLines,
+  isFullyTyped,
+  showCursor,
+}: TerminalBodyProps) {
+  const typedSoFar = entry.command.slice(0, typedChars);
+  const promptPrefix = typedSoFar.startsWith('$ ') ? '$ ' : '';
+  const promptRest = promptPrefix ? typedSoFar.slice(2) : typedSoFar;
+
+  return (
+    <>
+      {/* Command line */}
+      <div className="flex items-baseline whitespace-pre overflow-hidden">
+        <span className="text-accent font-semibold">{promptPrefix}</span>
+        <span className="text-ink truncate">{promptRest}</span>
+        {showCursor && !isFullyTyped && (
+          <span
+            aria-hidden="true"
+            className="inline-block w-2 h-[1em] bg-accent translate-y-0.5 ml-0.5 terminal-cursor"
+          />
+        )}
+      </div>
+
+      {/* Tagline line */}
+      <div
+        className={cn(
+          'mt-3 flex items-baseline gap-2 transition-opacity duration-150',
+          revealedLines >= 1 ? 'opacity-100' : 'opacity-0',
+        )}
+      >
+        <span className="text-ink-faint shrink-0">↳</span>
+        <span className="text-ink-dim truncate">
+          <span className="text-ink font-medium">{entry.tool.title}</span>
+          {entry.taglineLine.includes('·') && (
+            <span className="text-ink-mute">
+              {' '}
+              ·{' '}
+              {entry.taglineLine.slice(entry.taglineLine.indexOf('·') + 1).trim()}
+            </span>
+          )}
+        </span>
+      </div>
+
+      {/* Install snippet line */}
+      <div
+        className={cn(
+          'mt-1.5 flex items-baseline gap-2 transition-opacity duration-150',
+          revealedLines >= 2 ? 'opacity-100' : 'opacity-0',
+        )}
+      >
+        <span className="text-ink-faint shrink-0">↳</span>
+        <span className="text-accent-2 truncate">{entry.installLine}</span>
+      </div>
+
+      {/* Verified / approved date — hidden on <sm to save room */}
+      <div
+        className={cn(
+          'mt-1.5 hidden sm:flex items-baseline gap-2 transition-opacity duration-150',
+          revealedLines >= 3 && entry.verifiedLine ? 'opacity-100' : 'opacity-0',
+        )}
+      >
+        <span className="text-ink-faint shrink-0">↳</span>
+        <span className="text-ink-mute truncate">{entry.verifiedLine}</span>
+      </div>
+    </>
+  );
 }
 
 export default function TerminalHero({ tools }: TerminalHeroProps) {
@@ -170,13 +266,16 @@ export default function TerminalHero({ tools }: TerminalHeroProps) {
 
     if (state.phase === 'hold') {
       const t = setTimeout(() => {
-        setState((s) => ({ ...s, phase: 'clear' }));
-      }, CLEAR_MS);
+        setState((s) => ({ ...s, phase: 'prepare' }));
+      }, 0);
       timersRef.current.push(t);
       return;
     }
 
-    if (state.phase === 'clear') {
+    if (state.phase === 'prepare') {
+      // Cross-fade window: outgoing fades out, incoming (already rendered
+      // underneath at typedChars=0) fades in. After CROSSFADE_MS we advance
+      // step and reset to typing for the new tool.
       const t = setTimeout(() => {
         setState((s) => ({
           step: (s.step + 1) % entries.length,
@@ -185,7 +284,7 @@ export default function TerminalHero({ tools }: TerminalHeroProps) {
           revealedLines: 0,
           reducedMotion: false,
         }));
-      }, CLEAR_MS);
+      }, CROSSFADE_MS);
       timersRef.current.push(t);
       return;
     }
@@ -198,17 +297,15 @@ export default function TerminalHero({ tools }: TerminalHeroProps) {
 
   if (entries.length === 0) return null;
 
-  const entry = entries[state.step % entries.length];
-  const isClearing = state.phase === 'clear';
-  const typedSoFar = state.reducedMotion
-    ? entry.command
-    : entry.command.slice(0, state.typedChars);
-  const isFullyTyped = state.reducedMotion || state.typedChars >= entry.command.length;
-  const linesToShow = state.reducedMotion ? 3 : state.revealedLines;
+  const currentEntry = entries[state.step % entries.length];
+  const nextEntry = entries[(state.step + 1) % entries.length];
+  const isPreparing = state.phase === 'prepare';
 
-  // Split the typed command so we can color the `$` prompt separately.
-  const promptPrefix = typedSoFar.startsWith('$ ') ? '$ ' : '';
-  const promptRest = promptPrefix ? typedSoFar.slice(2) : typedSoFar;
+  // For the active layer, derive what to show.
+  const activeTypedChars = state.reducedMotion ? currentEntry.command.length : state.typedChars;
+  const activeRevealedLines = state.reducedMotion ? 3 : state.revealedLines;
+  const activeIsFullyTyped =
+    state.reducedMotion || state.typedChars >= currentEntry.command.length;
 
   return (
     <div
@@ -231,70 +328,53 @@ export default function TerminalHero({ tools }: TerminalHeroProps) {
         </span>
       </div>
 
-      {/* Body */}
+      {/* Body — relative so the cross-fade layers can stack. min-height keeps
+          the container from collapsing during the cross-fade between tools. */}
       <div
-        className={cn(
-          'font-mono text-[14px] sm:text-[15px] leading-relaxed p-6 sm:p-8',
-          'transition-opacity duration-200',
-          isClearing ? 'opacity-0' : 'opacity-100',
-        )}
+        className="relative font-mono text-[14px] sm:text-[15px] leading-relaxed p-6 sm:p-8"
+        style={{ minHeight: `${MIN_BODY_HEIGHT_PX}px` }}
         // aria-live so screen readers announce updates as the cycle moves,
         // but politely so we don't spam.
         aria-live="polite"
         aria-atomic="true"
       >
-        {/* Command line */}
-        <div className="flex items-baseline whitespace-pre overflow-hidden">
-          <span className="text-accent font-semibold">{promptPrefix}</span>
-          <span className="text-ink truncate">{promptRest}</span>
-          {!isFullyTyped && (
-            <span
-              aria-hidden="true"
-              className="inline-block w-2 h-[1em] bg-accent translate-y-0.5 ml-0.5 terminal-cursor"
-            />
-          )}
-        </div>
-
-        {/* Tagline line */}
-        <div
-          className={cn(
-            'mt-3 flex items-baseline gap-2 transition-opacity duration-150',
-            linesToShow >= 1 ? 'opacity-100' : 'opacity-0',
-          )}
-        >
-          <span className="text-ink-faint shrink-0">↳</span>
-          <span className="text-ink-dim truncate">
-            <span className="text-ink font-medium">{entry.tool.title}</span>
-            {entry.taglineLine.includes('·') && (
-              <span className="text-ink-mute">
-                {' '}
-                ·{' '}
-                {entry.taglineLine.slice(entry.taglineLine.indexOf('·') + 1).trim()}
-              </span>
+        {/* Incoming underlay — only mounted during prepare; renders the next
+            tool at typedChars=0 so it's ready to start typing as soon as we
+            transition. Fades in over CROSSFADE_MS. */}
+        {isPreparing && !state.reducedMotion && (
+          <div
+            aria-hidden="true"
+            className={cn(
+              'absolute inset-0 p-6 sm:p-8 transition-opacity duration-[250ms]',
+              'opacity-100',
             )}
-          </span>
-        </div>
+          >
+            <TerminalBody
+              entry={nextEntry}
+              typedChars={0}
+              revealedLines={0}
+              isFullyTyped={false}
+              showCursor={false}
+            />
+          </div>
+        )}
 
-        {/* Install snippet line */}
+        {/* Active foreground — the currently typing/revealed entry. During
+            `prepare` it fades to opacity-0 over CROSSFADE_MS, leaving the
+            underlay visible. */}
         <div
           className={cn(
-            'mt-1.5 flex items-baseline gap-2 transition-opacity duration-150',
-            linesToShow >= 2 ? 'opacity-100' : 'opacity-0',
+            'relative transition-opacity duration-[250ms]',
+            isPreparing && !state.reducedMotion ? 'opacity-0' : 'opacity-100',
           )}
         >
-          <span className="text-ink-faint shrink-0">↳</span>
-          <span className="text-accent-2 truncate">{entry.installLine}</span>
-        </div>
-
-        {/* Verified / approved date — hidden on <sm to save room */}
-        <div
-          className={cn(
-            'mt-1.5 hidden sm:flex items-baseline gap-2 transition-opacity duration-150',
-            linesToShow >= 3 && entry.verifiedLine ? 'opacity-100' : 'opacity-0',
-          )}
-        >
-          <span className="text-ink-faint shrink-0">↳</span>
-          <span className="text-ink-mute truncate">{entry.verifiedLine}</span>
+          <TerminalBody
+            entry={currentEntry}
+            typedChars={activeTypedChars}
+            revealedLines={activeRevealedLines}
+            isFullyTyped={activeIsFullyTyped}
+            showCursor={!isPreparing}
+          />
         </div>
       </div>
     </div>

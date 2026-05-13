@@ -49,6 +49,31 @@ export default function ScrollSpyTOC({ sections }: ScrollSpyTOCProps) {
     return () => observer.disconnect();
   }, [sections]);
 
+  // Fallback for bottom-of-page sections that fall inside the
+  // IntersectionObserver's dead zone (rootMargin's -40% bottom). When the
+  // viewport is near the page bottom, explicitly force the last section
+  // active. The IO above still owns the mid-page case; this layer only
+  // wins at the very bottom.
+  useEffect(() => {
+    if (sections.length === 0) return;
+    if (typeof window === 'undefined') return;
+
+    function onScroll() {
+      const scrollY = window.scrollY;
+      const innerH = window.innerHeight;
+      const docH = document.documentElement.scrollHeight;
+      const nearBottom = scrollY + innerH >= docH - 80;
+      if (nearBottom) {
+        const last = sections[sections.length - 1];
+        if (last) setActiveId(last.id);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [sections]);
+
   if (sections.length === 0) return null;
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

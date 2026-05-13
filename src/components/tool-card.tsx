@@ -42,7 +42,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           'hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]',
           isFeatured
             ? 'gradient-featured border-2 border-accent/40 bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/60'
-            : 'border-[1.5px] border-white/[0.08] bg-[--color-surface] hover:border-accent/40 hover:bg-[--color-surface-hover]',
+            : 'border-[1.5px] border-white/[0.14] bg-[--color-surface] hover:border-accent/40 hover:bg-[--color-surface-hover]',
         )}
       >
         {/* Subtle accent edge highlight on hover */}
@@ -55,7 +55,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           )}
         />
 
-        {/* Add-to-stack button — owned by B4, kept absolute-positioned in top-right */}
+        {/* Add-to-stack button. Owned by B4, kept absolute-positioned in top-right. */}
         <div className="absolute top-3 right-3 z-10">
           <AddToStackButton toolId={tool.id} title={tool.title} />
         </div>
@@ -118,7 +118,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
             'mt-5 flex items-center justify-between border-t pt-3 text-[11px] text-ink-faint transition-colors',
             isFeatured
               ? 'border-accent/15 group-hover:border-accent/30'
-              : 'border-white/[0.04] group-hover:border-white/[0.08]',
+              : 'border-white/[0.04] group-hover:border-white/[0.14]',
           )}
         >
           <span className="font-mono">added {timeAgo(tool.created_at)}</span>
@@ -144,7 +144,7 @@ function Chip({
         'inline-flex items-center rounded-lg border px-2.5 py-1 text-[12px] font-medium transition-colors',
         variant === 'accent'
           ? 'border-accent/30 bg-accent/10 text-accent-bright'
-          : 'border-white/[0.06] bg-white/[0.02] text-ink-mute',
+          : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
       )}
     >
       {children}

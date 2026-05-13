@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: ComparePageProps): Promise<Me
   }
   if (!toolA || !toolB) return { title: 'Not found' };
 
-  const title = `${toolA.title} vs ${toolB.title} — ai.tools`;
+  const title = `${toolA.title} vs ${toolB.title} · ai.tools`;
   const description =
     `Side-by-side comparison of ${toolA.title} and ${toolB.title}: ` +
     `${toolA.tagline ?? toolA.description ?? ''} vs ${toolB.tagline ?? toolB.description ?? ''}`.trim();
@@ -80,8 +80,8 @@ export default async function CompareDetailPage({ params }: ComparePageProps) {
 function Column({ tool }: { tool: ToolDetail }) {
   const cat = categoryStyle(tool.category);
   return (
-    <article className="rounded-xl border border-white/[0.06] bg-[--color-surface]">
-      <header className="border-b border-white/[0.06] p-6">
+    <article className="rounded-xl border border-white/[0.10] bg-[--color-surface]">
+      <header className="border-b border-white/[0.10] p-6">
         <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.10em]">
           <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
           <span className={cat.textClass}>{cat.short}</span>
@@ -145,7 +145,7 @@ function MiniChip({
         'inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider',
         variant === 'accent'
           ? 'border-accent/30 bg-accent/10 text-accent-bright'
-          : 'border-white/[0.08] bg-white/[0.02] text-ink-mute',
+          : 'border-white/[0.14] bg-white/[0.02] text-ink-mute',
       )}
     >
       {children}

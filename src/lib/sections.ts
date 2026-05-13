@@ -10,7 +10,7 @@ export interface CategorySection {
 }
 
 const SUBTITLES: Record<Category, string> = {
-  claude: 'Anthropic\'s stack — Claude Code, the API, MCP, and the Agent SDK.',
+  claude: 'Anthropic\'s stack. Claude Code, the API, MCP, and the Agent SDK.',
   clis: 'Coding assistants that live in your terminal.',
   frameworks: 'Libraries for building AI-powered apps and agents.',
   productivity: 'Tools to think, research, and ship faster.',

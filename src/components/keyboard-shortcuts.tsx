@@ -84,7 +84,7 @@ export default function KeyboardShortcuts() {
         return;
       }
 
-      // j / k traversal across visible tool links — only when not typing.
+      // j / k traversal across visible tool links, only when not typing.
       if ((e.key === 'j' || e.key === 'k') && !inField && !meta && !e.altKey) {
         const links = focusableToolLinks();
         if (links.length === 0) return;

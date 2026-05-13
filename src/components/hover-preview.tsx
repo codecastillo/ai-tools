@@ -111,7 +111,7 @@ export default function HoverPreview({ tool, children }: HoverPreviewProps) {
           {snippet && (
             <span
               className={cn(
-                'mt-3 block rounded-lg border border-white/[0.06] bg-black/40',
+                'mt-3 block rounded-lg border border-white/[0.10] bg-black/40',
                 'px-3 py-2 font-mono text-[12px] leading-relaxed text-ink',
                 'overflow-hidden whitespace-pre',
               )}

@@ -20,7 +20,7 @@ export default function AsciinemaEmbed({ castId }: AsciinemaEmbedProps) {
 
   return (
     <div className="my-6 overflow-hidden rounded-lg border border-white/[0.10] bg-[--color-bg-elevated,#0a0a0a] shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_1px_2px_rgba(0,0,0,0.4)]">
-      <div className="flex items-center justify-between border-b border-white/[0.06] px-3 py-1.5">
+      <div className="flex items-center justify-between border-b border-white/[0.10] px-3 py-1.5">
         <span className="font-mono text-[11px] uppercase tracking-wide text-ink-faint">
           asciinema · {castId}
         </span>

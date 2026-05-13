@@ -48,7 +48,7 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
       />
       <div className="gradient-featured overflow-hidden rounded-2xl border-2 border-accent/30 bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
         <div className="grid gap-8 p-6 sm:p-10 md:grid-cols-5">
-          {/* Left: 60% — copy + CTA */}
+          {/* Left: 60%. Copy + CTA. */}
           <div className="md:col-span-3">
             <p className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-bright">
               <Sparkles className="h-3 w-3" aria-hidden />
@@ -101,18 +101,18 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
                 href={tool.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.08] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:border-white/[0.18] hover:text-ink"
+                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.14] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:border-white/[0.18] hover:text-ink"
               >
                 Visit site
               </a>
             </div>
           </div>
 
-          {/* Right: 40% — static faux terminal */}
+          {/* Right: 40%. Static faux terminal. */}
           <div className="md:col-span-2">
-            <div className="overflow-hidden rounded-xl border-2 border-white/[0.08] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+            <div className="overflow-hidden rounded-xl border-2 border-white/[0.14] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               {/* macOS chrome */}
-              <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
+              <div className="flex items-center gap-2 border-b border-white/[0.10] px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" aria-hidden />
@@ -159,7 +159,7 @@ function Chip({
         'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium',
         variant === 'accent'
           ? 'border-accent/30 bg-accent/10 text-accent-bright'
-          : 'border-white/[0.06] bg-white/[0.02] text-ink-mute',
+          : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
       )}
     >
       {children}

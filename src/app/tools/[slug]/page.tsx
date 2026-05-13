@@ -10,6 +10,9 @@ import ScrollSpyTOC from '@/components/scrollspy-toc';
 import AsciinemaEmbed from '@/components/asciinema-embed';
 import RecentlyViewedPusher from '@/components/recently-viewed-pusher';
 import OftenCompared from '@/components/often-compared';
+import ToolQuickInfo from '@/components/tool-quick-info';
+import ToolRelated from '@/components/tool-related';
+import KeyboardShortcutsSection from '@/components/keyboard-shortcuts-section';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -25,7 +28,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   }
   if (!tool) return { title: 'Not found' };
 
-  const title = `${tool.title} — ai.tools`;
+  const title = `${tool.title} · ai.tools`;
   const description =
     tool.tagline ?? tool.description ?? 'A reference for AI dev tooling';
 
@@ -65,7 +68,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
     sections.push({ id: 'used-in', label: 'Used in' });
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-20 pt-10">
+    <div className="mx-auto max-w-7xl px-6 pb-20 pt-10">
       <Link
         href="/"
         className="inline-flex items-center gap-1.5 text-sm text-ink-mute transition-colors hover:text-ink-dim"
@@ -74,7 +77,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
         All tools
       </Link>
 
-      <div className="mt-6 grid gap-12 lg:grid-cols-[1fr_200px]">
+      <div className="mt-6 grid gap-12 lg:grid-cols-[1fr_260px]">
         <div className="min-w-0">
           {/* Header */}
           <header className="border-b border-white/[0.06] pb-8">
@@ -174,10 +177,17 @@ export default async function ToolPage({ params }: ToolPageProps) {
             </Section>
           )}
 
+          <ToolRelated tool={tool} all={allTools.tools} />
+
+          <KeyboardShortcutsSection cheatsheet={tool.cheatsheet_md} />
+
           <OftenCompared tool={tool} all={allTools.tools} />
         </div>
 
-        {sections.length > 0 && <ScrollSpyTOC sections={sections} />}
+        <div className="hidden lg:flex lg:flex-col lg:gap-6">
+          {sections.length > 0 && <ScrollSpyTOC sections={sections} />}
+          <ToolQuickInfo tool={tool} />
+        </div>
       </div>
       <RecentlyViewedPusher slug={tool.slug} title={tool.title} />
     </div>

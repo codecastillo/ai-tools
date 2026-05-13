@@ -21,8 +21,8 @@ export default function SubmitPage() {
           Know a tool we&apos;re missing?
         </h1>
         <p className="mt-3 text-base text-ink-dim">
-          Paste the URL — we&apos;ll grab the title and description for you. A curator
-          polishes the guide before it goes live.
+          Paste the URL. We&apos;ll grab the title and description for you, then a
+          curator polishes the guide before it goes live.
         </p>
       </header>
 

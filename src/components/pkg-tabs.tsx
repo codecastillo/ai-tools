@@ -4,87 +4,162 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Check, Copy } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
-export type OSId = 'mac' | 'linux' | 'windows';
+/**
+ * PkgId is intentionally a loose string so future package managers can be
+ * added in seed data without a code change. The label map below provides
+ * the display strings for the well-known managers.
+ */
+export type PkgId = string;
 
-interface OSBlock {
-  os: OSId;
+export interface PkgBlock {
+  pkg: PkgId;
   lang?: string;
   code: string;
   html: string;
 }
 
-interface OSTabsProps {
-  blocks: OSBlock[];
+export interface PkgTabsProps {
+  blocks: PkgBlock[];
+  /**
+   * Label map: short manager id → display label. Defaults to the package
+   * manager set; pass `OS_LABELS` to render legacy `:::os` blocks with
+   * macOS / Linux / Windows labels.
+   */
+  labelMap?: Record<string, string>;
+  /**
+   * Ordering hint for the tab strip. Blocks whose id appears in this list
+   * are sorted by their index; everything else is appended in source order.
+   */
+  order?: string[];
+  /**
+   * ARIA label for the tablist (e.g. "Package manager" or "Operating system").
+   */
+  ariaLabel?: string;
+  /**
+   * localStorage key used to persist the user's manual selection between
+   * tab groups of the same kind.
+   */
+  storageKey?: string;
+  /**
+   * Preferred default when no stored preference is present. Falls back to
+   * the first available block.
+   */
+  defaultPref?: string;
 }
 
-const OS_LABEL: Record<OSId, string> = {
+export const PKG_LABELS: Record<string, string> = {
+  npm: 'npm',
+  pnpm: 'pnpm',
+  yarn: 'Yarn',
+  bun: 'Bun',
+  brew: 'Homebrew',
+  winget: 'winget',
+  scoop: 'Scoop',
+  choco: 'Chocolatey',
+  pip: 'pip',
+  uv: 'uv',
+  conda: 'conda',
+  cargo: 'Cargo',
+  go: 'go',
+  apt: 'apt',
+  dnf: 'dnf',
+  pacman: 'pacman',
+  cli: 'CLI',
+  curl: 'curl',
+  docker: 'Docker',
+};
+
+export const PKG_ORDER: string[] = [
+  'npm',
+  'pnpm',
+  'yarn',
+  'bun',
+  'pip',
+  'uv',
+  'conda',
+  'brew',
+  'winget',
+  'scoop',
+  'choco',
+  'apt',
+  'dnf',
+  'pacman',
+  'cargo',
+  'go',
+  'docker',
+  'curl',
+  'cli',
+];
+
+export const OS_LABELS: Record<string, string> = {
   mac: 'macOS',
   linux: 'Linux',
   windows: 'Windows',
 };
 
-const OS_ORDER: OSId[] = ['mac', 'linux', 'windows'];
+export const OS_ORDER: string[] = ['mac', 'linux', 'windows'];
 
-const STORAGE_KEY = 'aitools:os-pref';
-
-function detectOS(): OSId {
-  if (typeof navigator === 'undefined') return 'mac';
-  const ua = navigator.userAgent || '';
-  if (/Mac/i.test(ua)) return 'mac';
-  if (/Win/i.test(ua)) return 'windows';
-  return 'linux';
+function labelFor(id: string, labelMap: Record<string, string>): string {
+  return labelMap[id] ?? id;
 }
 
-function readStoredPref(): OSId | null {
+function readStoredPref(key: string, allowed: Set<string>): string | null {
   try {
     if (typeof window === 'undefined') return null;
-    const v = window.localStorage.getItem(STORAGE_KEY);
-    if (v === 'mac' || v === 'linux' || v === 'windows') return v;
+    const v = window.localStorage.getItem(key);
+    if (v && allowed.has(v)) return v;
     return null;
   } catch {
     return null;
   }
 }
 
-export default function OSTabs({ blocks }: OSTabsProps) {
+export default function PkgTabs({
+  blocks,
+  labelMap = PKG_LABELS,
+  order = PKG_ORDER,
+  ariaLabel = 'Package manager',
+  storageKey = 'aitools:pkg-pref',
+  defaultPref = 'npm',
+}: PkgTabsProps) {
   const tablistId = useId();
 
   const ordered = useMemo(() => {
-    return [...blocks].sort(
-      (a, b) => OS_ORDER.indexOf(a.os) - OS_ORDER.indexOf(b.os),
-    );
-  }, [blocks]);
+    const byOrder = (id: string) => {
+      const i = order.indexOf(id);
+      return i === -1 ? order.length + 1 : i;
+    };
+    return [...blocks].sort((a, b) => byOrder(a.pkg) - byOrder(b.pkg));
+  }, [blocks, order]);
 
-  const availableOS = useMemo(
-    () => new Set(ordered.map((b) => b.os)),
+  const availableIds = useMemo(
+    () => new Set(ordered.map((b) => b.pkg)),
     [ordered],
   );
 
-  // SSR-safe initial selection: pick the first block; sync to user pref / UA on mount.
-  const [selected, setSelected] = useState<OSId>(
-    () => ordered[0]?.os ?? 'mac',
+  // SSR-safe initial selection: pick the first block; sync to user pref on mount.
+  const [selected, setSelected] = useState<string>(
+    () => ordered[0]?.pkg ?? '',
   );
 
   useEffect(() => {
-    const stored = readStoredPref();
-    const preferred = stored && availableOS.has(stored) ? stored : null;
-    if (preferred) {
-      setSelected(preferred);
+    const stored = readStoredPref(storageKey, availableIds);
+    if (stored) {
+      setSelected(stored);
       return;
     }
-    const detected = detectOS();
-    if (availableOS.has(detected)) {
-      setSelected(detected);
-    } else if (ordered[0]) {
-      setSelected(ordered[0].os);
+    if (availableIds.has(defaultPref)) {
+      setSelected(defaultPref);
+      return;
     }
-  }, [availableOS, ordered]);
+    if (ordered[0]) setSelected(ordered[0].pkg);
+  }, [availableIds, ordered, storageKey, defaultPref]);
 
-  const handleSelect = (os: OSId) => {
-    setSelected(os);
+  const handleSelect = (id: string) => {
+    setSelected(id);
     try {
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(STORAGE_KEY, os);
+        window.localStorage.setItem(storageKey, id);
       }
     } catch {
       // ignore quota / privacy mode errors
@@ -124,7 +199,7 @@ export default function OSTabs({ blocks }: OSTabsProps) {
 
   if (ordered.length === 0) return null;
 
-  const active = ordered.find((b) => b.os === selected) ?? ordered[0];
+  const active = ordered.find((b) => b.pkg === selected) ?? ordered[0];
   const isSingle = ordered.length === 1;
 
   return (
@@ -133,11 +208,11 @@ export default function OSTabs({ blocks }: OSTabsProps) {
         <div
           role="tablist"
           id={tablistId}
-          aria-label="Operating system"
+          aria-label={ariaLabel}
           className="flex items-center gap-1"
         >
           {ordered.map((b) => {
-            const isActive = b.os === active.os;
+            const isActive = b.pkg === active.pkg;
             const commonClass = cn(
               'rounded-md px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide',
               'transition-colors motion-reduce:transition-none',
@@ -148,27 +223,27 @@ export default function OSTabs({ blocks }: OSTabsProps) {
             if (isSingle) {
               return (
                 <span
-                  key={b.os}
+                  key={b.pkg}
                   role="tab"
                   aria-selected="true"
                   aria-disabled="true"
                   className={cn(commonClass, 'cursor-default')}
                 >
-                  {OS_LABEL[b.os]}
+                  {labelFor(b.pkg, labelMap)}
                 </span>
               );
             }
             return (
               <button
-                key={b.os}
+                key={b.pkg}
                 role="tab"
                 type="button"
                 aria-selected={isActive}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => handleSelect(b.os)}
+                onClick={() => handleSelect(b.pkg)}
                 className={commonClass}
               >
-                {OS_LABEL[b.os]}
+                {labelFor(b.pkg, labelMap)}
               </button>
             );
           })}

@@ -34,7 +34,7 @@ export default async function StacksPage() {
           <li key={s.id}>
             <Link
               href={`/stacks/${s.slug}`}
-              className="group flex h-full flex-col rounded-xl border border-white/[0.06] bg-[--color-surface] p-6 transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04]"
+              className="group flex h-full flex-col rounded-xl border border-white/[0.10] bg-[--color-surface] p-6 transition-all hover:-translate-y-px hover:border-accent/30 hover:bg-accent/[0.04]"
             >
               <span className="text-[11px] font-medium uppercase tracking-[0.10em] text-accent">
                 Stack · {s.tool_ids.length} tools

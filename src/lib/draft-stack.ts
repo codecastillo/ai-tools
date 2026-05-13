@@ -36,7 +36,7 @@ function writeRaw(ids: string[]): void {
   try {
     localStorage.setItem(KEY, JSON.stringify(ids));
   } catch {
-    // quota or privacy mode — swallow
+    // quota or privacy mode. Swallow.
   }
 }
 

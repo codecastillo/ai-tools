@@ -96,7 +96,7 @@ export default function SubmitForm() {
         setSubmitter('');
         setPrefilled(new Set());
         setDupes([]);
-        setToast("Got it! 🎉 We'll review and add it soon.");
+        setToast("Thanks. We'll review and add it soon.");
         window.setTimeout(() => setToast(null), 4500);
       }
     });
@@ -122,7 +122,7 @@ export default function SubmitForm() {
         name="url"
         required
         error={errors.url}
-        hint="Paste a URL — we'll fetch the title and description."
+        hint="Paste a URL. We'll fetch the title and description."
       >
         <input
           id="url"
@@ -217,7 +217,7 @@ export default function SubmitForm() {
             aria-describedby={errors.category ? 'category-err' : undefined}
             className={inputClass(!!errors.category)}
           >
-            <option value="">— Choose —</option>
+            <option value="">Choose a category</option>
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {c}

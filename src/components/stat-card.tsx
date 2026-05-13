@@ -10,7 +10,7 @@ export interface StatCardProps {
   value: number;
   label: string;
   sublabel?: string;
-  /** Tailwind text-color class for the icon and accent corner — default coral. */
+  /** Tailwind text-color class for the icon and accent corner. Defaults to coral. */
   tintClass?: string;
 }
 
@@ -72,14 +72,14 @@ export default function StatCard({
   return (
     <div
       className={cn(
-        'group rounded-2xl border-[1.5px] border-white/[0.08] bg-[--color-surface] p-5',
+        'group rounded-2xl border-[1.5px] border-white/[0.14] bg-[--color-surface] p-5',
         'transition-transform duration-150 hover:-translate-y-px',
       )}
     >
       <span
         className={cn(
           'inline-flex h-9 w-9 items-center justify-center rounded-xl',
-          'border border-white/[0.06] bg-white/[0.04]',
+          'border border-white/[0.10] bg-white/[0.04]',
           tintClass,
         )}
       >

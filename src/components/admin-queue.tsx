@@ -18,7 +18,7 @@ export default function AdminQueue({ tool }: { tool: Tool }) {
   }
 
   return (
-    <div className="flex items-start gap-4 rounded-xl border border-white/[0.06] bg-[--color-surface] px-5 py-4">
+    <div className="flex items-start gap-4 rounded-xl border border-white/[0.10] bg-[--color-surface] px-5 py-4">
       <span className={cn('mt-2 h-2 w-2 rounded-full', cat.dotClass)} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">

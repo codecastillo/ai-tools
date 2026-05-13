@@ -25,19 +25,22 @@ interface CodeBlockProps {
   className?: string;
 }
 
-type AnimState = 'pre-reveal' | 'typing' | 'done';
+type AnimState = 'pre-reveal' | 'typing' | 'finishing' | 'done';
 
 // Adaptive per-character timing: every character is typed (no global duration
 // cap), but the per-char interval shrinks for longer blocks so total time
 // stays in a comfortable range. Do NOT reintroduce a global max-duration cap
 // here — it caused long blocks to snap mid-stream after the first ~75 chars.
-//   50-char block   → 10 ms/ch ≈ 500ms total
+//   50-char block   → 10 ms/ch ≈ 500ms total → floor 700ms (≥20-char rule)
 //   200-char block  →  4 ms/ch ≈ 800ms total
 //   500-char block  →  3 ms/ch ≈ 1500ms total (clamped to min)
 //   1000-char block →  3 ms/ch ≈ 3000ms total (clamped to min)
 const TYPE_MS_PER_CHAR_MIN = 3;
 const TYPE_MS_PER_CHAR_MAX = 10;
 const TYPE_TARGET_TOTAL_MS = 800;
+/** Any block this long or longer must take at least MIN_TOTAL_DURATION_MS. */
+const MIN_DURATION_CHAR_THRESHOLD = 20;
+const MIN_TOTAL_DURATION_MS = 700;
 
 /**
  * Renders pre-sanitized Shiki HTML inside a styled surface with a
@@ -64,12 +67,6 @@ export default function CodeBlock({
   const startTsRef = useRef<number | null>(null);
   const hasRunRef = useRef(false);
 
-  // Start as 'done' on the server and on the first client render — we flip to
-  // 'pre-reveal' inside an effect once we've decided to animate. This keeps
-  // SSR markup identical to the non-animated state (no hydration mismatch).
-  const [animState, setAnimState] = useState<AnimState>('done');
-  const [typedCount, setTypedCount] = useState(0);
-
   // Stable derived values.
   const codeLength = code.length;
   const lineCount = useMemo(() => {
@@ -80,6 +77,24 @@ export default function CodeBlock({
   // ~20px/line + 32px vertical padding (matches `[&_pre]:p-4` ≈ 16px each side).
   const minBodyHeightPx = lineCount * 20 + 32;
 
+  // Lazy initial state so we can decide synchronously at first render whether
+  // we'll need to animate. SSR / non-window contexts always get 'done' to
+  // keep hydration markup stable. Once hydrated, the effect below either
+  // kicks off typing immediately (already-in-view) or sets up the observer.
+  const [animState, setAnimState] = useState<AnimState>(() => {
+    if (typeof window === 'undefined') return 'done';
+    if (!animate) return 'done';
+    if (code.length === 0) return 'done';
+    if (typeof IntersectionObserver === 'undefined') return 'done';
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    if (reduceMotion) return 'done';
+    // We'll commit the real decision (immediate vs observer) in the effect.
+    return 'pre-reveal';
+  });
+  const [typedCount, setTypedCount] = useState(0);
+
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -87,71 +102,91 @@ export default function CodeBlock({
     };
   }, []);
 
-  // Decide whether to set up the IntersectionObserver. We only animate on
-  // mount; if the user re-renders the page and the block is already in
-  // view we'll detect that immediately and either fade-in (motion-safe)
-  // or stay static.
+  // Drive the typewriter. Either kicks off immediately (block already in
+  // view at mount) or wires up an IntersectionObserver to start when the
+  // user scrolls to it.
   useEffect(() => {
     if (!animate) return;
     if (hasRunRef.current) return;
     if (typeof window === 'undefined') return;
     if (codeLength === 0) return;
+    if (animState === 'done') return; // Already finalized (reduce-motion etc.)
 
     const el = wrapperRef.current;
     if (!el) return;
 
-    const reduceMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
+    if (typeof IntersectionObserver === 'undefined') {
+      setAnimState('done');
+      return;
+    }
 
-    // If IntersectionObserver isn't available, just bail to 'done'.
-    if (typeof IntersectionObserver === 'undefined') return;
+    const startTyping = () => {
+      if (hasRunRef.current) return;
+      hasRunRef.current = true;
 
-    // Start in pre-reveal so the highlighted HTML is hidden until we trigger.
-    setAnimState('pre-reveal');
+      startTsRef.current = null;
+      setTypedCount(0);
+      setAnimState('typing');
+
+      const baseMsPerChar = Math.max(
+        TYPE_MS_PER_CHAR_MIN,
+        Math.min(
+          TYPE_MS_PER_CHAR_MAX,
+          TYPE_TARGET_TOTAL_MS / Math.max(1, codeLength),
+        ),
+      );
+      const baseDuration = baseMsPerChar * codeLength;
+      // Floor: ≥20-char blocks must take ≥700ms so they feel like typewriters.
+      const duration =
+        codeLength >= MIN_DURATION_CHAR_THRESHOLD
+          ? Math.max(MIN_TOTAL_DURATION_MS, baseDuration)
+          : baseDuration;
+
+      const step = (ts: number) => {
+        if (startTsRef.current == null) startTsRef.current = ts;
+        const elapsed = ts - startTsRef.current;
+        const progress = Math.min(1, elapsed / duration);
+        const next = Math.floor(progress * codeLength);
+        setTypedCount(next);
+        if (progress < 1) {
+          rafRef.current = requestAnimationFrame(step);
+        } else {
+          rafRef.current = null;
+          // 'finishing' = highlighted body becomes visible at opacity-1,
+          // overlay stays mounted for one more frame to avoid a font-metric
+          // flash, then we transition to 'done' which unmounts the overlay.
+          setAnimState('finishing');
+          rafRef.current = requestAnimationFrame(() => {
+            rafRef.current = requestAnimationFrame(() => {
+              setAnimState('done');
+            });
+          });
+        }
+      };
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    // Probe: if this block is already in the viewport at mount, start
+    // immediately. IntersectionObserver can sometimes no-op for elements
+    // already in view at hydration on certain browsers, so we don't rely
+    // on it for the above-the-fold case.
+    const rect = el.getBoundingClientRect();
+    const viewportH =
+      window.innerHeight || document.documentElement.clientHeight || 0;
+    const alreadyInView = rect.bottom > 0 && rect.top < viewportH;
+
+    if (alreadyInView) {
+      startTyping();
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           if (hasRunRef.current) break;
-          hasRunRef.current = true;
           observer.disconnect();
-
-          if (reduceMotion) {
-            // Just reveal instantly.
-            setAnimState('done');
-            return;
-          }
-
-          // Begin typewriter.
-          startTsRef.current = null;
-          setTypedCount(0);
-          setAnimState('typing');
-
-          const msPerChar = Math.max(
-            TYPE_MS_PER_CHAR_MIN,
-            Math.min(
-              TYPE_MS_PER_CHAR_MAX,
-              TYPE_TARGET_TOTAL_MS / Math.max(1, codeLength),
-            ),
-          );
-          const duration = msPerChar * codeLength;
-
-          const step = (ts: number) => {
-            if (startTsRef.current == null) startTsRef.current = ts;
-            const elapsed = ts - startTsRef.current;
-            const progress = Math.min(1, elapsed / duration);
-            const next = Math.floor(progress * codeLength);
-            setTypedCount(next);
-            if (progress < 1) {
-              rafRef.current = requestAnimationFrame(step);
-            } else {
-              rafRef.current = null;
-              setAnimState('done');
-            }
-          };
-          rafRef.current = requestAnimationFrame(step);
+          startTyping();
           break;
         }
       },
@@ -160,7 +195,7 @@ export default function CodeBlock({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [animate, codeLength]);
+  }, [animate, codeLength, animState]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -188,10 +223,16 @@ export default function CodeBlock({
   const displayLabel = (label ?? lang ?? 'text').toLowerCase();
 
   // Visibility of the highlighted (shiki) body.
-  // During pre-reveal and typing, it stays hidden behind the overlay so the
-  // typewriter has a stable target. Once 'done', it fades back in.
-  const showHighlighted = animState === 'done';
-  const showOverlay = animState === 'pre-reveal' || animState === 'typing';
+  // During pre-reveal/typing it stays hidden behind the overlay. Once
+  // typing completes we enter 'finishing' for one frame so the highlighted
+  // body paints at opacity-1 before the overlay is unmounted on the next
+  // frame — prevents a font-metric flash at the swap.
+  const showHighlighted =
+    animState === 'finishing' || animState === 'done';
+  const showOverlay =
+    animState === 'pre-reveal' ||
+    animState === 'typing' ||
+    animState === 'finishing';
 
   return (
     <div
@@ -250,7 +291,7 @@ export default function CodeBlock({
           )}
           dangerouslySetInnerHTML={{ __html: html }}
         />
-        {/* Typewriter overlay. Sits on top during pre-reveal/typing. */}
+        {/* Typewriter overlay. Sits on top during pre-reveal/typing/finishing. */}
         {showOverlay && (
           <pre
             aria-hidden="true"
@@ -258,7 +299,9 @@ export default function CodeBlock({
           >
             <code className="whitespace-pre">
               {code.slice(0, typedCount)}
-              <span className="terminal-cursor text-accent">▍</span>
+              {animState !== 'finishing' && (
+                <span className="terminal-cursor text-accent">▍</span>
+              )}
             </code>
           </pre>
         )}

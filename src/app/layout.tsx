@@ -21,7 +21,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'ai.tools — a reference for AI dev tooling',
+  title: 'ai.tools · a reference for AI dev tooling',
   description:
     'Install guides, usage tips, and curated stacks for the AI tools real developers ship with.',
 };

@@ -85,7 +85,7 @@ function TabLink({
         'group inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm transition-all duration-150',
         active
           ? 'border-2 border-white/[0.16] bg-white/[0.10] text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
-          : 'border-2 border-transparent text-ink-mute hover:scale-105 hover:border-white/[0.08] hover:bg-white/[0.03] hover:text-ink-dim',
+          : 'border-2 border-transparent text-ink-mute hover:scale-105 hover:border-white/[0.14] hover:bg-white/[0.03] hover:text-ink-dim',
       )}
     >
       {dotClass && (

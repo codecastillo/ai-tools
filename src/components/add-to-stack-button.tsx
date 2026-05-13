@@ -31,7 +31,7 @@ export default function AddToStackButton({ toolId, title }: AddToStackButtonProp
     return (
       <span
         aria-hidden
-        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/[0.06] bg-[--color-surface]/60 text-ink-faint opacity-0"
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/[0.10] bg-[--color-surface]/60 text-ink-faint opacity-0"
       />
     );
   }
@@ -52,7 +52,7 @@ export default function AddToStackButton({ toolId, title }: AddToStackButtonProp
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
         inStack
           ? 'border-accent/40 bg-accent/10 text-accent-bright hover:border-accent/60 hover:bg-accent/15'
-          : 'border-white/[0.08] bg-[--color-surface]/80 text-ink-faint backdrop-blur-sm hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright',
+          : 'border-white/[0.14] bg-[--color-surface]/80 text-ink-faint backdrop-blur-sm hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright',
       )}
     >
       {inStack ? (

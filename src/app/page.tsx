@@ -48,7 +48,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
   const recentlyAdded = !isFiltering ? allTools.tools.slice(0, 5) : [];
 
   return (
-    <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-10 sm:pt-14">
+    <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pt-14 lg:px-10">
       {/* ─── HERO ─────────────────────────────────────────────────────────── */}
       <section className="relative motion-safe:section-in">
         {/* Dotted-grid backdrop, only behind the hero. */}
@@ -68,7 +68,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </h1>
 
             <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
-              We hand-pick AI tools real devs love — install guides, usage tips,
+              We hand-pick AI tools real devs love. Install guides, usage tips,
               curated stacks, all in one place.
             </p>
 
@@ -155,7 +155,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </section>
           <section className="mt-6">
             {filtered.tools.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-white/[0.08] bg-white/[0.01] py-16 text-center text-sm text-ink-mute">
+              <p className="rounded-xl border border-dashed border-white/[0.14] bg-white/[0.01] py-16 text-center text-sm text-ink-mute">
                 {q ? `No tools match "${q}".` : 'No tools in this category yet.'}
               </p>
             ) : (
@@ -188,14 +188,14 @@ export default async function HomePage({ searchParams }: HomeProps) {
                     </h2>
                   </div>
                   <p className="mt-2 max-w-xl text-sm text-ink-dim sm:text-base">
-                    Hand-picked combinations for common workflows — start here when
-                    you don&apos;t know where to start.
+                    Hand-picked combinations for common workflows. Start here when
+                    you don&apos;t know where to begin.
                   </p>
                   <span aria-hidden className="mt-3 block h-[2px] w-20 rounded-full bg-accent" />
                 </div>
                 <Link
                   href="/stacks"
-                  className="inline-flex items-center gap-1.5 self-start rounded-md border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 text-sm font-medium text-ink-mute transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright sm:self-end"
+                  className="inline-flex items-center gap-1.5 self-start rounded-md border border-white/[0.14] bg-white/[0.02] px-3 py-1.5 text-sm font-medium text-ink-mute transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent-bright sm:self-end"
                 >
                   Browse all
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -206,7 +206,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <Link
                     key={s.id}
                     href={`/stacks/${s.slug}`}
-                    className="group lift-on-hover flex h-full flex-col rounded-2xl border-2 border-l-2 border-white/[0.08] border-l-accent/50 bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:border-l-accent hover:bg-accent/[0.04]"
+                    className="group lift-on-hover flex h-full flex-col rounded-2xl border-2 border-l-2 border-white/[0.14] border-l-accent/50 bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:border-l-accent hover:bg-accent/[0.04]"
                   >
                     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-accent-bright">
                       <span className="h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-200 group-hover:scale-150" />
@@ -252,12 +252,12 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <li key={t.id}>
                     <Link
                       href={`/tools/${t.slug}`}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/[0.14] bg-white/[0.02] px-3 py-1 text-xs text-ink-dim transition-all hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-accent-bright"
                     >
                       <span className="font-medium text-ink">{t.title}</span>
                       {t.tagline && (
                         <span className="hidden text-ink-faint sm:inline">
-                          — {truncate(t.tagline, 48)}
+                          · {truncate(t.tagline, 48)}
                         </span>
                       )}
                     </Link>
