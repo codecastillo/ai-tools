@@ -97,7 +97,7 @@ export default function HoverPreview({ tool, children }: HoverPreviewProps) {
           className={cn(
             'pointer-events-none absolute z-30 top-full left-0 mt-2',
             'w-80 max-w-[calc(100vw-2rem)]',
-            'surface block rounded-2xl border-[1.5px] border-accent/40 p-4',
+            'surface block rounded-2xl border-[1.5px] border-white/[0.15] p-4',
             'shadow-[0_0_40px_-8px_var(--color-accent-glow)]',
             reduced
               ? 'opacity-100'

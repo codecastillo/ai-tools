@@ -217,7 +217,7 @@ export default function PkgTabs({
               'rounded-md px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide',
               'transition-colors motion-reduce:transition-none',
               isActive
-                ? 'text-accent border border-accent/40 bg-accent/[0.08]'
+                ? 'text-ink border border-white/[0.10] bg-white/[0.08]'
                 : 'text-ink-mute hover:text-ink hover:bg-white/[0.04] border border-transparent',
             );
             if (isSingle) {

@@ -3,6 +3,8 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
+import SiteSidebar from '@/components/site-sidebar';
+import SiteSidebarMobile from '@/components/site-sidebar-mobile';
 import CommandPaletteProvider from '@/components/command-palette-provider';
 import KeyboardOverlayProvider from '@/components/keyboard-overlay';
 import KeyboardShortcuts from '@/components/keyboard-shortcuts';
@@ -36,12 +38,16 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="relative min-h-full flex flex-col">
+      <body className="relative min-h-full">
         <CommandPaletteProvider>
           <KeyboardOverlayProvider>
-            <SiteHeader />
-            <main className="relative z-10 flex-1">{children}</main>
-            <SiteFooter />
+            <SiteSidebar />
+            <SiteSidebarMobile />
+            <div className="flex min-h-full flex-col lg:pl-56">
+              <SiteHeader />
+              <main className="relative z-10 flex-1">{children}</main>
+              <SiteFooter />
+            </div>
             <KeyboardShortcuts />
           </KeyboardOverlayProvider>
         </CommandPaletteProvider>

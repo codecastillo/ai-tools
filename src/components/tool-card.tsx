@@ -21,12 +21,12 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
         href={`/tools/${tool.slug}`}
         data-tool-card
         className={cn(
-          'group relative flex h-full flex-col overflow-hidden rounded-2xl p-6 transition-all duration-200',
+          'group relative flex h-full flex-col overflow-hidden rounded-2xl p-6 text-center transition-all duration-200',
           'shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]',
           'lift-on-hover hover:-translate-y-1',
           'hover:shadow-[0_0_40px_-12px_var(--color-accent-glow)]',
           isFeatured
-            ? 'gradient-featured border-2 border-accent/40 bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/60'
+            ? 'gradient-featured border border-white/[0.12] bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/60'
             : 'border-[1.5px] border-white/[0.14] bg-[--color-surface] hover:border-accent/40 hover:bg-[--color-surface-hover]',
         )}
       >
@@ -77,7 +77,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
 
         {/* Pricing/difficulty/time chips */}
         {(tool.pricing || tool.difficulty || tool.time_to_value) && (
-          <div className="mt-4 flex flex-wrap gap-1.5">
+          <div className="mt-4 flex flex-wrap justify-center gap-1.5">
             {tool.pricing && <Chip>{tool.pricing}</Chip>}
             {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
             {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}
@@ -118,7 +118,7 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-lg border px-2.5 py-1 text-[12px] font-medium transition-colors',
         variant === 'accent'
-          ? 'border-accent/30 bg-accent/10 text-accent-bright'
+          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
           : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
       )}
     >

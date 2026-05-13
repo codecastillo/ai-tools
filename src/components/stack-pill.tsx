@@ -22,7 +22,7 @@ export default function StackPill() {
     <Link
       href="/stack/builder"
       aria-label={`Open stack builder · ${count} ${count === 1 ? 'tool' : 'tools'}`}
-      className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 rounded-full border border-accent/30 bg-[--color-surface]/85 px-4 py-2.5 text-sm font-medium text-ink shadow-lg shadow-accent/10 backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:bg-[--color-surface-hover]/90 hover:shadow-xl hover:shadow-accent/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+      className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 rounded-full border border-white/[0.10] bg-[--color-surface]/85 px-4 py-2.5 text-sm font-medium text-ink shadow-lg shadow-accent/10 backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:bg-[--color-surface-hover]/90 hover:shadow-xl hover:shadow-accent/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
     >
       <Layers className="h-4 w-4 text-accent" />
       <span>

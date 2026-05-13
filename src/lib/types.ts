@@ -3,6 +3,27 @@ export type Pricing = 'free' | 'paid' | 'freemium' | 'oss';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type ToolStatus = 'pending' | 'approved' | 'rejected';
 
+export interface PricingTier {
+  name: string;
+  price: string;
+  period?: string;
+  highlight?: boolean;
+  features: string[];
+  cta?: { label: string; href: string };
+}
+
+export interface StrengthAxis {
+  axis: 'speed' | 'accuracy' | 'price' | 'ecosystem' | 'ease';
+  score: number;
+}
+
+export interface Workflow {
+  title: string;
+  prompt: string;
+  steps: string[];
+  outcome: string;
+}
+
 export interface Tool {
   id: string;
   slug: string;
@@ -17,6 +38,10 @@ export interface Tool {
   cheatsheet_md: string | null;
   pricing_md: string | null;
   resources_md: string | null;
+  pricing_tiers: PricingTier[] | null;
+  strengths: StrengthAxis[] | null;
+  workflows: Workflow[] | null;
+  popularity: number;
   asciinema_id: string | null;
   pricing: Pricing | null;
   difficulty: Difficulty | null;

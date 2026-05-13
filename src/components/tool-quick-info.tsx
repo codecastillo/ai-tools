@@ -28,18 +28,18 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
   return (
     <div
       aria-label="Quick info"
-      className="rounded-2xl border border-white/[0.12] bg-[--color-surface] p-5 space-y-4"
+      className="rounded-2xl border border-white/[0.12] bg-[--color-surface] p-5 space-y-4 text-center"
     >
       <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
         Quick info
       </p>
 
       {rows.length > 0 && (
-        <dl className="space-y-2.5 text-sm">
+        <dl className="space-y-3">
           {rows.map((row) => (
-            <div key={row.label} className="flex items-baseline justify-between gap-3">
-              <dt className="text-ink-faint">{row.label}</dt>
-              <dd className="text-right text-ink">{row.value}</dd>
+            <div key={row.label} className="flex flex-col items-center text-center">
+              <dt className="text-xs text-ink-faint">{row.label}</dt>
+              <dd className="mt-1 text-sm text-ink">{row.value}</dd>
             </div>
           ))}
         </dl>
@@ -48,7 +48,7 @@ export default function ToolQuickInfo({ tool }: ToolQuickInfoProps) {
       {tool.tags.length > 0 && (
         <div>
           <p className="mb-2 text-xs text-ink-faint">Tags</p>
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap justify-center gap-1.5">
             {tool.tags.slice(0, 8).map((tag) => (
               <span
                 key={tag}

@@ -144,7 +144,7 @@ function MiniChip({
       className={cn(
         'inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider',
         variant === 'accent'
-          ? 'border-accent/30 bg-accent/10 text-accent-bright'
+          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
           : 'border-white/[0.14] bg-white/[0.02] text-ink-mute',
       )}
     >

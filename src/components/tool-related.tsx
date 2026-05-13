@@ -33,11 +33,11 @@ function RelatedCard({ tool }: { tool: Tool }) {
       <Link
         href={`/tools/${tool.slug}`}
         className={cn(
-          'group block h-full rounded-lg border border-white/[0.08] bg-white/[0.02] p-4',
+          'group block h-full rounded-lg border border-white/[0.08] bg-white/[0.02] p-4 text-center',
           'transition-all hover:-translate-y-0.5 hover:border-accent/30 hover:bg-accent/[0.04]',
         )}
       >
-        <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em]">
+        <div className="flex items-center justify-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em]">
           <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
           <span className={cat.textClass}>{cat.short}</span>
         </div>

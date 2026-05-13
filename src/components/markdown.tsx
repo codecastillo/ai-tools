@@ -191,7 +191,7 @@ const proseClasses = cn(
   '[&_table]:my-4 [&_table]:w-full [&_table]:text-sm',
   '[&_th]:border-b [&_th]:border-white/[0.10] [&_th]:py-2 [&_th]:px-3 [&_th]:text-left [&_th]:font-medium [&_th]:text-ink',
   '[&_td]:border-b [&_td]:border-white/[0.04] [&_td]:py-2 [&_td]:px-3',
-  '[&_blockquote]:border-l-2 [&_blockquote]:border-accent/40 [&_blockquote]:pl-4 [&_blockquote]:text-ink-mute [&_blockquote]:italic',
+  '[&_blockquote]:border-l-2 [&_blockquote]:border-white/[0.15] [&_blockquote]:pl-4 [&_blockquote]:text-ink-mute [&_blockquote]:italic',
 );
 
 function TextSpan({ value }: { value: string }) {

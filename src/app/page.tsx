@@ -1,9 +1,19 @@
 import Link from 'next/link';
-import { ArrowRight, Layers, Library, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  DollarSign,
+  GraduationCap,
+  Layers,
+  Library,
+  Newspaper,
+  Sparkles,
+} from 'lucide-react';
 import { listApprovedTools, listCuratedStacks } from '@/lib/db';
 import { CATEGORIES, type Category } from '@/lib/types';
 import { pickToolOfTheDay } from '@/lib/tool-of-the-day';
 import { groupByCategory } from '@/lib/sections';
+import { CHANGELOG, relativeTime } from '@/lib/changelog';
 import TerminalHero from '@/components/terminal-hero';
 import ToolOfTheDay from '@/components/tool-of-the-day';
 import CategorySection from '@/components/category-section';
@@ -14,6 +24,11 @@ import RecentlyViewed from '@/components/recently-viewed';
 import SearchBar from '@/components/search-bar';
 import CategoryTabs from '@/components/category-tabs';
 import ToolCard from '@/components/tool-card';
+import ToolFinderQuiz from '@/components/tool-finder-quiz';
+import TrendingStrip from '@/components/trending-strip';
+import SiteStatsBand from '@/components/site-stats-band';
+
+export const dynamic = 'force-dynamic';
 
 interface HomeProps {
   searchParams: Promise<{ q?: string; category?: string }>;
@@ -46,96 +61,112 @@ export default async function HomePage({ searchParams }: HomeProps) {
   const sections = groupByCategory(allTools.tools);
   const featuredOfDay = !isFiltering ? pickToolOfTheDay(allTools.tools) : null;
   const recentlyAdded = !isFiltering ? allTools.tools.slice(0, 5) : [];
+  const recentChangelog = CHANGELOG.slice(0, 3);
 
   return (
     <div className="relative mx-auto max-w-screen-2xl px-6 pb-24 pt-10 sm:pt-14 lg:px-12">
-      {/* ─── HERO ─────────────────────────────────────────────────────────── */}
+      {/* HERO */}
       <section className="relative motion-safe:section-in">
-        {/* Dotted-grid backdrop, only behind the hero. */}
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-dot-grid opacity-50"
         />
 
-        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:items-center lg:gap-12">
-          <div className="min-w-0">
-            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
-              A reference for AI dev tooling
-            </p>
+        <div className="flex flex-col items-center text-center">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
+            A reference for AI dev tooling
+          </p>
 
-            <h1 className="text-display mt-5 text-balance text-5xl text-ink sm:text-6xl lg:text-7xl">
-              Find your favorite AI tools.
-            </h1>
+          <h1 className="text-display mt-5 text-balance text-5xl text-ink sm:text-6xl lg:text-7xl">
+            Find your favorite AI tools.
+          </h1>
 
-            <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
-              We hand-pick AI tools real devs love. Install guides, usage tips,
-              curated stacks, all in one place.
-            </p>
+          <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
+            We hand-pick AI tools real devs love. Install guides, usage tips,
+            curated stacks, all in one place.
+          </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link
-                href="#sections"
-                className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
-              >
-                Browse all tools
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/submit"
-                className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.10] bg-white/[0.02] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
-              >
-                <Sparkles className="h-4 w-4" aria-hidden />
-                Submit a tool
-              </Link>
-            </div>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="#sections"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
+            >
+              Browse all tools
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/submit"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-white/[0.10] bg-white/[0.02] px-5 py-2 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:text-ink"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden />
+              Submit a tool
+            </Link>
           </div>
 
-          <div className="min-w-0">
+          <div className="mt-10 w-full max-w-3xl">
             <TerminalHero tools={allTools.tools} />
           </div>
         </div>
 
-        {/* Stat cards */}
+        {/* Small inline stat trio under the hero */}
         <div className="mt-10 grid gap-3 sm:grid-cols-3">
           <StatCard
             icon={<Library className="h-4 w-4" aria-hidden />}
             value={counts.all}
-            label="tools"
+            label="Tools indexed"
             sublabel="curated guides"
           />
           <StatCard
             icon={<Layers className="h-4 w-4" aria-hidden />}
-            value={4}
-            label="categories"
-            sublabel="claude, clis, frameworks, productivity"
+            value={stacks.length}
+            label="Stacks"
+            sublabel="ready-to-share starter kits"
           />
           <StatCard
             icon={<Sparkles className="h-4 w-4" aria-hidden />}
-            value={stacks.length}
-            label="stacks"
-            sublabel="ready-to-share starter kits"
+            value={4}
+            label="Categories"
+            sublabel="claude, clis, frameworks, productivity"
           />
         </div>
       </section>
 
-      {/* ─── PICK YOUR PATH ───────────────────────────────────────────────── */}
-      <section className="mt-16 motion-safe:section-in">
-        <h2 className="text-display text-2xl text-ink">Pick your path</h2>
-        <p className="mt-2 text-sm text-ink-dim">
-          Quick-start entry points if you&apos;re not sure where to begin.
-        </p>
+      {/* TOOL FINDER QUIZ */}
+      <section className="mt-16 md:mt-20 motion-safe:section-in">
+        <ToolFinderQuiz tools={allTools.tools} />
+      </section>
+
+      {/* PICK YOUR PATH */}
+      <section className="mt-16 md:mt-20 motion-safe:section-in">
+        <div className="text-center">
+          <h2 className="text-display text-2xl text-ink">Pick your path</h2>
+          <p className="mt-2 text-sm text-ink-dim">
+            Quick-start entry points if you&apos;re not sure where to begin.
+          </p>
+        </div>
         <div className="mt-6">
           <PathCards />
         </div>
       </section>
 
-      {/* ─── TOOL-NAME MARQUEE ────────────────────────────────────────────── */}
-      <section aria-label="All tools" className="mt-12 motion-safe:section-in">
+      {/* TOOL MARQUEE */}
+      <section
+        aria-label="Tools we track"
+        className="mt-16 md:mt-20 motion-safe:section-in"
+      >
+        <div className="mb-4 text-center">
+          <h2 className="text-display text-2xl text-ink">
+            Tools we track{' '}
+            <span className="font-mono text-base text-ink-faint">
+              ({counts.all})
+            </span>
+          </h2>
+        </div>
         <ToolMarquee tools={allTools.tools} />
       </section>
 
-      {/* ─── SEARCH ───────────────────────────────────────────────────────── */}
-      <section className="mt-14 flex flex-col items-center text-center">
+      {/* SEARCH */}
+      <section className="mt-16 md:mt-20 flex flex-col items-center text-center">
         <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
           Or jump straight in
         </p>
@@ -144,10 +175,10 @@ export default async function HomePage({ searchParams }: HomeProps) {
         </div>
       </section>
 
-      {/* Recently viewed (hides itself when localStorage is empty) */}
+      {/* Recently viewed (renders only when localStorage data exists) */}
       {!isFiltering && <RecentlyViewed />}
 
-      {/* ─── FILTERED VIEW (search or category) ───────────────────────────── */}
+      {/* FILTERED VIEW */}
       {isFiltering ? (
         <>
           <section className="mt-12">
@@ -169,16 +200,75 @@ export default async function HomePage({ searchParams }: HomeProps) {
         </>
       ) : (
         <>
-          {/* ─── TOOL OF THE DAY ───────────────────────────────────────── */}
+          {/* TOOL OF THE DAY */}
           {featuredOfDay && (
-            <div className="mt-16">
+            <div className="mt-16 md:mt-20">
               <ToolOfTheDay tool={featuredOfDay} />
             </div>
           )}
 
-          {/* ─── CURATED STACKS ────────────────────────────────────────── */}
+          {/* TRENDING THIS WEEK */}
+          <section className="mt-16 md:mt-20 motion-safe:section-in">
+            <TrendingStrip tools={allTools.tools} />
+          </section>
+
+          {/* WHAT'S NEW */}
+          <section
+            aria-label="What's new"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <div className="mb-6 text-center">
+              <h2 className="text-display text-2xl text-ink">What&apos;s new</h2>
+              <p className="mt-2 text-sm text-ink-dim">
+                Two recent additions worth knowing about.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+                  <DollarSign className="h-5 w-5" aria-hidden />
+                </span>
+                <h3 className="mt-4 text-display text-xl text-ink">
+                  LLM pricing in one place
+                </h3>
+                <p className="mt-2 max-w-md text-sm text-ink-dim">
+                  Per-million-token rates for every frontier model side by side.
+                  Calculate spend before you ship.
+                </p>
+                <Link
+                  href="/pricing"
+                  className="mt-5 inline-flex items-center gap-1 text-sm text-accent transition-all group-hover:gap-2"
+                >
+                  Compare rates
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                </Link>
+              </div>
+
+              <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+                  <GraduationCap className="h-5 w-5" aria-hidden />
+                </span>
+                <h3 className="mt-4 text-display text-xl text-ink">
+                  Where to start
+                </h3>
+                <p className="mt-2 max-w-md text-sm text-ink-dim">
+                  Guided learning paths from your first chat completion through
+                  shipping a production agent.
+                </p>
+                <Link
+                  href="/learn"
+                  className="mt-5 inline-flex items-center gap-1 text-sm text-accent transition-all group-hover:gap-2"
+                >
+                  See paths
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* CURATED STACKS */}
           {stacks.length > 0 && (
-            <section className="mt-16 motion-safe:section-in">
+            <section className="mt-16 md:mt-20 motion-safe:section-in">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div className="flex items-center gap-3">
@@ -188,10 +278,13 @@ export default async function HomePage({ searchParams }: HomeProps) {
                     </h2>
                   </div>
                   <p className="mt-2 max-w-xl text-sm text-ink-dim sm:text-base">
-                    Hand-picked combinations for common workflows. Start here when
-                    you don&apos;t know where to begin.
+                    Hand-picked combinations for common workflows. Start here
+                    when you don&apos;t know where to begin.
                   </p>
-                  <span aria-hidden className="mt-3 block h-[2px] w-20 rounded-full bg-accent" />
+                  <span
+                    aria-hidden
+                    className="mt-3 block h-[2px] w-20 rounded-full bg-accent"
+                  />
                 </div>
                 <Link
                   href="/stacks"
@@ -206,7 +299,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   <Link
                     key={s.id}
                     href={`/stacks/${s.slug}`}
-                    className="group lift-on-hover flex h-full flex-col rounded-2xl border-2 border-l-2 border-white/[0.14] border-l-accent/50 bg-white/[0.02] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:border-l-accent hover:bg-accent/[0.04]"
+                    className="group lift-on-hover flex h-full flex-col items-center rounded-2xl border border-l border-white/[0.10] bg-white/[0.02] p-6 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
                   >
                     <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-accent-bright">
                       <span className="h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-200 group-hover:scale-150" />
@@ -221,7 +314,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                       </p>
                     )}
                     <div className="flex-1" />
-                    <div className="mt-5 flex items-center justify-between border-t border-white/[0.05] pt-3 font-mono text-[11px] text-ink-faint transition-colors group-hover:border-white/[0.10]">
+                    <div className="mt-5 flex w-full items-center justify-between border-t border-white/[0.05] pt-3 font-mono text-[11px] text-ink-faint transition-colors group-hover:border-white/[0.10]">
                       <span>{s.tool_ids.length} tools</span>
                       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-accent-bright" />
                     </div>
@@ -231,18 +324,107 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </section>
           )}
 
-          {/* ─── CATEGORY SECTIONS ─────────────────────────────────────── */}
-          <div id="sections" className="mt-20 space-y-20 scroll-mt-20">
+          {/* CATEGORY SECTIONS */}
+          <div
+            id="sections"
+            className="mt-16 md:mt-20 space-y-20 scroll-mt-20"
+          >
             {sections.map((section) => (
               <CategorySection key={section.category} section={section} />
             ))}
           </div>
 
-          {/* ─── RECENTLY ADDED ────────────────────────────────────────── */}
+          {/* GLOSSARY TEASER */}
+          <section
+            aria-label="Glossary"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <div className="group flex flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-8 text-center md:p-10">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+                <BookOpen className="h-5 w-5" aria-hidden />
+              </span>
+              <h2 className="mt-4 text-display text-2xl text-ink">
+                Speak the language
+              </h2>
+              <p className="mt-2 max-w-xl text-sm text-ink-dim">
+                30+ terms decoded, from RAG to MCP. Hover any term in a guide to
+                see the definition inline.
+              </p>
+              <Link
+                href="/glossary"
+                className="mt-5 inline-flex items-center gap-1 text-sm text-accent transition-all group-hover:gap-2"
+              >
+                Open the glossary
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+              </Link>
+            </div>
+          </section>
+
+          {/* CHANGELOG TEASER */}
+          <section
+            aria-label="Latest from the site"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <div className="mb-6 flex flex-col items-center gap-2 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.10] bg-white/[0.04] text-accent">
+                <Newspaper className="h-5 w-5" aria-hidden />
+              </span>
+              <h2 className="mt-2 text-display text-2xl text-ink">
+                Latest from the site
+              </h2>
+              <p className="text-sm text-ink-dim">
+                Recent shipped changes, in plain English.
+              </p>
+            </div>
+            <ul className="grid gap-4 md:grid-cols-3">
+              {recentChangelog.map((entry) => (
+                <li key={entry.date}>
+                  <Link
+                    href="/changelog"
+                    className="group flex h-full flex-col items-center rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 text-center transition-all hover:border-accent/30 hover:bg-accent/[0.04]"
+                  >
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+                      {relativeTime(entry.date)}
+                    </span>
+                    <span className="mt-1 font-mono text-[10px] text-ink-faint">
+                      {entry.date}
+                    </span>
+                    <h3 className="mt-3 text-base font-semibold text-ink">
+                      {entry.title}
+                    </h3>
+                    <p className="mt-2 line-clamp-3 text-sm text-ink-dim">
+                      {entry.body}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-xs text-accent transition-all group-hover:gap-2">
+                      Read more
+                      <ArrowRight className="h-3 w-3" aria-hidden />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 text-center">
+              <Link
+                href="/changelog"
+                className="inline-flex items-center gap-1 text-sm text-accent transition-all hover:gap-2"
+              >
+                See full changelog
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+              </Link>
+            </div>
+          </section>
+
+          {/* RECENTLY ADDED */}
           {recentlyAdded.length > 0 && (
-            <section className="mt-20 motion-safe:section-in" aria-label="Recently added">
+            <section
+              className="mt-16 md:mt-20 motion-safe:section-in"
+              aria-label="Recently added"
+            >
               <div className="flex items-center gap-2">
-                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent-2" />
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-accent-2"
+                />
                 <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint">
                   Recently added
                 </span>
@@ -266,6 +448,15 @@ export default async function HomePage({ searchParams }: HomeProps) {
               </ul>
             </section>
           )}
+
+          {/* SITE STATS BAND (footer) */}
+          <div className="mt-16 md:mt-20 -mx-6 lg:-mx-12">
+            <SiteStatsBand
+              toolCount={allTools.total}
+              stackCount={stacks.length}
+              categoryCount={4}
+            />
+          </div>
         </>
       )}
     </div>

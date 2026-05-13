@@ -72,7 +72,7 @@ export default function StatCard({
   return (
     <div
       className={cn(
-        'group rounded-2xl border-[1.5px] border-white/[0.14] bg-[--color-surface] p-5',
+        'group flex flex-col items-center rounded-2xl border-[1.5px] border-white/[0.14] bg-[--color-surface] p-5 text-center',
         'transition-transform duration-150 hover:-translate-y-px',
       )}
     >

@@ -12,6 +12,11 @@ import RecentlyViewedPusher from '@/components/recently-viewed-pusher';
 import OftenCompared from '@/components/often-compared';
 import ToolQuickInfo from '@/components/tool-quick-info';
 import ToolRelated from '@/components/tool-related';
+import PricingTiers from '@/components/pricing-tiers';
+import RadarChart from '@/components/radar-chart';
+import FeatureMatrix from '@/components/feature-matrix';
+import WorkflowCards from '@/components/workflow-cards';
+import VersusCarousel from '@/components/versus-carousel';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -58,15 +63,21 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const cat = categoryStyle(tool.category);
   const lastVerified = tool.last_verified ? tool.last_verified.slice(0, 10) : null;
 
-  const sections: Array<{ id: string; label: string }> = [];
+  const sections: Array<{ id: string; label: string }> = [
+    { id: 'at-a-glance', label: 'At a glance' },
+  ];
   if (tool.install_md) sections.push({ id: 'install', label: 'Install' });
-  if (tool.pricing_md) sections.push({ id: 'pricing', label: 'Pricing' });
+  if (tool.pricing_md || tool.pricing_tiers)
+    sections.push({ id: 'pricing', label: 'Pricing' });
   if (tool.usage_md) sections.push({ id: 'usage', label: 'How it works' });
+  if (tool.workflows && tool.workflows.length > 0)
+    sections.push({ id: 'workflows', label: 'Workflows' });
   if (tool.asciinema_id) sections.push({ id: 'live-demo', label: 'Live demo' });
   if (tool.cheatsheet_md) sections.push({ id: 'cheatsheet', label: 'Cheat sheet' });
   if (tool.resources_md) sections.push({ id: 'resources', label: 'Resources' });
   if (tool.used_in_stacks.length > 0)
     sections.push({ id: 'used-in', label: 'Used in' });
+  sections.push({ id: 'versus', label: 'Versus' });
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-10">
@@ -130,21 +141,40 @@ export default async function ToolPage({ params }: ToolPageProps) {
           </header>
 
           {/* Sections */}
+          <Section title="At a glance" id="at-a-glance">
+            <div className="grid gap-6 lg:grid-cols-2">
+              {tool.strengths && tool.strengths.length > 0 && (
+                <div>
+                  <RadarChart strengths={tool.strengths} />
+                </div>
+              )}
+              <div>
+                <FeatureMatrix tool={tool} />
+              </div>
+            </div>
+          </Section>
+
           {tool.install_md && (
             <Section title="Install" id="install">
               <Markdown source={tool.install_md} />
             </Section>
           )}
 
-          {tool.pricing_md && (
+          {(tool.pricing_md || tool.pricing_tiers) && (
             <Section title="Pricing" id="pricing">
-              <Markdown source={tool.pricing_md} />
+              <PricingTiers tool={tool} fallbackMd={tool.pricing_md} />
             </Section>
           )}
 
           {tool.usage_md && (
             <Section title="How it works" id="usage">
               <Markdown source={tool.usage_md} />
+            </Section>
+          )}
+
+          {tool.workflows && tool.workflows.length > 0 && (
+            <Section title="Workflow examples" id="workflows">
+              <WorkflowCards workflows={tool.workflows} />
             </Section>
           )}
 
@@ -183,6 +213,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </ul>
             </Section>
           )}
+
+          <Section title="Versus" id="versus">
+            <VersusCarousel tool={tool} all={allTools.tools} />
+          </Section>
 
           <ToolRelated tool={tool} all={allTools.tools} />
 
@@ -230,7 +264,7 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider',
         variant === 'accent'
-          ? 'border-accent/30 bg-accent/10 text-accent-bright'
+          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
           : 'border-white/[0.08] bg-white/[0.02] text-ink-mute',
       )}
     >

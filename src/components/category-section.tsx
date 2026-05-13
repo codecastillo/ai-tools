@@ -30,8 +30,8 @@ export default function CategorySection({ section }: CategorySectionProps) {
       aria-labelledby={`cat-${section.category}-title`}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
-          <div className="flex items-center gap-3">
+        <div className="min-w-0 text-center sm:text-left">
+          <div className="flex items-center justify-center gap-3 sm:justify-start">
             <span
               aria-hidden
               className={cn('h-3 w-3 rounded-full shadow-[0_0_18px_-2px_currentColor]', cat.dotClass)}
@@ -46,13 +46,13 @@ export default function CategorySection({ section }: CategorySectionProps) {
               {total} {total === 1 ? 'tool' : 'tools'}
             </span>
           </div>
-          <p className="mt-2 max-w-xl text-sm text-ink-dim sm:text-base">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-ink-dim sm:mx-0 sm:text-base">
             {section.subtitle}
           </p>
           {/* Colored underline strip */}
           <span
             aria-hidden
-            className={cn('mt-3 block h-[2px] w-20 rounded-full', cat.dotClass)}
+            className={cn('mx-auto mt-3 block h-[2px] w-20 rounded-full sm:mx-0', cat.dotClass)}
           />
         </div>
 

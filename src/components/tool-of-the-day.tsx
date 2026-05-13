@@ -46,10 +46,10 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
         aria-hidden
         className="pointer-events-none absolute -inset-x-8 -inset-y-8 -z-10 gradient-featured-wash blur-3xl"
       />
-      <div className="gradient-featured overflow-hidden rounded-2xl border-2 border-accent/30 bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="gradient-featured overflow-hidden rounded-2xl border border-white/[0.10] bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
         <div className="grid gap-8 p-6 sm:p-10 md:grid-cols-5">
           {/* Left: 60%. Copy + CTA. */}
-          <div className="md:col-span-3">
+          <div className="text-center md:col-span-3">
             <p className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-bright">
               <Sparkles className="h-3 w-3" aria-hidden />
               Tool of the day · {formatToday()}
@@ -63,13 +63,13 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
             </h2>
 
             {tool.tagline && (
-              <p className="mt-3 max-w-xl text-lg text-ink-dim sm:text-xl">
+              <p className="mx-auto mt-3 max-w-xl text-lg text-ink-dim sm:text-xl">
                 {tool.tagline}
               </p>
             )}
 
             {(tool.category || tool.pricing || tool.difficulty || tool.time_to_value) && (
-              <div className="mt-5 flex flex-wrap items-center gap-2">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
                 {tool.category && (
                   <span
                     className={cn(
@@ -89,7 +89,7 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
               </div>
             )}
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href={`/tools/${tool.slug}`}
                 className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
@@ -158,7 +158,7 @@ function Chip({
       className={cn(
         'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium',
         variant === 'accent'
-          ? 'border-accent/30 bg-accent/10 text-accent-bright'
+          ? 'border-white/[0.10] bg-white/[0.05] text-accent-bright'
           : 'border-white/[0.10] bg-white/[0.02] text-ink-mute',
       )}
     >
