@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { listCuratedStacks } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StacksPage() {
   const stacks = await listCuratedStacks();
 

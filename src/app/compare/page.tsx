@@ -3,6 +3,9 @@ import { ArrowLeft } from 'lucide-react';
 import { listApprovedTools } from '@/lib/db';
 import CompareBuilder from '@/components/compare-builder';
 
+// Read-on-demand: the DB hostname isn't resolvable during Railway's build phase.
+export const dynamic = 'force-dynamic';
+
 export default async function ComparePage() {
   const { tools } = await listApprovedTools({ limit: 100 });
   return (
