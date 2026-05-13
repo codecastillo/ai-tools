@@ -3,6 +3,9 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/site-header';
 import SiteFooter from '@/components/site-footer';
+import CommandPaletteProvider from '@/components/command-palette-provider';
+import KeyboardShortcuts from '@/components/keyboard-shortcuts';
+import StackPill from '@/components/stack-pill';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -33,9 +36,13 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="relative min-h-full flex flex-col">
-        <SiteHeader />
-        <main className="relative z-10 flex-1">{children}</main>
-        <SiteFooter />
+        <CommandPaletteProvider>
+          <SiteHeader />
+          <main className="relative z-10 flex-1">{children}</main>
+          <SiteFooter />
+          <KeyboardShortcuts />
+        </CommandPaletteProvider>
+        <StackPill />
       </body>
     </html>
   );

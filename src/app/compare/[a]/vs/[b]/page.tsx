@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getToolBySlug } from '@/lib/db';
 import { categoryStyle } from '@/lib/categories';
@@ -9,6 +10,37 @@ import type { ToolDetail } from '@/lib/types';
 
 interface ComparePageProps {
   params: Promise<{ a: string; b: string }>;
+}
+
+export async function generateMetadata({ params }: ComparePageProps): Promise<Metadata> {
+  const { a, b } = await params;
+  let toolA, toolB;
+  try {
+    [toolA, toolB] = await Promise.all([getToolBySlug(a), getToolBySlug(b)]);
+  } catch {
+    return { title: 'Not found' };
+  }
+  if (!toolA || !toolB) return { title: 'Not found' };
+
+  const title = `${toolA.title} vs ${toolB.title} — ai.tools`;
+  const description =
+    `Side-by-side comparison of ${toolA.title} and ${toolB.title}: ` +
+    `${toolA.tagline ?? toolA.description ?? ''} vs ${toolB.tagline ?? toolB.description ?? ''}`.trim();
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
 }
 
 export default async function CompareDetailPage({ params }: ComparePageProps) {

@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import type { Tool } from '@/lib/types';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
+import AddToStackButton from '@/components/add-to-stack-button';
 
 interface ToolCardProps {
   tool: Tool;
@@ -32,24 +33,47 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
     <Link
       href={`/tools/${tool.slug}`}
       className={cn(
-        'group relative flex h-full flex-col rounded-xl border border-white/[0.06] bg-[--color-surface] p-5 transition-all duration-150',
-        'hover:border-white/[0.12] hover:bg-[--color-surface-hover] hover:-translate-y-px',
-        isFeatured && 'p-7',
+        'group relative flex h-full flex-col overflow-hidden rounded-xl border p-5 transition-all duration-200',
+        'shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]',
+        'lift-on-hover',
+        isFeatured
+          ? 'gradient-featured border-accent/30 bg-[--color-surface] p-7 shadow-[0_0_48px_-20px_rgba(94,106,210,0.45),inset_0_1px_0_rgba(255,255,255,0.04)] hover:border-accent/50'
+          : 'border-white/[0.08] bg-[--color-surface] hover:border-white/[0.18] hover:bg-[--color-surface-hover]',
       )}
     >
+      {/* Subtle accent edge highlight on hover */}
+      <span
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300',
+          'group-hover:opacity-100',
+          isFeatured && 'opacity-100',
+        )}
+      />
+
+      {/* Add-to-stack button — owned by B4, kept absolute-positioned in top-right */}
+      <div className="absolute top-3 right-3 z-10">
+        <AddToStackButton toolId={tool.id} title={tool.title} />
+      </div>
+
       {/* Category dot + label */}
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 pr-10">
         <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em]">
-          <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
+          <span
+            className={cn(
+              'h-1.5 w-1.5 rounded-full transition-transform duration-200 group-hover:scale-125',
+              cat.dotClass,
+            )}
+          />
           <span className={cat.textClass}>{cat.short}</span>
         </div>
-        <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink-dim" />
+        <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent-bright" />
       </div>
 
       {/* Title + curated badge */}
       <h3
         className={cn(
-          'mt-3 font-medium tracking-tight text-ink',
+          'mt-3 font-medium tracking-tight text-ink transition-colors',
           isFeatured ? 'text-2xl' : 'text-base',
         )}
       >
@@ -85,7 +109,14 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
       <div className="flex-1" />
 
       {/* Footer row */}
-      <div className="mt-5 flex items-center justify-between border-t border-white/[0.04] pt-3 text-[11px] text-ink-faint">
+      <div
+        className={cn(
+          'mt-5 flex items-center justify-between border-t pt-3 text-[11px] text-ink-faint transition-colors',
+          isFeatured
+            ? 'border-accent/15 group-hover:border-accent/25'
+            : 'border-white/[0.04] group-hover:border-white/[0.08]',
+        )}
+      >
         <span className="font-mono">added {timeAgo(tool.created_at)}</span>
         {tool.tags.length > 0 && (
           <span className="truncate">{tool.tags.slice(0, 3).join(' · ')}</span>
@@ -105,7 +136,7 @@ function Chip({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium',
+        'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium transition-colors',
         variant === 'accent'
           ? 'border-accent/30 bg-accent/10 text-accent-bright'
           : 'border-white/[0.06] bg-white/[0.02] text-ink-mute',

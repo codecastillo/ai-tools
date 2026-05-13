@@ -161,23 +161,59 @@ export async function listApprovedTools(opts: {
   };
 }
 
+/**
+ * Returns counts of approved tools per category in a single query.
+ * Used by the homepage tab bar.
+ */
+export async function getCategoryCounts(): Promise<{
+  total: number;
+  byCategory: Record<string, number>;
+}> {
+  await ensureMigrations();
+  const pool = getPool();
+  const res = await pool.query<{ category: string | null; count: string }>(
+    `SELECT category, COUNT(*)::int AS count
+       FROM tools
+      WHERE status = 'approved'
+      GROUP BY category`,
+  );
+  const byCategory: Record<string, number> = {};
+  let total = 0;
+  for (const row of res.rows) {
+    const n = Number(row.count) || 0;
+    total += n;
+    if (row.category) byCategory[row.category] = n;
+  }
+  return { total, byCategory };
+}
+
 export async function getToolBySlug(slug: string): Promise<ToolDetail | null> {
   await ensureMigrations();
   const pool = getPool();
-  const toolRes = await pool.query(
-    `SELECT ${TOOL_COLS} FROM tools WHERE slug = $1 AND status = 'approved' LIMIT 1`,
+  const res = await pool.query(
+    `SELECT ${TOOL_COLS},
+            COALESCE(
+              (SELECT json_agg(s_row ORDER BY s_row.created_at DESC)
+                 FROM (
+                   SELECT s.id, s.slug, s.name, s.description, s.tool_ids,
+                          s.is_curated, s.created_at
+                     FROM stacks s
+                    WHERE s.is_curated = TRUE
+                      AND tools.id = ANY(s.tool_ids)
+                 ) AS s_row),
+              '[]'::json
+            ) AS used_in_stacks
+       FROM tools
+      WHERE slug = $1 AND status = 'approved'
+      LIMIT 1`,
     [slug],
   );
-  if (toolRes.rowCount === 0) return null;
-  const tool = rowToTool(toolRes.rows[0]);
-  const stacksRes = await pool.query(
-    `SELECT id, slug, name, description, tool_ids, is_curated, created_at
-       FROM stacks
-      WHERE is_curated = TRUE AND $1::uuid = ANY(tool_ids)
-      ORDER BY created_at DESC`,
-    [tool.id],
-  );
-  return { ...tool, used_in_stacks: stacksRes.rows.map(rowToStack) };
+  if (res.rowCount === 0) return null;
+  const row = res.rows[0];
+  const tool = rowToTool(row);
+  const rawStacks = row.used_in_stacks as Array<Record<string, unknown>> | null;
+  const stacks = Array.isArray(rawStacks) ? rawStacks.map(rowToStack) : [];
+  return { ...tool, used_in_stacks: stacks };
 }
 
 export async function listCuratedStacks(): Promise<Stack[]> {

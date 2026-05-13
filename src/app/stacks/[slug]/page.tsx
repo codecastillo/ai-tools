@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getStackBySlug } from '@/lib/db';
 import { categoryStyle } from '@/lib/categories';
@@ -7,6 +8,37 @@ import { cn } from '@/lib/cn';
 
 interface StackPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: StackPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  let stack;
+  try {
+    stack = await getStackBySlug(slug);
+  } catch {
+    return { title: 'Not found' };
+  }
+  if (!stack) return { title: 'Not found' };
+
+  const name = stack.name ?? stack.slug;
+  const title = `${name} — ai.tools`;
+  const description =
+    stack.description ?? `A ${stack.tools.length}-tool AI dev stack on ai.tools`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
 }
 
 export default async function StackDetail({ params }: StackPageProps) {

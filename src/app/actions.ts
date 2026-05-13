@@ -123,12 +123,26 @@ export async function lookupMetadata(
   url: string,
 ): Promise<{ title?: string | null; description?: string | null; error?: string }> {
   if (!url.trim()) return { error: 'URL required' };
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 8000); // outer ceiling
   try {
-    const meta = await fetchMetadata(url.trim());
+    const meta = await Promise.race([
+      fetchMetadata(url.trim()),
+      new Promise<never>((_, reject) => {
+        ac.signal.addEventListener('abort', () =>
+          reject(new Error('Metadata lookup timed out')),
+        );
+      }),
+    ]);
     return { title: meta.title, description: meta.description };
   } catch (err) {
     if (err instanceof UnsafeUrlError) return { error: err.message };
     if (err instanceof FetchSizeError) return { error: 'Page too large' };
+    if (err instanceof Error && /timed out/i.test(err.message)) {
+      return { error: 'Metadata lookup timed out' };
+    }
     return { error: 'Could not fetch metadata' };
+  } finally {
+    clearTimeout(timer);
   }
 }

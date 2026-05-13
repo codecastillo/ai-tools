@@ -125,6 +125,7 @@ export default function SubmitForm() {
         hint="Paste a URL — we'll fetch the title and description."
       >
         <input
+          id="url"
           type="url"
           name="url"
           value={url}
@@ -132,6 +133,8 @@ export default function SubmitForm() {
           onBlur={(e) => tryMetadata(e.target.value.trim())}
           placeholder="https://example.com/tool"
           required
+          aria-invalid={!!errors.url}
+          aria-describedby={errors.url ? 'url-err' : undefined}
           className={inputClass(!!errors.url)}
         />
       </Field>
@@ -144,6 +147,7 @@ export default function SubmitForm() {
         hint={prefilled.has('title') ? '✦ pre-filled from the page' : undefined}
       >
         <input
+          id="title"
           type="text"
           name="title"
           value={title}
@@ -153,6 +157,8 @@ export default function SubmitForm() {
           }}
           placeholder="e.g. Cursor"
           required
+          aria-invalid={!!errors.title}
+          aria-describedby={errors.title ? 'title-err' : undefined}
           className={inputClass(!!errors.title)}
         />
       </Field>
@@ -185,6 +191,7 @@ export default function SubmitForm() {
         hint={prefilled.has('description') ? '✦ pre-filled from the page' : 'Optional'}
       >
         <textarea
+          id="description"
           name="description"
           rows={3}
           value={description}
@@ -193,6 +200,8 @@ export default function SubmitForm() {
             unmarkPrefilled('description');
           }}
           placeholder="What does it do?"
+          aria-invalid={!!errors.description}
+          aria-describedby={errors.description ? 'description-err' : undefined}
           className={cn(inputClass(!!errors.description), 'resize-y leading-relaxed')}
         />
       </Field>
@@ -200,9 +209,12 @@ export default function SubmitForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Category" name="category" error={errors.category} hint="Optional">
           <select
+            id="category"
             name="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            aria-invalid={!!errors.category}
+            aria-describedby={errors.category ? 'category-err' : undefined}
             className={inputClass(!!errors.category)}
           >
             <option value="">— Choose —</option>
@@ -216,11 +228,14 @@ export default function SubmitForm() {
 
         <Field label="Tags" name="tags" error={errors.tags} hint="Comma-separated">
           <input
+            id="tags"
             type="text"
             name="tags"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="cli, anthropic, terminal"
+            aria-invalid={!!errors.tags}
+            aria-describedby={errors.tags ? 'tags-err' : undefined}
             className={inputClass(!!errors.tags)}
           />
         </Field>
@@ -228,11 +243,14 @@ export default function SubmitForm() {
 
       <Field label="Submitter name" name="submitter" error={errors.submitter} hint="Optional">
         <input
+          id="submitter"
           type="text"
           name="submitter"
           value={submitter}
           onChange={(e) => setSubmitter(e.target.value)}
           placeholder="Your name (optional)"
+          aria-invalid={!!errors.submitter}
+          aria-describedby={errors.submitter ? 'submitter-err' : undefined}
           className={inputClass(!!errors.submitter)}
         />
       </Field>

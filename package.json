@@ -17,6 +17,7 @@
     "cmdk": "^1.0.4",
     "fuse.js": "^7.0.0",
     "ipaddr.js": "^2.2.0",
+    "isomorphic-dompurify": "^3.12.0",
     "lucide-react": "^0.469.0",
     "nanoid": "^5.0.9",
     "next": "16.2.6",
