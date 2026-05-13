@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* Linear-inspired dark palette.
+ * Background isn't pure black — it has a touch of cool blue for depth.
+ * Accent is Linear's signature soft indigo. */
+@theme {
+  --color-bg: #0F1011;
+  --color-bg-elevated: #16181B;
+  --color-surface: #1A1C20;
+  --color-surface-hover: #20232A;
+
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.10);
+  --color-border-accent: rgba(94, 106, 210, 0.40);
+
+  --color-ink: #F4F5F8;
+  --color-ink-dim: #B4B6C0;
+  --color-ink-mute: #8C8F9B;
+  --color-ink-faint: #6C6E7A;
+
+  --color-accent: #5E6AD2;
+  --color-accent-bright: #7D88E5;
+  --color-accent-dim: #4A55B3;
+  --color-accent-glow: rgba(94, 106, 210, 0.30);
+
+  --color-success: #4ADE80;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 1px 2px 0 rgba(0, 0, 0, 0.40);
+  --shadow-elevated: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 8px 24px -8px rgba(0, 0, 0, 0.60);
+  --shadow-glow: 0 0 32px -8px rgba(94, 106, 210, 0.40);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    font-family: var(--font-sans);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: white;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Subtle ambient gradient anchored top — gives Linear-like depth. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 480px;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(94, 106, 210, 0.10),
+      transparent 60%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .surface {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .surface-hover {
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+      transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .surface-hover:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-strong);
+  }
+}

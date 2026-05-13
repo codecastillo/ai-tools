@@ -1,0 +1,117 @@
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import type { Tool } from '@/lib/types';
+import { categoryStyle } from '@/lib/categories';
+import { cn } from '@/lib/cn';
+
+interface ToolCardProps {
+  tool: Tool;
+  variant?: 'default' | 'featured';
+}
+
+function timeAgo(iso: string): string {
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return '';
+  const diff = Date.now() - t;
+  const min = Math.round(diff / 60000);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.round(hr / 24);
+  if (day < 30) return `${day}d ago`;
+  const mo = Math.round(day / 30);
+  if (mo < 12) return `${mo}mo ago`;
+  return `${Math.round(day / 365)}y ago`;
+}
+
+export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
+  const cat = categoryStyle(tool.category);
+  const isFeatured = variant === 'featured';
+
+  return (
+    <Link
+      href={`/tools/${tool.slug}`}
+      className={cn(
+        'group relative flex h-full flex-col rounded-xl border border-white/[0.06] bg-[--color-surface] p-5 transition-all duration-150',
+        'hover:border-white/[0.12] hover:bg-[--color-surface-hover] hover:-translate-y-px',
+        isFeatured && 'p-7',
+      )}
+    >
+      {/* Category dot + label */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em]">
+          <span className={cn('h-1.5 w-1.5 rounded-full', cat.dotClass)} />
+          <span className={cat.textClass}>{cat.short}</span>
+        </div>
+        <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink-dim" />
+      </div>
+
+      {/* Title + curated badge */}
+      <h3
+        className={cn(
+          'mt-3 font-medium tracking-tight text-ink',
+          isFeatured ? 'text-2xl' : 'text-base',
+        )}
+      >
+        {tool.title}
+        {tool.is_curated && (
+          <span className="ml-2 text-[10px] font-normal uppercase tracking-wider text-accent">
+            ★ curated
+          </span>
+        )}
+      </h3>
+
+      {tool.tagline && (
+        <p
+          className={cn(
+            'mt-1 text-ink-dim',
+            isFeatured ? 'text-base line-clamp-3' : 'text-sm line-clamp-2',
+          )}
+        >
+          {tool.tagline}
+        </p>
+      )}
+
+      {/* Pricing/difficulty/time chips */}
+      {(tool.pricing || tool.difficulty || tool.time_to_value) && (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {tool.pricing && <Chip>{tool.pricing}</Chip>}
+          {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
+          {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}
+        </div>
+      )}
+
+      {/* Spacer to push footer down */}
+      <div className="flex-1" />
+
+      {/* Footer row */}
+      <div className="mt-5 flex items-center justify-between border-t border-white/[0.04] pt-3 text-[11px] text-ink-faint">
+        <span className="font-mono">added {timeAgo(tool.created_at)}</span>
+        {tool.tags.length > 0 && (
+          <span className="truncate">{tool.tags.slice(0, 3).join(' · ')}</span>
+        )}
+      </div>
+    </Link>
+  );
+}
+
+function Chip({
+  children,
+  variant = 'default',
+}: {
+  children: React.ReactNode;
+  variant?: 'default' | 'accent';
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium',
+        variant === 'accent'
+          ? 'border-accent/30 bg-accent/10 text-accent-bright'
+          : 'border-white/[0.06] bg-white/[0.02] text-ink-mute',
+      )}
+    >
+      {children}
+    </span>
+  );
+}
