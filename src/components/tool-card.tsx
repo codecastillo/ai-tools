@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn';
 import AddToStackButton from '@/components/add-to-stack-button';
 import HoverPreview from '@/components/hover-preview';
 import SaveToolButton from '@/components/save-tool-button';
+import TrackerButton from '@/components/tracker-button';
 import WhatsNewBadge from '@/components/whats-new-badge';
 import TrendingIndicator from '@/components/trending-indicator';
 
@@ -104,7 +105,10 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
               : 'border-line group-hover:border-line-2',
           )}
         >
-          <AddToStackButton toolId={tool.id} title={tool.title} variant="ghost" />
+          <div className="flex items-center gap-2">
+            <AddToStackButton toolId={tool.id} title={tool.title} variant="ghost" />
+            <TrackerButton slug={tool.slug} variant="pill" size="sm" />
+          </div>
           <span className="font-medium transition-colors group-hover:text-accent">
             Read guide →
           </span>

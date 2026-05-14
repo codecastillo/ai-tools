@@ -29,14 +29,14 @@ export default function ToolDna({ tool }: Props) {
             <Target className="h-3 w-3 text-accent" />
             Best for
           </p>
-          <ul className="mt-2 text-left max-w-md mx-auto space-y-1 text-sm text-ink-dim">
+          <div className="mt-3 space-y-2 text-sm text-ink-dim">
             {dna.best_for.map((item) => (
-              <li key={item} className="flex gap-2">
-                <span className="text-accent">+</span>
-                <span>{item}</span>
-              </li>
+              <p key={item} className="text-center">
+                <span className="mr-1.5 text-accent">+</span>
+                {item}
+              </p>
             ))}
-          </ul>
+          </div>
         </div>
 
         <div>
@@ -44,14 +44,14 @@ export default function ToolDna({ tool }: Props) {
             <ShieldX className="h-3 w-3 text-ink-faint" />
             Not for
           </p>
-          <ul className="mt-2 text-left max-w-md mx-auto space-y-1 text-sm text-ink-dim">
+          <div className="mt-3 space-y-2 text-sm text-ink-dim">
             {dna.not_for.map((item) => (
-              <li key={item} className="flex gap-2">
-                <span className="text-ink-faint">-</span>
-                <span>{item}</span>
-              </li>
+              <p key={item} className="text-center">
+                <span className="mr-1.5 text-ink-faint">-</span>
+                {item}
+              </p>
             ))}
-          </ul>
+          </div>
         </div>
 
         <div>

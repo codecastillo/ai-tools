@@ -108,28 +108,30 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
             </div>
           </div>
 
-          {/* Right: 40%. Static faux terminal. */}
+          {/* Right: 40%. Static faux terminal. Always dark, text colors are
+              hardcoded so the panel reads cleanly in both light and dark
+              themes. */}
           <div className="md:col-span-2">
-            <div className="overflow-hidden rounded-xl border-2 border-line-2 bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+            <div className="overflow-hidden rounded-xl border-2 border-white/[0.10] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               {/* macOS chrome */}
-              <div className="flex items-center gap-2 border-b border-line-2 px-3 py-2">
+              <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" aria-hidden />
                 <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" aria-hidden />
-                <span className="ml-2 font-mono text-[11px] text-ink-faint">
+                <span className="ml-2 font-mono text-[11px] text-[#a8a299]">
                   ai.tools/{tool.slug}
                 </span>
               </div>
               <div className="px-4 py-4 font-mono text-[13px] leading-relaxed">
                 <div className="flex items-start gap-2">
-                  <span className="select-none text-accent-bright">$</span>
-                  <span className="whitespace-pre-wrap break-all text-ink">
+                  <span className="select-none text-[#FF8B7E]">$</span>
+                  <span className="whitespace-pre-wrap break-all text-[#e8e3dc]">
                     {promptLine}
                   </span>
                 </div>
-                <div className="mt-2 text-ink-faint">
+                <div className="mt-2 text-[#a8a299]">
                   <span className="select-none">↳ </span>
-                  {tool.title}
+                  <span className="text-[#cfc9c0]">{tool.title}</span>
                   {tool.tagline ? ` · ${truncate(tool.tagline, 60)}` : ''}
                 </div>
               </div>

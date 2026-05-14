@@ -408,6 +408,49 @@ export default async function HomePage({ searchParams }: HomeProps) {
             </div>
           </section>
 
+          {/* STUDY MODE TEASER */}
+          <section
+            aria-label="Study features"
+            className="mt-16 md:mt-20 motion-safe:section-in"
+          >
+            <div className="mb-6 flex flex-col items-center gap-2 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line-2 bg-surface-2 text-accent">
+                <GraduationCap className="h-5 w-5" aria-hidden />
+              </span>
+              <h2 className="mt-2 text-display text-2xl text-ink">Study mode</h2>
+              <p className="text-ink-mute max-w-xl">
+                Built for school. Flashcards, quizzes, notes, a pomodoro, and a tracker, all kept in your browser.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              <Link href="/flashcards" className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-2 transition">
+                <Layers className="h-5 w-5 text-accent mx-auto" />
+                <div className="mt-2 text-sm font-medium text-ink">Flashcards</div>
+                <div className="mt-1 text-xs text-ink-mute">60 glossary terms</div>
+              </Link>
+              <Link href="/quiz" className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-2 transition">
+                <Sparkles className="h-5 w-5 text-accent mx-auto" />
+                <div className="mt-2 text-sm font-medium text-ink">Quiz</div>
+                <div className="mt-1 text-xs text-ink-mute">Test yourself</div>
+              </Link>
+              <Link href="/notes" className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-2 transition">
+                <BookOpen className="h-5 w-5 text-accent mx-auto" />
+                <div className="mt-2 text-sm font-medium text-ink">Notes</div>
+                <div className="mt-1 text-xs text-ink-mute">Per-tool study notes</div>
+              </Link>
+              <Link href="/study" className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-2 transition">
+                <GraduationCap className="h-5 w-5 text-accent mx-auto" />
+                <div className="mt-2 text-sm font-medium text-ink">Study mode</div>
+                <div className="mt-1 text-xs text-ink-mute">Pomodoro + paths</div>
+              </Link>
+              <Link href="/tracker" className="group rounded-xl border border-line bg-surface-1 p-5 text-center hover:border-line-2 hover:bg-surface-2 transition">
+                <Library className="h-5 w-5 text-accent mx-auto" />
+                <div className="mt-2 text-sm font-medium text-ink">Tracker</div>
+                <div className="mt-1 text-xs text-ink-mute">Tried · Want · Using</div>
+              </Link>
+            </div>
+          </section>
+
           {/* AI ECOSYSTEM NEWS */}
           <section
             aria-label="AI ecosystem news"

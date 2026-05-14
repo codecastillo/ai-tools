@@ -140,7 +140,7 @@ export default function TerminalHero(_props: TerminalHeroProps) {
           <span className="h-3 w-3 rounded-full bg-[#28C840]" />
         </div>
         <div className="flex-1" />
-        <span className="font-mono text-[11px] text-ink-faint tracking-tight">
+        <span className="font-mono text-[11px] text-[#a8a299] tracking-tight">
           {DEMO.title}
         </span>
       </div>
@@ -154,12 +154,12 @@ export default function TerminalHero(_props: TerminalHeroProps) {
       >
         {/* Prompt line. */}
         <div className="flex items-baseline whitespace-pre overflow-hidden">
-          <span className="text-accent font-semibold">$ </span>
-          <span className="text-ink truncate">{promptTyped}</span>
+          <span className="text-[#FF8B7E] font-semibold">$ </span>
+          <span className="text-[#e8e3dc] truncate">{promptTyped}</span>
           {!promptDone && (
             <span
               aria-hidden="true"
-              className="inline-block w-2 h-[1em] bg-accent translate-y-0.5 ml-0.5 terminal-cursor"
+              className="inline-block w-2 h-[1em] bg-[#FF8B7E] translate-y-0.5 ml-0.5 terminal-cursor"
             />
           )}
         </div>
@@ -182,15 +182,15 @@ export default function TerminalHero(_props: TerminalHeroProps) {
                 className={cn(
                   'shrink-0',
                   isOk
-                    ? 'text-success'
+                    ? 'text-[#7FCF93]'
                     : isProgress
-                      ? 'text-accent-2'
-                      : 'text-ink-faint',
+                      ? 'text-[#FFB347]'
+                      : 'text-[#a8a299]',
                 )}
               >
                 {isOk ? '[ok]' : isProgress ? '[~]' : '  '}
               </span>
-              <span className="text-ink-dim truncate">
+              <span className="text-[#cfc9c0] truncate">
                 {isOk
                   ? line.slice(5)
                   : isProgress
@@ -208,7 +208,7 @@ export default function TerminalHero(_props: TerminalHeroProps) {
           {promptDone && allOutputDone && !reducedMotion && (
             <span
               aria-hidden="true"
-              className="inline-block w-2 h-[1em] bg-accent translate-y-0.5 terminal-cursor"
+              className="inline-block w-2 h-[1em] bg-[#FF8B7E] translate-y-0.5 terminal-cursor"
             />
           )}
         </div>

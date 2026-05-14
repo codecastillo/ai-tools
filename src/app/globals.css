@@ -275,7 +275,7 @@
     line-height: 0.95;
   }
 
-  /* Warm gradient wash for featured surfaces. */
+  /* Warm gradient wash for featured surfaces. Dark mode default. */
   .gradient-featured {
     background:
       linear-gradient(
@@ -289,6 +289,21 @@
         transparent 70%
       );
   }
+  /* Lighter, less saturated gradient stops on light theme so the card reads
+     soft and warm instead of a sun-bleached coral wash. */
+  [data-theme='light'] .gradient-featured {
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 220, 200, 0.55),
+        transparent 65%
+      ),
+      radial-gradient(
+        ellipse 60% 100% at 100% 0%,
+        rgba(255, 235, 200, 0.50),
+        transparent 75%
+      );
+  }
 
   /* Ambient halo behind featured cards. */
   .gradient-featured-wash {
@@ -296,6 +311,13 @@
       ellipse 70% 80% at 20% 0%,
       rgba(255, 107, 91, 0.18),
       transparent 70%
+    );
+  }
+  [data-theme='light'] .gradient-featured-wash {
+    background: radial-gradient(
+      ellipse 70% 80% at 20% 0%,
+      rgba(255, 200, 170, 0.25),
+      transparent 75%
     );
   }
 

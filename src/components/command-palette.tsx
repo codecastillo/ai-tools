@@ -7,11 +7,21 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
+  Bookmark,
   Box,
+  Brain,
   FileText,
+  GitBranch,
   Globe,
+  Hash,
+  HelpCircle,
   Layers,
+  Maximize2,
+  Printer,
   Search,
+  Star,
+  Target,
+  Wand2,
   Wrench,
   Zap,
 } from 'lucide-react';
@@ -22,10 +32,13 @@ import { PROMPTS, PROMPT_CATEGORY_LABEL } from '@/lib/prompts';
 import { RECIPES } from '@/lib/recipes';
 import { BENCHMARKS } from '@/lib/benchmarks';
 
+type IconComponent = typeof Globe;
+
 interface PageEntry {
   label: string;
   href: string;
   keywords?: string[];
+  icon?: IconComponent;
 }
 
 const PAGES: PageEntry[] = [
@@ -40,6 +53,87 @@ const PAGES: PageEntry[] = [
   { label: 'Prompts', href: '/prompts', keywords: ['library', 'templates'] },
   { label: 'Recipes', href: '/recipes', keywords: ['stacks', 'cookbook', 'setups'] },
   { label: 'Benchmarks', href: '/benchmarks', keywords: ['scores', 'leaderboard', 'models'] },
+];
+
+const STUDY_PAGES: PageEntry[] = [
+  {
+    label: 'Flashcards',
+    href: '/flashcards',
+    icon: Layers,
+    keywords: ['cards', 'memorize', 'review', 'study'],
+  },
+  {
+    label: 'Quiz',
+    href: '/quiz',
+    icon: HelpCircle,
+    keywords: ['test', 'questions', 'practice', 'study'],
+  },
+  {
+    label: 'Notes',
+    href: '/notes',
+    icon: FileText,
+    keywords: ['note', 'scratchpad', 'jot', 'study'],
+  },
+  {
+    label: 'Tracker',
+    href: '/tracker',
+    icon: Bookmark,
+    keywords: ['progress', 'streak', 'log', 'study'],
+  },
+  {
+    label: 'Study mode',
+    href: '/study',
+    icon: Brain,
+    keywords: ['learn', 'focus', 'session', 'study'],
+  },
+  {
+    label: 'Tokenizer',
+    href: '/playground/tokens',
+    icon: Hash,
+    keywords: ['tokens', 'playground', 'count', 'bpe'],
+  },
+  {
+    label: 'Prompt builder',
+    href: '/playground/prompt-builder',
+    icon: Wand2,
+    keywords: ['prompt', 'builder', 'playground', 'compose'],
+  },
+  {
+    label: 'Context windows',
+    href: '/context-windows',
+    icon: Maximize2,
+    keywords: ['context', 'window', 'size', 'tokens', 'limits'],
+  },
+  {
+    label: 'Model families',
+    href: '/families',
+    icon: GitBranch,
+    keywords: ['family', 'model', 'lineage', 'vendor', 'tree'],
+  },
+  {
+    label: 'Use cases',
+    href: '/use-cases',
+    icon: Target,
+    keywords: ['use case', 'scenarios', 'apply', 'tasks'],
+  },
+  {
+    label: 'Cheatsheets',
+    href: '/cheatsheets',
+    icon: Printer,
+    keywords: ['cheat', 'reference', 'quick', 'print'],
+  },
+  {
+    label: 'Ecosystem stats',
+    href: '/stats',
+    icon: BarChart3,
+    keywords: ['stats', 'data', 'metrics', 'ecosystem'],
+  },
+  {
+    label: 'Saved tools',
+    href: '/saved',
+    icon: Star,
+    keywords: ['favorites', 'bookmarks', 'saved', 'starred'],
+  },
 ];
 
 interface ActionEntry {
@@ -69,6 +163,50 @@ const ACTIONS: ActionEntry[] = [
       document.documentElement.setAttribute('data-theme', next);
       try {
         localStorage.setItem('aitools_theme', next);
+      } catch {
+        /* private mode */
+      }
+    },
+  },
+  {
+    label: 'Reset onboarding tour',
+    hint: 'replay intro',
+    keywords: ['tour', 'onboarding', 'intro', 'replay', 'reset'],
+    run: () => {
+      if (typeof window === 'undefined') return;
+      try {
+        localStorage.setItem('aitools_tour_done', 'false');
+      } catch {
+        /* private mode */
+      }
+      window.location.reload();
+    },
+  },
+  {
+    label: 'Clear saved tools',
+    hint: 'wipe favorites',
+    keywords: ['clear', 'saved', 'favorites', 'bookmarks', 'wipe', 'reset'],
+    run: () => {
+      if (typeof window === 'undefined') return;
+      const ok = window.confirm('Clear all saved tools? This cannot be undone.');
+      if (!ok) return;
+      try {
+        localStorage.removeItem('aitools_saved');
+      } catch {
+        /* private mode */
+      }
+    },
+  },
+  {
+    label: 'Clear notes',
+    hint: 'wipe notes',
+    keywords: ['clear', 'notes', 'wipe', 'reset', 'delete'],
+    run: () => {
+      if (typeof window === 'undefined') return;
+      const ok = window.confirm('Clear all notes? This cannot be undone.');
+      if (!ok) return;
+      try {
+        localStorage.removeItem('aitools_notes');
       } catch {
         /* private mode */
       }
@@ -244,19 +382,41 @@ export default function CommandPalette() {
         </Command.Group>
 
         <Command.Group heading="Pages" className={GROUP_CLS}>
-          {PAGES.map((p) => (
-            <Command.Item
-              key={`page-${p.href}`}
-              value={`page ${p.label} ${p.href} ${p.keywords?.join(' ') ?? ''}`}
-              keywords={[p.label, p.href, ...(p.keywords ?? [])]}
-              onSelect={() => go(p.href)}
-              className={ITEM_CLS}
-            >
-              <Globe className="h-3.5 w-3.5 shrink-0 text-ink-faint" aria-hidden="true" />
-              <span>{p.label}</span>
-              <span className="ml-auto font-mono text-[10px] text-ink-faint">{p.href}</span>
-            </Command.Item>
-          ))}
+          {PAGES.map((p) => {
+            const Icon = p.icon ?? Globe;
+            return (
+              <Command.Item
+                key={`page-${p.href}`}
+                value={`page ${p.label} ${p.href} ${p.keywords?.join(' ') ?? ''}`}
+                keywords={[p.label, p.href, ...(p.keywords ?? [])]}
+                onSelect={() => go(p.href)}
+                className={ITEM_CLS}
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0 text-ink-faint" aria-hidden="true" />
+                <span>{p.label}</span>
+                <span className="ml-auto font-mono text-[10px] text-ink-faint">{p.href}</span>
+              </Command.Item>
+            );
+          })}
+        </Command.Group>
+
+        <Command.Group heading="Study" className={GROUP_CLS}>
+          {STUDY_PAGES.map((p) => {
+            const Icon = p.icon ?? Globe;
+            return (
+              <Command.Item
+                key={`study-${p.href}`}
+                value={`study ${p.label} ${p.href} ${p.keywords?.join(' ') ?? ''}`}
+                keywords={[p.label, p.href, ...(p.keywords ?? [])]}
+                onSelect={() => go(p.href)}
+                className={ITEM_CLS}
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0 text-ink-faint" aria-hidden="true" />
+                <span>{p.label}</span>
+                <span className="ml-auto font-mono text-[10px] text-ink-faint">{p.href}</span>
+              </Command.Item>
+            );
+          })}
         </Command.Group>
 
         <Command.Group heading="Actions" className={GROUP_CLS}>

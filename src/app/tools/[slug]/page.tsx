@@ -20,8 +20,11 @@ import VersusCarousel from '@/components/versus-carousel';
 import ToolDNA from '@/components/tool-dna';
 import FreshnessBadge from '@/components/freshness-badge';
 import SaveToolButton from '@/components/save-tool-button';
+import TrackerButton from '@/components/tracker-button';
 import WhatsNewBadge from '@/components/whats-new-badge';
 import ReadingTime from '@/components/reading-time';
+import ResourcesGrid from '@/components/resources-grid';
+import ToolTimeline from '@/components/tool-timeline';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -70,6 +73,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const sections: Array<{ id: string; label: string }> = [];
   if (tool.tool_dna) sections.push({ id: 'dna', label: 'DNA' });
   sections.push({ id: 'at-a-glance', label: 'At a glance' });
+  sections.push({ id: 'timeline', label: 'Timeline' });
   if (tool.install_md) sections.push({ id: 'install', label: 'Install' });
   if (tool.pricing_md || tool.pricing_tiers)
     sections.push({ id: 'pricing', label: 'Pricing' });
@@ -137,6 +141,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 <ArrowUpRight className="h-4 w-4" />
               </a>
               <SaveToolButton slug={tool.slug} variant="pill" size="md" />
+              <TrackerButton slug={tool.slug} variant="pill" size="md" />
               <FreshnessBadge tool={tool} />
               <ReadingTime tool={tool} />
             </div>
@@ -160,6 +165,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 <FeatureMatrix tool={tool} />
               </div>
             </div>
+          </Section>
+
+          <Section title="Timeline" id="timeline">
+            <ToolTimeline tool={tool} />
           </Section>
 
           {tool.install_md && (
@@ -200,7 +209,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
           {tool.resources_md && (
             <Section title="Resources" id="resources">
-              <Markdown source={tool.resources_md} />
+              <ResourcesGrid markdown={tool.resources_md} />
             </Section>
           )}
 
