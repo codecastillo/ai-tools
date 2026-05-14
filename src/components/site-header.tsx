@@ -307,12 +307,15 @@ interface NavDropdownProps {
 function NavDropdown({ group, open, onOpen, onClose, pathname }: NavDropdownProps) {
   const hasActive = group.items.some((i) => i.href === pathname);
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={onOpen}
+      onMouseLeave={onClose}
+    >
       <button
         type="button"
         aria-haspopup="true"
         aria-expanded={open}
-        onMouseEnter={onOpen}
         onFocus={onOpen}
         onClick={() => (open ? onClose() : onOpen())}
         className={cn(
@@ -333,9 +336,11 @@ function NavDropdown({ group, open, onOpen, onClose, pathname }: NavDropdownProp
 
       {open && (
         <div
-          onMouseLeave={onClose}
-          className="absolute left-1/2 top-full z-50 mt-2 w-[min(680px,90vw)] -translate-x-1/2 overflow-hidden rounded-xl border border-line-2 bg-surface-1 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.50)]"
+          /* Tiny invisible bridge so the cursor doesn't pass through dead space
+           * between the button and the panel and trigger an early close. */
+          className="absolute left-1/2 top-full z-50 w-[min(680px,90vw)] -translate-x-1/2 pt-2"
         >
+          <div className="overflow-hidden rounded-xl border border-line-2 bg-surface-1 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.50)]">
           <div className="grid grid-cols-1 gap-1 p-3 md:grid-cols-2">
             {group.items.map((item) => {
               const Icon = item.icon;
@@ -378,6 +383,7 @@ function NavDropdown({ group, open, onOpen, onClose, pathname }: NavDropdownProp
                 </Link>
               );
             })}
+            </div>
           </div>
         </div>
       )}
