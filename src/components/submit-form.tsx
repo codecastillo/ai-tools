@@ -27,6 +27,13 @@ export default function SubmitForm() {
   const [toast, setToast] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  const [metaStatus, setMetaStatus] = useState<
+    | { kind: 'idle' }
+    | { kind: 'fetching' }
+    | { kind: 'ok' }
+    | { kind: 'error'; message: string }
+  >({ kind: 'idle' });
+
   // Auto-fetch metadata on URL blur.
   async function tryMetadata(u: string) {
     if (!u) return;
@@ -41,13 +48,19 @@ export default function SubmitForm() {
     } catch {
       return;
     }
-    // Promote the normalized URL into the field so the submission has a
-    // protocol when the user clicks submit.
     if (candidate !== u) {
       setUrl(candidate);
     }
+    setMetaStatus({ kind: 'fetching' });
     const meta = await lookupMetadata(candidate);
-    if (meta.error) return;
+    if (meta.error) {
+      setMetaStatus({
+        kind: 'error',
+        message: `${meta.error}. Fill the title and description by hand.`,
+      });
+      return;
+    }
+    setMetaStatus({ kind: 'ok' });
     setPrefilled((cur) => {
       const next = new Set(cur);
       setTitle((t) => {
@@ -133,7 +146,15 @@ export default function SubmitForm() {
         name="url"
         required
         error={errors.url}
-        hint="Paste a URL. We'll fetch the title and description."
+        hint={
+          metaStatus.kind === 'fetching'
+            ? 'Fetching title and description...'
+            : metaStatus.kind === 'ok'
+              ? 'Title and description prefilled. Tweak as needed.'
+              : metaStatus.kind === 'error'
+                ? metaStatus.message
+                : "Paste a URL. We'll fetch the title and description."
+        }
       >
         <input
           id="url"

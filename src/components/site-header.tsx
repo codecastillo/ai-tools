@@ -31,7 +31,6 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import CommandPaletteTrigger from './command-palette-trigger';
-import ThemeToggle from './theme-toggle';
 import { cn } from '@/lib/cn';
 
 interface NavItem {
@@ -155,7 +154,7 @@ export default function SiteHeader() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-60"
         />
 
-        <div className="mx-auto flex max-w-screen-2xl items-center gap-6 px-6 py-3.5 lg:px-12">
+        <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-6 px-6 py-3.5 lg:px-12">
           {/* Logo */}
           <Link
             href="/"
@@ -177,8 +176,8 @@ export default function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+          {/* Desktop nav: centered between logo and right rail */}
+          <nav className="hidden items-center gap-6 lg:flex">
             {GROUPS.map((group) => (
               <NavDropdown
                 key={group.label}
@@ -192,11 +191,10 @@ export default function SiteHeader() {
           </nav>
 
           {/* Right rail */}
-          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+          <div className="flex items-center gap-2">
             <div className="hidden md:block">
               <CommandPaletteTrigger />
             </div>
-            <ThemeToggle />
             <Link
               href="/submit"
               className="hidden md:inline-flex items-center gap-1.5 rounded-lg border border-line-2 bg-surface-1 px-3 py-1.5 text-sm font-medium text-ink-dim transition-all duration-150 hover:-translate-y-px hover:border-accent/40 hover:bg-accent/10 hover:text-ink"

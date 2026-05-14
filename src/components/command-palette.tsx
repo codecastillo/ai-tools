@@ -151,24 +151,6 @@ const ACTIONS: ActionEntry[] = [
     run: (router) => router.push('/stack/builder'),
   },
   {
-    label: 'Theme: toggle',
-    hint: 'dark / light',
-    keywords: ['theme', 'dark', 'light', 'appearance', 'mode'],
-    // Read the current attribute set by ThemeProvider's bootstrap script,
-    // flip it, and persist. Mirrors the logic in `theme-provider.tsx`.
-    run: () => {
-      if (typeof document === 'undefined') return;
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      try {
-        localStorage.setItem('aitools_theme', next);
-      } catch {
-        /* private mode */
-      }
-    },
-  },
-  {
     label: 'Reset onboarding tour',
     hint: 'replay intro',
     keywords: ['tour', 'onboarding', 'intro', 'replay', 'reset'],
