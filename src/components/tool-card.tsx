@@ -5,7 +5,6 @@ import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
 import { use3DTilt } from '@/hooks/use-3d-tilt';
 import AddToStackButton from '@/components/add-to-stack-button';
-import HoverPreview from '@/components/hover-preview';
 import SaveToolButton from '@/components/save-tool-button';
 import TrackerButton from '@/components/tracker-button';
 import WhatsNewBadge from '@/components/whats-new-badge';
@@ -22,8 +21,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
   const tiltRef = use3DTilt<HTMLAnchorElement>({ max: 5, perspective: 1200, speed: 250 });
 
   return (
-    <HoverPreview tool={tool}>
-      <Link
+    <Link
         ref={tiltRef}
         href={`/tools/${tool.slug}`}
         data-tool-card
@@ -114,8 +112,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
             Read guide →
           </span>
         </div>
-      </Link>
-    </HoverPreview>
+    </Link>
   );
 }
 
