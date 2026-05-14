@@ -30,12 +30,23 @@ export default function SubmitForm() {
   // Auto-fetch metadata on URL blur.
   async function tryMetadata(u: string) {
     if (!u) return;
+    // Accept bare domains like "claude.ai" by prepending https:// before
+    // validating, so a user who skips the protocol still gets autofill.
+    let candidate = u.trim();
+    if (!/^https?:\/\//i.test(candidate)) {
+      candidate = `https://${candidate}`;
+    }
     try {
-      new URL(u);
+      new URL(candidate);
     } catch {
       return;
     }
-    const meta = await lookupMetadata(u);
+    // Promote the normalized URL into the field so the submission has a
+    // protocol when the user clicks submit.
+    if (candidate !== u) {
+      setUrl(candidate);
+    }
+    const meta = await lookupMetadata(candidate);
     if (meta.error) return;
     setPrefilled((cur) => {
       const next = new Set(cur);
