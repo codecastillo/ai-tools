@@ -126,24 +126,19 @@ export default function PriceBarChart({ rates }: Props) {
                 <title>{`${r.model} input ${formatUsd(r.input)} / M`}</title>
               </rect>
 
-              {/* Value labels at the end of the wider bar */}
+              {/* Single inline label combines input and output rates with a
+                  slash separator so they cannot overlap each other. */}
               <text
-                x={BAR_X + Math.max(inputW, outputW) + 6}
-                y={outputBarY + 1}
-                dominantBaseline="hanging"
+                x={BAR_X + Math.max(inputW, outputW) + 8}
+                y={outputBarY + outputBarH / 2}
+                dominantBaseline="middle"
                 fill="rgba(255,255,255,0.85)"
                 style={{ fontSize: 10 }}
               >
-                {`${formatUsd(r.input)} input`}
-              </text>
-              <text
-                x={BAR_X + Math.max(inputW, outputW) + 6}
-                y={outputBarY + outputBarH - 1}
-                dominantBaseline="alphabetic"
-                fill="rgba(255,255,255,0.55)"
-                style={{ fontSize: 10 }}
-              >
-                {`${formatUsd(r.output)} output`}
+                <tspan fill="rgba(255,255,255,0.95)">{formatUsd(r.input)}</tspan>
+                <tspan fill="rgba(255,255,255,0.45)" dx="3"> / </tspan>
+                <tspan fill="rgba(255,255,255,0.65)" dx="3">{formatUsd(r.output)}</tspan>
+                <tspan fill="rgba(255,255,255,0.45)" dx="4">/M</tspan>
               </text>
             </g>
           );
