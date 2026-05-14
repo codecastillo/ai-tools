@@ -168,8 +168,7 @@
 }
 
 @layer base {
-  html,
-  body {
+  html {
     background: var(--color-bg);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
@@ -178,7 +177,11 @@
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
+  /* Body is transparent so the fixed particle canvas at z-index -10 is
+   * visible between the html background and the page content. */
   body {
+    background: transparent;
+    color: var(--color-ink);
     font-family: var(--font-sans);
     min-height: 100vh;
   }
