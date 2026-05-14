@@ -382,3 +382,13 @@
     );
   }
 }
+
+@media print {
+  body { background: white; color: black; }
+  .print\:hidden { display: none; }
+  .print\:text-left { text-align: left; }
+  pre, code { background: rgba(0,0,0,0.05); color: black; }
+  a { color: black; text-decoration: underline; }
+  h1, h2, h3 { color: black; page-break-after: avoid; }
+  section, article { page-break-inside: avoid; }
+}

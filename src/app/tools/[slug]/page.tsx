@@ -19,7 +19,9 @@ import WorkflowCards from '@/components/workflow-cards';
 import VersusCarousel from '@/components/versus-carousel';
 import ToolDNA from '@/components/tool-dna';
 import FreshnessBadge from '@/components/freshness-badge';
+import SaveToolButton from '@/components/save-tool-button';
 import WhatsNewBadge from '@/components/whats-new-badge';
+import ReadingTime from '@/components/reading-time';
 
 interface ToolPageProps {
   params: Promise<{ slug: string }>;
@@ -134,7 +136,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 Visit website
                 <ArrowUpRight className="h-4 w-4" />
               </a>
+              <SaveToolButton slug={tool.slug} variant="pill" size="md" />
               <FreshnessBadge tool={tool} />
+              <ReadingTime tool={tool} />
             </div>
           </header>
 
@@ -248,7 +252,7 @@ function Section({
 }) {
   return (
     <section id={id} className="mt-10 scroll-mt-24">
-      <h2 className="text-sm font-medium uppercase tracking-[0.10em] text-ink-faint">
+      <h2 className="text-center text-sm font-medium uppercase tracking-[0.10em] text-ink-faint">
         {title}
       </h2>
       <div className="mt-3">{children}</div>

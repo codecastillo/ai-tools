@@ -5,7 +5,9 @@ import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
 import AddToStackButton from '@/components/add-to-stack-button';
 import HoverPreview from '@/components/hover-preview';
+import SaveToolButton from '@/components/save-tool-button';
 import WhatsNewBadge from '@/components/whats-new-badge';
+import TrendingIndicator from '@/components/trending-indicator';
 
 interface ToolCardProps {
   tool: Tool;
@@ -40,6 +42,11 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
             isFeatured && 'opacity-100',
           )}
         />
+
+        {/* Save button (top-left, top-right is taken by the arrow) */}
+        <div className="absolute top-3 left-3 z-10">
+          <SaveToolButton slug={tool.slug} variant="icon" size="sm" />
+        </div>
 
         {/* Category dot + label */}
         <div className="flex items-center justify-between gap-3">
@@ -79,6 +86,7 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
         {/* Pricing/difficulty/time chips */}
         <div className="mt-4 flex flex-wrap justify-center gap-1.5">
           <WhatsNewBadge tool={tool} />
+          <TrendingIndicator popularity={tool.popularity} />
           {tool.pricing && <Chip>{tool.pricing}</Chip>}
           {tool.difficulty && <Chip>{tool.difficulty}</Chip>}
           {tool.time_to_value && <Chip variant="accent">{tool.time_to_value}</Chip>}

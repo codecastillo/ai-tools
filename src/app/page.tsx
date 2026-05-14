@@ -29,6 +29,8 @@ import TrendingStrip from '@/components/trending-strip';
 import SiteStatsBand from '@/components/site-stats-band';
 import AiNewsTicker from '@/components/ai-news-ticker';
 import NewsletterSignup from '@/components/newsletter-signup';
+import DailyTipCard from '@/components/daily-tip-card';
+import HeroIllustration from '@/components/hero-illustration';
 
 export const dynamic = 'force-dynamic';
 
@@ -86,6 +88,10 @@ export default async function HomePage({ searchParams }: HomeProps) {
         />
 
         <div className="flex flex-col items-center text-center">
+          <div className="mx-auto max-w-3xl opacity-80">
+            <HeroIllustration />
+          </div>
+
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
             A reference for AI dev tooling
           </p>
@@ -223,6 +229,11 @@ export default async function HomePage({ searchParams }: HomeProps) {
           {/* TRENDING THIS WEEK */}
           <section className="mt-16 md:mt-20 motion-safe:section-in">
             <TrendingStrip tools={allTools.tools} />
+          </section>
+
+          {/* DAILY TIP */}
+          <section className="mt-16 md:mt-20 motion-safe:section-in">
+            <DailyTipCard />
           </section>
 
           {/* NEW THIS WEEK */}

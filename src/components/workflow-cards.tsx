@@ -10,10 +10,7 @@ export default function WorkflowCards({ workflows }: Props) {
 
   return (
     <section>
-      <h3 className="text-sm uppercase tracking-wider text-ink-faint text-center mb-4">
-        Workflow examples
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
         {workflows.map((workflow, idx) => (
           <details
             key={`${workflow.title}-${idx}`}
