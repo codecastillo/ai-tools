@@ -113,9 +113,9 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
 
           {/* Right: 40%. Static faux terminal. Always dark, text colors are
               hardcoded so the panel reads cleanly in both light and dark
-              themes. */}
-          <div className="md:col-span-2">
-            <div className="overflow-hidden rounded-xl border-2 border-white/[0.10] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              themes. Vertically centered against the left column. */}
+          <div className="flex items-center md:col-span-2">
+            <div className="w-full overflow-hidden rounded-xl border-2 border-white/[0.10] bg-[#0B0A12] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
               {/* macOS chrome */}
               <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" aria-hidden />

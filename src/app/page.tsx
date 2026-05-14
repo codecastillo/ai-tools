@@ -25,7 +25,6 @@ import SearchBar from '@/components/search-bar';
 import CategoryTabs from '@/components/category-tabs';
 import ToolCard from '@/components/tool-card';
 import ToolFinderQuiz from '@/components/tool-finder-quiz';
-import TrendingStrip from '@/components/trending-strip';
 import SiteStatsBand from '@/components/site-stats-band';
 import AiNewsTicker from '@/components/ai-news-ticker';
 import NewsletterSignup from '@/components/newsletter-signup';
@@ -226,11 +225,6 @@ export default async function HomePage({ searchParams }: HomeProps) {
               <ToolOfTheDay tool={featuredOfDay} />
             </div>
           )}
-
-          {/* TRENDING THIS WEEK */}
-          <section className="mt-16 md:mt-20 motion-safe:section-in">
-            <TrendingStrip tools={allTools.tools} />
-          </section>
 
           {/* DAILY TIP */}
           <section className="mt-16 md:mt-20 motion-safe:section-in">
