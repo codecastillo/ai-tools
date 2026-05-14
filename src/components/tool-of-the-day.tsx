@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import type { Tool } from '@/lib/types';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
+import MagneticLink from '@/components/magnetic-link';
 
 export interface ToolOfTheDayProps {
   tool: Tool;
@@ -48,8 +48,9 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
       />
       <div className="gradient-featured overflow-hidden rounded-2xl border border-line-2 bg-[--color-surface] shadow-[0_0_64px_-24px_var(--color-accent-glow),inset_0_1px_0_rgba(255,255,255,0.04)]">
         <div className="grid gap-8 p-6 sm:p-10 md:grid-cols-5">
-          {/* Left: 60%. Copy + CTA. */}
-          <div className="text-center md:col-span-3">
+          {/* Left: 60%. Copy + CTA, left-aligned to balance the right-side
+              terminal panel. */}
+          <div className="text-left md:col-span-3">
             <p className="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-bright">
               <Sparkles className="h-3 w-3" aria-hidden />
               Tool of the day · {formatToday()}
@@ -63,13 +64,13 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
             </h2>
 
             {tool.tagline && (
-              <p className="mx-auto mt-3 max-w-xl text-lg text-ink-dim sm:text-xl">
+              <p className="mt-3 max-w-xl text-lg text-ink-dim sm:text-xl">
                 {tool.tagline}
               </p>
             )}
 
             {(tool.category || tool.pricing || tool.difficulty || tool.time_to_value) && (
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+              <div className="mt-5 flex flex-wrap items-center gap-2">
                 {tool.category && (
                   <span
                     className={cn(
@@ -89,14 +90,16 @@ export default function ToolOfTheDay({ tool }: ToolOfTheDayProps) {
               </div>
             )}
 
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <MagneticLink
                 href={`/tools/${tool.slug}`}
+                strength={0.3}
+                range={80}
                 className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-bg shadow-[0_0_24px_-8px_var(--color-accent-glow)] transition-all duration-150 hover:-translate-y-px hover:bg-accent-bright"
               >
                 Read the guide
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </MagneticLink>
               <a
                 href={tool.url}
                 target="_blank"

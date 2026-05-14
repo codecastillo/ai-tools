@@ -386,6 +386,16 @@
     animation-play-state: paused;
   }
 
+  /* Hide native scrollbars while still allowing scroll. Used on horizontal
+     rails where the bar visually clutters the design. */
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Soft horizontal-scroll affordance for category rails. */
   .rail-mask {
     -webkit-mask-image: linear-gradient(
@@ -405,6 +415,53 @@
   }
 }
 
+@keyframes aurora-drift {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  50%  { transform: translate(40px, -30px) rotate(45deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@layer components {
+  .aurora-1, .aurora-2, .aurora-3 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+  }
+  .aurora-1 {
+    width: 600px; height: 600px;
+    top: -200px; left: -100px;
+    background: radial-gradient(circle, rgba(255,107,91,0.4), transparent 70%);
+    animation: aurora-drift 18s ease-in-out infinite;
+  }
+  .aurora-2 {
+    width: 500px; height: 500px;
+    top: -100px; right: -150px;
+    background: radial-gradient(circle, rgba(255,179,71,0.35), transparent 70%);
+    animation: aurora-drift 22s ease-in-out infinite reverse;
+  }
+  .aurora-3 {
+    width: 400px; height: 400px;
+    top: 100px; left: 40%;
+    background: radial-gradient(circle, rgba(255,107,91,0.25), transparent 70%);
+    animation: aurora-drift 25s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+
+  /* On light theme, tone down so it doesn't wash out the cream background */
+  [data-theme='light'] .aurora-1,
+  [data-theme='light'] .aurora-2,
+  [data-theme='light'] .aurora-3 {
+    opacity: 0.18;
+    filter: blur(100px);
+  }
+
+  /* Honor reduced motion: freeze the gradients in place. */
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-1, .aurora-2, .aurora-3 { animation: none; }
+  }
+}
+
 @media print {
   body { background: white; color: black; }
   .print\:hidden { display: none; }
@@ -413,4 +470,54 @@
   a { color: black; text-decoration: underline; }
   h1, h2, h3 { color: black; page-break-after: avoid; }
   section, article { page-break-inside: avoid; }
+}
+
+/* Custom text selection. Coral on dark, warm cream-on-coral on light. */
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+[data-theme='light'] ::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Animated shimmer for loading skeletons. */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@layer components {
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--color-surface) 0%,
+      var(--color-surface-2) 50%,
+      var(--color-surface) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer { animation: none; }
+  }
+}
+
+/* Circle-wipe theme transition. Uses the View Transitions API where
+ * available; the ripple origin is set via custom properties just before
+ * `document.startViewTransition` runs. */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  ::view-transition-new(root) {
+    animation: theme-ripple 0.5s ease-out;
+    clip-path: circle(0% at var(--ripple-x, 50%) var(--ripple-y, 50%));
+  }
+  @keyframes theme-ripple {
+    from { clip-path: circle(0% at var(--ripple-x, 50%) var(--ripple-y, 50%)); }
+    to   { clip-path: circle(200% at var(--ripple-x, 50%) var(--ripple-y, 50%)); }
+  }
 }

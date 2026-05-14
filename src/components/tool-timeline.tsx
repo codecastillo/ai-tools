@@ -1,12 +1,13 @@
 import type { Tool } from '@/lib/types';
 import { Sparkles, Rocket, GitBranch, Calendar } from 'lucide-react';
+import { historyFor, type HistoryMilestone } from '@/lib/tool-history';
 
-interface Milestone {
-  date: string; // ISO YYYY-MM-DD
+type Milestone = HistoryMilestone | {
+  date: string;
   label: string;
   detail: string;
-  kind: 'launch' | 'version' | 'verified' | 'indexed';
-}
+  kind: 'indexed' | 'verified';
+};
 
 interface Props {
   tool: Tool;
@@ -172,6 +173,8 @@ function dotColor(kind: Milestone['kind']): string {
       return 'var(--color-accent)';
     case 'version':
       return 'var(--color-accent-2)';
+    case 'milestone':
+      return 'var(--color-accent-2)';
     case 'verified':
       return 'var(--color-success)';
     case 'indexed':
@@ -181,68 +184,9 @@ function dotColor(kind: Milestone['kind']): string {
 }
 
 /**
- * Derive 3-4 deterministic milestones from a tool. We use the slug's first
- * character code to seed the launch and v2 offsets so output is stable across
- * renders without any persistence layer.
+ * Read accurate, hand-authored milestones from `tool-history.ts` for this
+ * slug. Falls back to nothing when we don't have history for a tool.
  */
 function buildMilestones(tool: Tool): Milestone[] {
-  const created = new Date(tool.created_at);
-  if (Number.isNaN(created.getTime())) return [];
-
-  const seed = tool.slug.length > 0 ? tool.slug.charCodeAt(0) : 65;
-  const launchOffsetMonths = (seed * 7) % 18 + 6; // 6..23 months before created
-  const v2OffsetMonths = (seed * 3) % 4 + 6; // 6..9 months before created
-
-  const launchDate = addMonths(created, -launchOffsetMonths);
-  const v2Date = addMonths(created, -v2OffsetMonths);
-
-  const milestones: Milestone[] = [
-    {
-      date: toISODate(launchDate),
-      label: 'Launched',
-      detail: `${tool.title} went public.`,
-      kind: 'launch',
-    },
-    {
-      date: toISODate(v2Date),
-      label: 'v2 release',
-      detail: 'Major version released.',
-      kind: 'version',
-    },
-    {
-      date: toISODate(created),
-      label: 'Indexed on ai.tools',
-      detail: 'Added to the directory.',
-      kind: 'indexed',
-    },
-  ];
-
-  if (tool.last_verified) {
-    const verified = new Date(tool.last_verified);
-    if (!Number.isNaN(verified.getTime())) {
-      milestones.push({
-        date: toISODate(verified),
-        label: 'Last verified',
-        detail: 'Info checked for accuracy.',
-        kind: 'verified',
-      });
-    }
-  }
-
-  // Sort ascending by date so the SVG reads left-to-right chronologically.
-  milestones.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-  return milestones;
-}
-
-function addMonths(date: Date, months: number): Date {
-  const d = new Date(date.getTime());
-  d.setMonth(d.getMonth() + months);
-  return d;
-}
-
-function toISODate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+  return historyFor(tool.slug) as Milestone[];
 }

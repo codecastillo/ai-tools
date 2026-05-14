@@ -14,7 +14,7 @@ export default function ToolRelated({ tool, all }: ToolRelatedProps) {
   if (related.length === 0) return null;
   return (
     <section className="mt-10 border-t border-line-2 pt-5">
-      <p className="text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
+      <p className="text-center text-xs font-medium uppercase tracking-[0.18em] text-ink-faint">
         Related tools
       </p>
       <ul className="mt-3 grid gap-3 sm:grid-cols-3">

@@ -24,14 +24,14 @@ export default function RecentlyViewed() {
   if (!mounted || items.length === 0) return null;
 
   return (
-    <section className="mt-10" aria-label="Recently viewed tools">
-      <div className="flex items-center gap-2">
+    <section className="mt-10 text-center" aria-label="Recently viewed tools">
+      <div className="flex items-center justify-center gap-2">
         <Clock className="h-3 w-3 text-ink-faint" aria-hidden="true" />
         <span className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-ink-faint">
           Recently viewed
         </span>
       </div>
-      <ul className="mt-3 flex flex-wrap gap-2">
+      <ul className="mt-3 flex flex-wrap justify-center gap-2">
         {items.map((r) => (
           <li key={r.slug}>
             <Link

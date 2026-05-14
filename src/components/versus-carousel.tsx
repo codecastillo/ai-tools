@@ -17,10 +17,7 @@ export default function VersusCarousel({ tool, all }: Props) {
 
   return (
     <section>
-      <h3 className="text-sm uppercase tracking-wider text-ink-faint text-center mb-4">
-        Versus
-      </h3>
-      <p className="text-xs text-ink-faint mt-1 text-center">
+      <p className="text-xs text-ink-faint text-center">
         How {tool.title} stacks up against similar tools.
       </p>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">

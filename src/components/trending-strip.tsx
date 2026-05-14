@@ -40,7 +40,7 @@ export function TrendingStrip({ tools }: Props) {
         </p>
       </div>
 
-      <div className="mt-6 flex gap-3 overflow-x-auto pb-3 rail-mask">
+      <div className="mt-6 flex gap-3 overflow-x-auto pb-3 rail-mask scrollbar-hide">
         {top.map((tool, i) => (
           <Link
             key={tool.id}

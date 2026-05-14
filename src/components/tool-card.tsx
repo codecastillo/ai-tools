@@ -1,8 +1,9 @@
+'use client';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
 import type { Tool } from '@/lib/types';
 import { categoryStyle } from '@/lib/categories';
 import { cn } from '@/lib/cn';
+import { use3DTilt } from '@/hooks/use-3d-tilt';
 import AddToStackButton from '@/components/add-to-stack-button';
 import HoverPreview from '@/components/hover-preview';
 import SaveToolButton from '@/components/save-tool-button';
@@ -18,10 +19,12 @@ interface ToolCardProps {
 export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
   const cat = categoryStyle(tool.category);
   const isFeatured = variant === 'featured';
+  const tiltRef = use3DTilt<HTMLAnchorElement>({ max: 5, perspective: 1200, speed: 250 });
 
   return (
     <HoverPreview tool={tool}>
       <Link
+        ref={tiltRef}
         href={`/tools/${tool.slug}`}
         data-tool-card
         className={cn(
@@ -44,23 +47,21 @@ export default function ToolCard({ tool, variant = 'default' }: ToolCardProps) {
           )}
         />
 
-        {/* Save button (top-left, top-right is taken by the arrow) */}
-        <div className="absolute top-3 left-3 z-10">
+        {/* Save button now sits in the top-right corner. The body arrow is
+            gone so there is no overlap with the category text. */}
+        <div className="absolute top-3 right-3 z-10">
           <SaveToolButton slug={tool.slug} variant="icon" size="sm" />
         </div>
 
-        {/* Category dot + label */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em]">
-            <span
-              className={cn(
-                'h-2 w-2 rounded-full transition-transform duration-200 group-hover:scale-125',
-                cat.dotClass,
-              )}
-            />
-            <span className={cat.textClass}>{cat.short}</span>
-          </div>
-          <ArrowUpRight className="h-4 w-4 text-ink-faint transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent-bright" />
+        {/* Category dot + label, centered above the title */}
+        <div className="flex items-center justify-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em]">
+          <span
+            className={cn(
+              'h-2 w-2 rounded-full transition-transform duration-200 group-hover:scale-125',
+              cat.dotClass,
+            )}
+          />
+          <span className={cat.textClass}>{cat.short}</span>
         </div>
 
         {/* Title */}

@@ -30,7 +30,10 @@ import SiteStatsBand from '@/components/site-stats-band';
 import AiNewsTicker from '@/components/ai-news-ticker';
 import NewsletterSignup from '@/components/newsletter-signup';
 import DailyTipCard from '@/components/daily-tip-card';
-import HeroIllustration from '@/components/hero-illustration';
+import HeroIllustrationCanvas from '@/components/hero-illustration-canvas';
+import TypingCycle from '@/components/typing-cycle';
+import AuroraBackground from '@/components/aurora-background';
+import SectionReveal from '@/components/section-reveal';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,6 +85,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
     <div className="relative mx-auto max-w-screen-2xl px-6 pb-24 pt-10 sm:pt-14 lg:px-12">
       {/* HERO */}
       <section className="relative motion-safe:section-in">
+        <AuroraBackground />
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-dot-grid opacity-50"
@@ -89,7 +93,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
 
         <div className="flex flex-col items-center text-center">
           <div className="mx-auto max-w-3xl opacity-80">
-            <HeroIllustration />
+            <HeroIllustrationCanvas />
           </div>
 
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
@@ -97,13 +101,22 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </p>
 
           <h1 className="text-display mt-5 text-balance text-5xl text-ink sm:text-6xl lg:text-7xl">
-            Find your favorite AI tools.
+            <TypingCycle
+              phrases={[
+                'Find your favorite AI tools.',
+                'Compare them.',
+                'Save them for later.',
+                'Try a new stack today.',
+              ]}
+            />
           </h1>
 
-          <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
-            We hand-pick AI tools real devs love. Install guides, usage tips,
-            curated stacks, all in one place.
-          </p>
+          <SectionReveal>
+            <p className="mt-5 max-w-xl text-balance text-base text-ink-dim sm:text-lg">
+              We hand-pick AI tools real devs love. Install guides, usage tips,
+              curated stacks, all in one place.
+            </p>
+          </SectionReveal>
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -521,10 +534,10 @@ export default async function HomePage({ searchParams }: HomeProps) {
           {/* RECENTLY ADDED */}
           {recentlyAdded.length > 0 && (
             <section
-              className="mt-16 md:mt-20 motion-safe:section-in"
+              className="mt-16 md:mt-20 motion-safe:section-in text-center"
               aria-label="Recently added"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-accent-2"
@@ -533,7 +546,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
                   Recently added
                 </span>
               </div>
-              <ul className="mt-3 flex flex-wrap gap-2">
+              <ul className="mt-3 flex flex-wrap justify-center gap-2">
                 {recentlyAdded.map((t) => (
                   <li key={t.id}>
                     <Link

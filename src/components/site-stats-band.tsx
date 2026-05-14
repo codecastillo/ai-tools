@@ -1,3 +1,5 @@
+import CountUp from '@/components/count-up';
+
 interface Props {
   toolCount: number;
   stackCount: number;
@@ -9,11 +11,16 @@ export default function SiteStatsBand({
   stackCount,
   categoryCount,
 }: Props) {
-  const stats = [
-    { value: `${toolCount}`, label: 'Tools indexed' },
-    { value: `${stackCount}`, label: 'Curated stacks' },
-    { value: `${categoryCount}`, label: 'Categories' },
-    { value: '30+', label: 'Glossary terms' },
+  const stats: Array<{
+    key: string;
+    to: number;
+    suffix?: string;
+    label: string;
+  }> = [
+    { key: 'tools', to: toolCount, label: 'Tools indexed' },
+    { key: 'stacks', to: stackCount, label: 'Curated stacks' },
+    { key: 'categories', to: categoryCount, label: 'Categories' },
+    { key: 'glossary', to: 30, suffix: '+', label: 'Glossary terms' },
   ];
 
   return (
@@ -27,9 +34,9 @@ export default function SiteStatsBand({
         </p>
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {stats.map((stat) => (
-            <div key={stat.label}>
-              <div className="text-4xl md:text-5xl font-medium text-ink">
-                {stat.value}
+            <div key={stat.key}>
+              <div className="text-4xl md:text-5xl font-medium text-ink tabular-nums">
+                <CountUp to={stat.to} suffix={stat.suffix} />
               </div>
               <div className="text-sm text-ink-faint mt-2">{stat.label}</div>
             </div>
