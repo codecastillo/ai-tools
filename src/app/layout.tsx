@@ -54,7 +54,7 @@ export default function RootLayout({
           <ParticleBackground />
           <CommandPaletteProvider>
             <KeyboardOverlayProvider>
-              <div className="flex min-h-full flex-col">
+              <div className="relative z-10 flex min-h-full flex-col">
                 <SiteHeader />
                 <main className="relative z-10 flex-1">{children}</main>
                 <SiteFooter />

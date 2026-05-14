@@ -16,12 +16,12 @@
   --color-surface: #1E1B28;
   --color-surface-hover: #262232;
 
-  /* Neutral surface levels used across cards/pills/inputs. The opacity values
-   * mirror the legacy bg-white/[0.0X] tokens so we can drop in `surface-1/2/3`
-   * everywhere without re-tuning the look. */
-  --color-surface-1: rgba(255, 255, 255, 0.02);
-  --color-surface-2: rgba(255, 255, 255, 0.04);
-  --color-surface-3: rgba(255, 255, 255, 0.06);
+  /* Card / pill / input surfaces. Mostly opaque dark slabs that sit cleanly
+   * on top of the ambient particle canvas, so cards read as solid panels
+   * instead of letting the moving dots bleed through them. */
+  --color-surface-1: rgba(28, 25, 38, 0.92);
+  --color-surface-2: rgba(38, 34, 50, 0.94);
+  --color-surface-3: rgba(48, 43, 62, 0.96);
 
   /* Lines */
   --color-line: rgba(255, 255, 255, 0.08);
@@ -73,9 +73,11 @@
   --color-surface: #FFFFFF;
   --color-surface-hover: #F2EDE5;
 
-  --color-surface-1: rgba(0, 0, 0, 0.025);
-  --color-surface-2: rgba(0, 0, 0, 0.05);
-  --color-surface-3: rgba(0, 0, 0, 0.08);
+  /* Light-mode surfaces: warm cream slabs, opaque so particles do not show
+   * through cards. */
+  --color-surface-1: rgba(255, 251, 244, 0.94);
+  --color-surface-2: rgba(248, 240, 226, 0.96);
+  --color-surface-3: rgba(240, 230, 210, 0.98);
 
   --color-line: rgba(0, 0, 0, 0.08);
   --color-line-2: rgba(0, 0, 0, 0.14);
@@ -168,7 +170,8 @@
 }
 
 @layer base {
-  html {
+  html,
+  body {
     background: var(--color-bg);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
@@ -177,11 +180,7 @@
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
-  /* Body is transparent so the fixed particle canvas at z-index -10 is
-   * visible between the html background and the page content. */
   body {
-    background: transparent;
-    color: var(--color-ink);
     font-family: var(--font-sans);
     min-height: 100vh;
   }

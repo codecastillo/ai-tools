@@ -85,10 +85,6 @@ export default async function HomePage({ searchParams }: HomeProps) {
       {/* HERO */}
       <section className="relative motion-safe:section-in">
         <AuroraBackground />
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-dot-grid opacity-50"
-        />
 
         <div className="flex flex-col items-center text-center">
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">

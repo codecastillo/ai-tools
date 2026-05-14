@@ -199,7 +199,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full opacity-70 [@media(prefers-reduced-motion:reduce)]:opacity-50"
+      className="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-60 [@media(prefers-reduced-motion:reduce)]:opacity-40"
     />
   );
 }
