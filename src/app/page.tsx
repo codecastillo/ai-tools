@@ -31,7 +31,6 @@ import AiNewsTicker from '@/components/ai-news-ticker';
 import NewsletterSignup from '@/components/newsletter-signup';
 import DailyTipCard from '@/components/daily-tip-card';
 import TypingCycle from '@/components/typing-cycle';
-import AuroraBackground from '@/components/aurora-background';
 import SectionReveal from '@/components/section-reveal';
 
 export const dynamic = 'force-dynamic';
@@ -84,8 +83,6 @@ export default async function HomePage({ searchParams }: HomeProps) {
     <div className="relative mx-auto max-w-screen-2xl px-6 pb-24 pt-10 sm:pt-14 lg:px-12">
       {/* HERO */}
       <section className="relative motion-safe:section-in">
-        <AuroraBackground />
-
         <div className="flex flex-col items-center text-center">
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
             A reference for AI dev tooling
