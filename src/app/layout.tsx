@@ -8,6 +8,7 @@ import KeyboardOverlayProvider from '@/components/keyboard-overlay';
 import KeyboardShortcuts from '@/components/keyboard-shortcuts';
 import StackPill from '@/components/stack-pill';
 import OnboardingTour from '@/components/onboarding-tour';
+import ParticleBackground from '@/components/particle-background';
 import { ThemeProvider } from '@/components/theme-provider';
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
       </head>
       <body className="relative min-h-full">
         <ThemeProvider>
+          <ParticleBackground />
           <CommandPaletteProvider>
             <KeyboardOverlayProvider>
               <div className="flex min-h-full flex-col">

@@ -30,7 +30,6 @@ import SiteStatsBand from '@/components/site-stats-band';
 import AiNewsTicker from '@/components/ai-news-ticker';
 import NewsletterSignup from '@/components/newsletter-signup';
 import DailyTipCard from '@/components/daily-tip-card';
-import HeroIllustrationCanvas from '@/components/hero-illustration-canvas';
 import TypingCycle from '@/components/typing-cycle';
 import AuroraBackground from '@/components/aurora-background';
 import SectionReveal from '@/components/section-reveal';
@@ -92,10 +91,6 @@ export default async function HomePage({ searchParams }: HomeProps) {
         />
 
         <div className="flex flex-col items-center text-center">
-          <div className="mx-auto max-w-3xl opacity-80">
-            <HeroIllustrationCanvas />
-          </div>
-
           <p className="font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-ink-faint">
             A reference for AI dev tooling
           </p>
