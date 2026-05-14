@@ -54,7 +54,7 @@ export default function ToolDna({ tool }: Props) {
           </div>
         </div>
 
-        <div>
+        <div className="md:col-span-2">
           <p className="inline-flex items-center justify-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-ink-faint">
             <User className="h-3 w-3 text-ink-mute" />
             Typical user
