@@ -154,11 +154,11 @@ export default function SiteHeader() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-60"
         />
 
-        <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-6 px-6 py-3.5 lg:px-12">
-          {/* Logo */}
+        <div className="mx-auto grid max-w-screen-2xl grid-cols-[1fr_auto_1fr] items-center gap-6 px-6 py-3.5 lg:px-12">
+          {/* Logo, left column */}
           <Link
             href="/"
-            className="group inline-flex items-center gap-2.5"
+            className="group inline-flex w-fit items-center gap-2.5"
             onClick={() => setOpenGroup(null)}
           >
             <span className="relative inline-grid h-7 w-7 place-items-center rounded-lg border border-line-2 bg-surface-1 transition-colors group-hover:border-accent/50">
@@ -176,8 +176,10 @@ export default function SiteHeader() {
             </span>
           </Link>
 
-          {/* Desktop nav: centered between logo and right rail */}
-          <nav className="hidden items-center gap-6 lg:flex">
+          {/* Desktop nav, middle column. The auto track plus equal 1fr
+              tracks on either side guarantees this row sits at the absolute
+              centre of the header. */}
+          <nav className="hidden items-center justify-center gap-8 lg:flex">
             {GROUPS.map((group) => (
               <NavDropdown
                 key={group.label}
@@ -189,9 +191,13 @@ export default function SiteHeader() {
               />
             ))}
           </nav>
+          {/* On mobile the grid collapses to logo + right rail only, so we
+              fill the middle cell with an empty span to keep the right rail
+              hugging the right edge. */}
+          <div className="lg:hidden" />
 
-          {/* Right rail */}
-          <div className="flex items-center gap-2">
+          {/* Right rail, right column */}
+          <div className="flex items-center justify-end gap-2">
             <div className="hidden md:block">
               <CommandPaletteTrigger />
             </div>
